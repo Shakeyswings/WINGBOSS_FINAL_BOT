@@ -79,3 +79,5 @@ export async function buildBot(env: Env) {
 
   return bot;
 }
+
+import { versionCommand } from "./admin/version.ts";
