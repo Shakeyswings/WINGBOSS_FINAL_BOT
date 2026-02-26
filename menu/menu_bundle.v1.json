@@ -1,0 +1,127 @@
+{
+  "meta": {
+    "version": "v1.0",
+    "export_type": "single-file",
+    "generated": "2026-02-21T17:51:32.587980Z",
+    "currency": "USD",
+    "notes": "Consolidated menu export including rules, flavors, pricing, and constraints."
+  },
+  "rules": {
+    "tossed_or_side_dip_default": true,
+    "tossed_only_exceptions": [
+      "easy_win_boxes",
+      "extreme_boneless"
+    ],
+    "spice_tiers": {
+      "Original": 0.0,
+      "Hot": 0.25,
+      "Spicy": 0.5,
+      "Extreme": 0.75,
+      "Revenge": 1.0,
+      "Nuclear": 1.5
+    },
+    "spice_visibility_logic": "Revenge/Nuclear only visible for Extreme/Revenge base flavors",
+    "boneless_no_6pc": true,
+    "dip_standard_ml": 30,
+    "dip_upgrade_container_ml": 50
+  },
+  "pricing": {
+    "bone_in": {
+      "6": 6.75,
+      "12": 12.5,
+      "20": 19.95
+    },
+    "boneless": {
+      "8": 9.5,
+      "12": 14.0,
+      "20": 22.0
+    },
+    "extreme_bone_in": {
+      "6": 7.75,
+      "12": 14.95,
+      "20": 22.5
+    },
+    "extreme_boneless": {
+      "8": 10.95,
+      "12": 15.95,
+      "20": 23.5
+    }
+  },
+  "flavor_counts": {
+    "bone_in": {
+      "6": {
+        "included": 1,
+        "extra_allowed": 0
+      },
+      "12": {
+        "included": 2,
+        "extra_allowed": 1,
+        "extra_price": 1.0
+      },
+      "20": {
+        "included": 2,
+        "extra_allowed": 2,
+        "extra_price": 1.0
+      },
+      "36": {
+        "included": 3,
+        "extra_allowed": 3,
+        "extra_price": 1.0
+      }
+    },
+    "boneless": {
+      "8": 2,
+      "12": 2,
+      "24": 3,
+      "36": 4
+    }
+  },
+  "combos": {
+    "buffalo_box": {
+      "price": 10.5,
+      "drink": false,
+      "upgrades_allowed": false
+    },
+    "lemon_pepper_box": {
+      "price": 10.5,
+      "drink": false,
+      "upgrades_allowed": false,
+      "dual_seasoning_upgrade": 0.5
+    },
+    "boneless_box": {
+      "price": 11.95,
+      "drink": false,
+      "upgrades_allowed": false
+    },
+    "wing_boss_box": {
+      "price": 12.5,
+      "drink": false
+    },
+    "king_box": {
+      "price": 15.95,
+      "drink": false
+    }
+  },
+  "extra_wings_addon": {
+    "2_wings": {
+      "price": 2.5,
+      "same_sauce_required": true
+    },
+    "3_wings": {
+      "price": 3.25,
+      "same_sauce_required": true,
+      "includes_extra_dip_same_sauce": true
+    }
+  },
+  "in_house_only_flavor_ids": [
+    16,
+    19,
+    23,
+    34,
+    38,
+    53,
+    65,
+    69,
+    70
+  ]
+}

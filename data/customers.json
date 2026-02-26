@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "customers": [
+    {
+      "user_id": "5500590901",
+      "created_at": "2026-02-26T09:44:43.007Z",
+      "lang": "km",
+      "confidence_level": 1,
+      "lifetime_food_spend_usd": 0,
+      "completed_orders": 0
+    },
+    {
+      "user_id": "1966348424",
+      "created_at": "2026-02-26T10:00:01.402Z",
+      "lang": "km",
+      "confidence_level": 1,
+      "lifetime_food_spend_usd": 0,
+      "completed_orders": 0
+    }
+  ]
+}

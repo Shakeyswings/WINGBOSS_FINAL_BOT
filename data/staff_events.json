@@ -1,0 +1,329 @@
+{
+  "version": 1,
+  "events": [
+    {
+      "event_id": "5e0feb33-9",
+      "staff_id": "5500590901",
+      "order_id": "E6FE262D",
+      "type": "ORDER_ACCEPTED",
+      "ts": "2026-02-26T09:20:43.407Z"
+    },
+    {
+      "event_id": "25e1cf7b-e",
+      "staff_id": "5500590901",
+      "order_id": "4E612659",
+      "type": "ORDER_ACCEPTED",
+      "ts": "2026-02-26T09:25:39.443Z"
+    },
+    {
+      "event_id": "df1b0b62-4",
+      "staff_id": "5500590901",
+      "order_id": "17B1002B",
+      "type": "ORDER_ACCEPTED",
+      "ts": "2026-02-26T09:43:52.014Z"
+    },
+    {
+      "event_id": "67ea2e67-7",
+      "staff_id": "5500590901",
+      "order_id": "55BB00D0",
+      "type": "ISSUE_RAISED",
+      "ts": "2026-02-26T09:43:57.769Z",
+      "meta": {
+        "reason": "SEQUENCE_VIOLATION",
+        "from": "SENT_TO_STAFF",
+        "to": "COOKING"
+      }
+    },
+    {
+      "event_id": "14f72e36-8",
+      "staff_id": "5500590901",
+      "order_id": "55BB00D0",
+      "type": "ORDER_ACCEPTED",
+      "ts": "2026-02-26T09:44:01.135Z"
+    },
+    {
+      "event_id": "e990a48f-3",
+      "staff_id": "5500590901",
+      "order_id": "1440F8E3",
+      "type": "DISPATCH_PACK_GENERATED",
+      "ts": "2026-02-26T09:45:34.422Z",
+      "meta": {
+        "source": "button"
+      }
+    },
+    {
+      "event_id": "1a0d5049-d",
+      "staff_id": "5500590901",
+      "order_id": "0C6924B9",
+      "type": "ISSUE_RAISED",
+      "ts": "2026-02-26T09:49:12.630Z",
+      "meta": {
+        "reason": "SEQUENCE_VIOLATION",
+        "from": "SENT_TO_STAFF",
+        "to": "READY"
+      }
+    },
+    {
+      "event_id": "d8eaa1ea-6",
+      "staff_id": "5500590901",
+      "order_id": "0C6924B9",
+      "type": "MARKED_READY",
+      "ts": "2026-02-26T09:49:31.110Z",
+      "meta": {
+        "checklist": "confirmed"
+      }
+    },
+    {
+      "event_id": "ff59abd2-6",
+      "staff_id": "5500590901",
+      "order_id": "0C6924B9",
+      "type": "MARKED_READY",
+      "ts": "2026-02-26T09:50:34.766Z",
+      "meta": {
+        "checklist": "confirmed"
+      }
+    },
+    {
+      "event_id": "a43330ac-0",
+      "staff_id": "5500590901",
+      "order_id": "0C6924B9",
+      "type": "ISSUE_RAISED",
+      "ts": "2026-02-26T09:50:45.080Z",
+      "meta": {
+        "reason": "SEQUENCE_VIOLATION",
+        "from": "SENT_TO_STAFF",
+        "to": "READY"
+      }
+    },
+    {
+      "event_id": "efa94be9-5",
+      "staff_id": "5500590901",
+      "order_id": "0C6924B9",
+      "type": "ISSUE_RAISED",
+      "ts": "2026-02-26T09:51:03.003Z",
+      "meta": {
+        "reason": "SEQUENCE_VIOLATION",
+        "from": "SENT_TO_STAFF",
+        "to": "READY"
+      }
+    },
+    {
+      "event_id": "816ea3a8-4",
+      "staff_id": "5500590901",
+      "order_id": "0C6924B9",
+      "type": "ISSUE_RAISED",
+      "ts": "2026-02-26T09:51:10.186Z",
+      "meta": {
+        "reason": "SEQUENCE_VIOLATION",
+        "from": "SENT_TO_STAFF",
+        "to": "READY"
+      }
+    },
+    {
+      "event_id": "0212f233-e",
+      "staff_id": "5500590901",
+      "order_id": "0C6924B9",
+      "type": "MARKED_READY",
+      "ts": "2026-02-26T09:51:24.135Z",
+      "meta": {
+        "checklist": "confirmed"
+      }
+    },
+    {
+      "event_id": "fa680ca0-9",
+      "staff_id": "5500590901",
+      "order_id": "0C6924B9",
+      "type": "ISSUE_RAISED",
+      "ts": "2026-02-26T09:51:57.272Z",
+      "meta": {
+        "reason": "SEQUENCE_VIOLATION",
+        "from": "SENT_TO_STAFF",
+        "to": "READY"
+      }
+    },
+    {
+      "event_id": "9b7d62af-7",
+      "staff_id": "5500590901",
+      "order_id": "0C6924B9",
+      "type": "MARKED_READY",
+      "ts": "2026-02-26T09:51:59.647Z",
+      "meta": {
+        "checklist": "confirmed"
+      }
+    },
+    {
+      "event_id": "ac384501-e",
+      "staff_id": "5500590901",
+      "order_id": "0C6924B9",
+      "type": "ISSUE_RAISED",
+      "ts": "2026-02-26T09:52:01.481Z",
+      "meta": {
+        "reason": "SEQUENCE_VIOLATION",
+        "from": "SENT_TO_STAFF",
+        "to": "READY"
+      }
+    },
+    {
+      "event_id": "4af903e4-9",
+      "staff_id": "5500590901",
+      "order_id": "0C6924B9",
+      "type": "ORDER_ACCEPTED",
+      "ts": "2026-02-26T09:52:08.433Z"
+    },
+    {
+      "event_id": "b1b8374f-d",
+      "staff_id": "5500590901",
+      "order_id": "D125FA85",
+      "type": "ORDER_ACCEPTED",
+      "ts": "2026-02-26T10:01:46.222Z"
+    },
+    {
+      "event_id": "af8ed847-3",
+      "staff_id": "5500590901",
+      "order_id": "AABB1258",
+      "type": "ISSUE_RAISED",
+      "ts": "2026-02-26T10:02:02.911Z",
+      "meta": {
+        "reason": "SEQUENCE_VIOLATION",
+        "from": "SENT_TO_STAFF",
+        "to": "COOKING"
+      }
+    },
+    {
+      "event_id": "43b27599-2",
+      "staff_id": "5500590901",
+      "order_id": "AABB1258",
+      "type": "ORDER_ACCEPTED",
+      "ts": "2026-02-26T10:02:07.172Z"
+    },
+    {
+      "event_id": "c6f6a289-6",
+      "staff_id": "5500590901",
+      "order_id": "BCCFE404",
+      "type": "ORDER_ACCEPTED",
+      "ts": "2026-02-26T10:06:12.670Z"
+    },
+    {
+      "event_id": "1da4569c-3",
+      "staff_id": "5500590901",
+      "order_id": "BCCFE404",
+      "type": "COOKING_STARTED",
+      "ts": "2026-02-26T10:06:19.171Z"
+    },
+    {
+      "event_id": "c4bf88b0-f",
+      "staff_id": "5500590901",
+      "order_id": "BCCFE404",
+      "type": "MARKED_READY",
+      "ts": "2026-02-26T10:06:23.361Z",
+      "meta": {
+        "checklist": "confirmed"
+      }
+    },
+    {
+      "event_id": "3321ebab-f",
+      "staff_id": "5500590901",
+      "order_id": "BCCFE404",
+      "type": "MARKED_READY",
+      "ts": "2026-02-26T10:06:31.993Z",
+      "meta": {
+        "reason": "READY_CHECKLIST_CONFIRMED"
+      }
+    },
+    {
+      "event_id": "d8e6d6f0-a",
+      "staff_id": "5500590901",
+      "order_id": "EF3764BE",
+      "type": "ORDER_ACCEPTED",
+      "ts": "2026-02-26T10:10:18.969Z"
+    },
+    {
+      "event_id": "2bb7c152-1",
+      "staff_id": "5500590901",
+      "order_id": "EF3764BE",
+      "type": "COOKING_STARTED",
+      "ts": "2026-02-26T10:10:23.154Z"
+    },
+    {
+      "event_id": "8aeb6966-e",
+      "staff_id": "5500590901",
+      "order_id": "EF3764BE",
+      "type": "MARKED_READY",
+      "ts": "2026-02-26T10:10:38.290Z",
+      "meta": {
+        "checklist": "confirmed"
+      }
+    },
+    {
+      "event_id": "b2bf671e-a",
+      "staff_id": "5500590901",
+      "order_id": "EF3764BE",
+      "type": "DISPATCH_PACK_GENERATED",
+      "ts": "2026-02-26T10:10:50.910Z",
+      "meta": {
+        "source": "button"
+      }
+    },
+    {
+      "event_id": "033d623f-b",
+      "staff_id": "5500590901",
+      "order_id": "EF3764BE",
+      "type": "ISSUE_RAISED",
+      "ts": "2026-02-26T10:11:43.621Z",
+      "meta": {
+        "reason": "SEQUENCE_VIOLATION",
+        "from": "COOKING",
+        "to": "BOOK_DRIVER"
+      }
+    },
+    {
+      "event_id": "a3881a23-0",
+      "staff_id": "5500590901",
+      "order_id": "EF3764BE",
+      "type": "ISSUE_RAISED",
+      "ts": "2026-02-26T10:11:51.443Z",
+      "meta": {
+        "reason": "SEQUENCE_VIOLATION",
+        "from": "COOKING",
+        "to": "COOKING"
+      }
+    },
+    {
+      "event_id": "f627b4f5-8",
+      "staff_id": "5500590901",
+      "order_id": "EF3764BE",
+      "type": "MARKED_READY",
+      "ts": "2026-02-26T10:11:57.120Z",
+      "meta": {
+        "reason": "READY_CHECKLIST_CONFIRMED"
+      }
+    },
+    {
+      "event_id": "9c48d1ad-e",
+      "staff_id": "5500590901",
+      "order_id": "EF3764BE",
+      "type": "DISPATCH_PACK_GENERATED",
+      "ts": "2026-02-26T10:12:00.012Z"
+    },
+    {
+      "event_id": "79fbada6-f",
+      "staff_id": "5500590901",
+      "order_id": "EF3764BE",
+      "type": "DISPATCH_PACK_GENERATED",
+      "ts": "2026-02-26T10:12:09.726Z",
+      "meta": {
+        "source": "button"
+      }
+    },
+    {
+      "event_id": "0d344dd9-4",
+      "staff_id": "5500590901",
+      "order_id": "2AB607D6",
+      "type": "DISPATCH_PACK_GENERATED",
+      "ts": "2026-02-26T10:19:19.405Z",
+      "meta": {
+        "source": "button"
+      }
+    }
+  ]
+}
