@@ -324,6 +324,89 @@
       "meta": {
         "source": "button"
       }
+    },
+    {
+      "event_id": "a249bfeb-5",
+      "staff_id": "5500590901",
+      "order_id": "DAA8FBA0",
+      "type": "ORDER_ACCEPTED",
+      "ts": "2026-02-26T11:53:55.281Z"
+    },
+    {
+      "event_id": "ede6462d-7",
+      "staff_id": "5500590901",
+      "order_id": "DAA8FBA0",
+      "type": "COOKING_STARTED",
+      "ts": "2026-02-26T11:53:59.456Z"
+    },
+    {
+      "event_id": "d71efcfe-8",
+      "staff_id": "5500590901",
+      "order_id": "DAA8FBA0",
+      "type": "ISSUE_RAISED",
+      "ts": "2026-02-26T11:54:09.122Z",
+      "meta": {
+        "reason": "SEQUENCE_VIOLATION",
+        "from": "COOKING",
+        "to": "BOOK_DRIVER"
+      }
+    },
+    {
+      "event_id": "7e0bd543-3",
+      "staff_id": "5500590901",
+      "order_id": "DAA8FBA0",
+      "type": "MARKED_READY",
+      "ts": "2026-02-26T11:54:12.372Z",
+      "meta": {
+        "reason": "READY_CHECKLIST_CONFIRMED"
+      }
+    },
+    {
+      "event_id": "61e3e28b-3",
+      "staff_id": "5500590901",
+      "order_id": "DAA8FBA0",
+      "type": "DISPATCH_PACK_GENERATED",
+      "ts": "2026-02-26T11:54:14.884Z"
+    },
+    {
+      "event_id": "e421984d-6",
+      "staff_id": "5500590901",
+      "order_id": "DAA8FBA0",
+      "type": "DISPATCH_PACK_GENERATED",
+      "ts": "2026-02-26T11:54:21.622Z",
+      "meta": {
+        "source": "button"
+      }
+    },
+    {
+      "event_id": "099250ad-5",
+      "staff_id": "5500590901",
+      "order_id": "F3BF707A",
+      "type": "DISPATCH_PACK_GENERATED",
+      "ts": "2026-02-26T11:55:18.309Z",
+      "meta": {
+        "source": "button"
+      }
+    },
+    {
+      "event_id": "4878216a-d",
+      "staff_id": "5500590901",
+      "order_id": "F3BF707A",
+      "type": "ORDER_REJECTED",
+      "ts": "2026-02-26T11:55:29.512Z",
+      "meta": {
+        "reason": "STAFF_REJECTED"
+      }
+    },
+    {
+      "event_id": "c4806f1e-5",
+      "staff_id": "5500590901",
+      "order_id": "32AC4076",
+      "type": "DISPATCH_PACK_GENERATED",
+      "ts": "2026-02-26T11:55:50.211Z",
+      "meta": {
+        "source": "button"
+      }
     }
   ]
 }

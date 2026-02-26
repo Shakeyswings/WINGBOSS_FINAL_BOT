@@ -544,6 +544,164 @@
         "staff_message_id": 1141,
         "staff_card_body": "ORDER #7855CB6C\nSTATUS: SENT_TO_STAFF\nNEXT: ✅ Accept\n---\n• 1 × Test Wings 12 pc\n---\nTOTAL: $12.50\nMODE: DELIVERY\nADDR: Test Address\nPHONE: 012345678"
       }
+    },
+    {
+      "order_id": "222ADA5B",
+      "user_id": "5500590901",
+      "created_at": "2026-02-26T11:53:13.398Z",
+      "updated_at": "2026-02-26T11:53:13.398Z",
+      "status": "DRAFT",
+      "items": [],
+      "totals": {
+        "food_subtotal_usd": 0,
+        "fees_usd": 0,
+        "grand_total_usd": 0
+      }
+    },
+    {
+      "order_id": "DAA8FBA0",
+      "user_id": "5500590901",
+      "created_at": "2026-02-26T11:53:13.394Z",
+      "updated_at": "2026-02-26T11:54:14.471Z",
+      "status": "BOOK_DRIVER",
+      "items": [
+        {
+          "sku": "test:wings:12",
+          "name_en": "Test Wings 12 pc",
+          "qty": 1,
+          "unit_price_usd": 12.5
+        }
+      ],
+      "totals": {
+        "food_subtotal_usd": 12.5,
+        "fees_usd": 0,
+        "grand_total_usd": 12.5
+      },
+      "delivery": {
+        "mode": "delivery",
+        "address": "Test Address",
+        "phone": "012345678",
+        "recipient_name": "Test Customer",
+        "location": {
+          "lat": 11.5564,
+          "lon": 104.9282
+        }
+      },
+      "payment": {
+        "method": "bank_transfer",
+        "proof_file_id": "TEST_PROOF_FILE_ID"
+      },
+      "staff": {
+        "staff_chat_id": -1003653716341,
+        "staff_message_id": 1142,
+        "staff_card_body": "ORDER #DAA8FBA0\nSTATUS: SENT_TO_STAFF\nNEXT: ✅ Accept\n---\n• 1 × Test Wings 12 pc\n---\nTOTAL: $12.50\nMODE: DELIVERY\nADDR: Test Address\nPHONE: 012345678",
+        "ready_checklist_confirmed": true
+      }
+    },
+    {
+      "order_id": "F3BF707A",
+      "user_id": "5500590901",
+      "created_at": "2026-02-26T11:53:33.206Z",
+      "updated_at": "2026-02-26T11:55:29.095Z",
+      "status": "REJECTED",
+      "items": [
+        {
+          "sku": "test:wings:12",
+          "name_en": "Test Wings 12 pc",
+          "qty": 1,
+          "unit_price_usd": 12.5
+        }
+      ],
+      "totals": {
+        "food_subtotal_usd": 12.5,
+        "fees_usd": 0,
+        "grand_total_usd": 12.5
+      },
+      "delivery": {
+        "mode": "delivery",
+        "address": "Test Address",
+        "phone": "012345678",
+        "recipient_name": "Test Customer",
+        "location": {
+          "lat": 11.5564,
+          "lon": 104.9282
+        }
+      },
+      "payment": {
+        "method": "bank_transfer",
+        "proof_file_id": "TEST_PROOF_FILE_ID"
+      },
+      "staff": {
+        "staff_chat_id": -1003653716341,
+        "staff_message_id": 1143,
+        "staff_card_body": "ORDER #F3BF707A\nSTATUS: SENT_TO_STAFF\nNEXT: ✅ Accept\n---\n• 1 × Test Wings 12 pc\n---\nTOTAL: $12.50\nMODE: DELIVERY\nADDR: Test Address\nPHONE: 012345678"
+      }
+    },
+    {
+      "order_id": "32AC4076",
+      "user_id": "5500590901",
+      "created_at": "2026-02-26T11:55:38.430Z",
+      "updated_at": "2026-02-26T11:55:38.845Z",
+      "status": "SENT_TO_STAFF",
+      "items": [
+        {
+          "sku": "test:wings:12",
+          "name_en": "Test Wings 12 pc",
+          "qty": 1,
+          "unit_price_usd": 12.5
+        }
+      ],
+      "totals": {
+        "food_subtotal_usd": 12.5,
+        "fees_usd": 0,
+        "grand_total_usd": 12.5
+      },
+      "delivery": {
+        "mode": "delivery",
+        "address": "Test Address",
+        "phone": "012345678",
+        "recipient_name": "Test Customer",
+        "location": {
+          "lat": 11.5564,
+          "lon": 104.9282
+        }
+      },
+      "payment": {
+        "method": "bank_transfer",
+        "proof_file_id": "TEST_PROOF_FILE_ID"
+      },
+      "staff": {
+        "staff_chat_id": -1003653716341,
+        "staff_message_id": 1147,
+        "staff_card_body": "ORDER #32AC4076\nSTATUS: SENT_TO_STAFF\nNEXT: ✅ Accept\n---\n• 1 × Test Wings 12 pc\n---\nTOTAL: $12.50\nMODE: DELIVERY\nADDR: Test Address\nPHONE: 012345678"
+      }
+    },
+    {
+      "order_id": "9F16DB0B",
+      "user_id": "5500590901",
+      "created_at": "2026-02-26T11:56:58.672Z",
+      "updated_at": "2026-02-26T11:57:13.105Z",
+      "status": "AWAITING_PAYMENT",
+      "items": [
+        {
+          "sku": "wings:boneless:20",
+          "name_en": "Wings boneless 20 pc",
+          "qty": 1,
+          "unit_price_usd": 9.5,
+          "meta": {
+            "wingType": "boneless",
+            "size": "20"
+          }
+        }
+      ],
+      "totals": {
+        "food_subtotal_usd": 9.5,
+        "fees_usd": 0,
+        "grand_total_usd": 9.5
+      },
+      "delivery": {
+        "mode": "delivery"
+      }
     }
   ]
 }
