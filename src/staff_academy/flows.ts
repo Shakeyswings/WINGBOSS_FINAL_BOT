@@ -17,14 +17,6 @@ function isAllowed(ctx: WBContext) {
   return allow.has(id);
 }
 
-function lang(ctx: WBContext) {
-  return (ctx.session.lang ?? ctx.env.DEFAULT_LANG) === "km" ? "km" : "en";
-}
-
-function tr(ctx: WBContext, kmText: string, enText: string) {
-  return lang(ctx) === "km" ? kmText : enText;
-}
-
 function cbData(ctx: WBContext): string {
   const d = (ctx.update as any)?.callback_query?.data;
   return typeof d === "string" ? d : "";
@@ -67,7 +59,9 @@ export async function academyFlow(ctx: WBContext) {
 
   if (step === "set_role") {
     const nextRole = a as Role;
-    if (!ROLES.includes(nextRole)) return respond(ctx, "Invalid role.", Markup.inlineKeyboard([[Markup.button.callback("⬅️ Back", "academy:role")]]));
+    if (!ROLES.includes(nextRole)) {
+      return respond(ctx, "Invalid role.", Markup.inlineKeyboard([[Markup.button.callback("⬅️ Back", "academy:role")]]));
+    }
     await setRole(sid, nextRole);
     return respond(ctx, `✅ Role set: ${nextRole}`, Markup.inlineKeyboard([[Markup.button.callback("🧠 Start Drill", "academy:drill")]]));
   }
@@ -75,14 +69,19 @@ export async function academyFlow(ctx: WBContext) {
   if (step === "drill") {
     const bank = await loadBank();
     const qs = pickForRole(bank, role);
-    if (qs.length === 0) return respond(ctx, "No questions yet for this role.", Markup.inlineKeyboard([[Markup.button.callback("🧑‍🍳 Set Role", "academy:role")]]));
+    if (qs.length === 0) {
+      return respond(ctx, "No questions yet for this role.", Markup.inlineKeyboard([[Markup.button.callback("🧑‍🍳 Set Role", "academy:role")]]));
+    }
 
     const q = qs[Math.floor(Math.random() * qs.length)];
-    const prompt = lang(ctx) === "km" ? q.prompt_km : q.prompt_en;
+    const prompt = `🧠 Quick Drill (${role})\n\n🇰🇭 ${q.prompt_km}\n🇺🇸 ${q.prompt_en}`;
 
-    const rows = q.options.map((o) => [Markup.button.callback(lang(ctx) === "km" ? o.km : o.en, `academy:answer:${q.id}:${o.id}`)]);
+    const rows = q.options.map((o) => [
+      Markup.button.callback(`${o.km}  •  ${o.en}`, `academy:answer:${q.id}:${o.id}`)
+    ]).map((btn) => [btn]);
+
     rows.push([Markup.button.callback("⬅️ Home", "academy:home")]);
-    return respond(ctx, `🧠 Quick Drill (${role})\n\n${prompt}`, Markup.inlineKeyboard(rows));
+    return respond(ctx, prompt, Markup.inlineKeyboard(rows));
   }
 
   if (step === "answer") {
@@ -105,17 +104,26 @@ export async function academyFlow(ctx: WBContext) {
       passed: g.passed
     });
 
-    const notes = lang(ctx) === "km" ? (q.notes_km ?? "") : (q.notes_en ?? "");
+    const notes = (q.notes_km || q.notes_en) ? `\n\n📌 ${q.notes_km ?? ""}\n📌 ${q.notes_en ?? ""}` : "";
     const msg = g.passed ? "✅ Correct." : "❌ Not correct.";
-    const extra = notes ? `\n\n📌 ${notes}` : "";
-    return respond(ctx, `${msg}${extra}`, Markup.inlineKeyboard([[Markup.button.callback("🧠 Next Drill", "academy:drill")], [Markup.button.callback("🏠 Home", "academy:home")]]));
+    return respond(
+      ctx,
+      `${msg}${notes}`,
+      Markup.inlineKeyboard([
+        [Markup.button.callback("🧠 Next Drill", "academy:drill")],
+        [Markup.button.callback("🏠 Home", "academy:home")]
+      ])
+    );
   }
 
   if (step === "progress") {
     return respond(
       ctx,
-      `🧾 Progress\nRole: ${role}\n\n(Quiz attempts logged to data/staff_quiz_attempts.json)`,
-      Markup.inlineKeyboard([[Markup.button.callback("🧠 Quick Drill", "academy:drill")], [Markup.button.callback("🏠 Home", "academy:home")]])
+      `🧾 Progress\nRole: ${role}\n\nAttempts are logged in:\n/data/staff_quiz_attempts.json`,
+      Markup.inlineKeyboard([
+        [Markup.button.callback("🧠 Quick Drill", "academy:drill")],
+        [Markup.button.callback("🏠 Home", "academy:home")]
+      ])
     );
   }
 

@@ -1,53 +1,238 @@
 {
   "version": 1,
   "questions": [
+    // ======================
+    // FRYER (10)
+    // ======================
     {
-      "id": "FRY_OIL_TEMP_CHICKEN",
+      "id": "FRY_01_OIL_TEMP_BEFORE_CHICKEN",
       "role": "Fryer",
       "topic": "Oil Temperature",
-      "prompt_en": "Before frying chicken, oil temperature should be:",
       "prompt_km": "មុនចៀនមាន់ សីតុណ្ហភាពប្រេងត្រូវជា៖",
+      "prompt_en": "Before frying chicken, the oil temperature should be:",
       "options": [
-        { "id": "A", "en": "Set by SOP (manager value)", "km": "តាម SOP (កំណត់ដោយអ្នកគ្រប់គ្រង)", "correct": true },
-        { "id": "B", "en": "Any temperature is fine", "km": "សីតុណ្ហភាពណាក៏បាន", "correct": false },
-        { "id": "C", "en": "Only after smoke appears", "km": "រង់ចាំឲ្យមានផ្សែងសិន", "correct": false }
+        { "id": "A", "km": "តាម SOP (ស្លាកនៅកន្លែង fryer) ✅", "en": "Per SOP station label ✅", "correct": true },
+        { "id": "B", "km": "កំដៅតិចៗក៏បាន", "en": "Any low temperature is fine", "correct": false },
+        { "id": "C", "km": "រង់ចាំឲ្យមានផ្សែងសិន", "en": "Wait until you see smoke", "correct": false }
       ],
-      "notes_en": "Replace this with your exact SOP target range (°C/°F) once confirmed.",
-      "notes_km": "សូមជំនួសជាមួយតម្លៃ SOP ពិត (°C/°F) បន្ទាប់ពីបញ្ជាក់។"
+      "notes_km": "👉 សូមជំនួស SOP តម្លៃពិត (°C/°F) នៅស្លាក fryer ដើម្បី drill ឲ្យត្រឹមត្រូវ។",
+      "notes_en": "👉 Replace with your actual SOP target (°C/°F) from the fryer station label."
     },
     {
-      "id": "FRY_OIL_TEMP_FRIES",
+      "id": "FRY_02_OIL_TEMP_BEFORE_FRIES",
       "role": "Fryer",
       "topic": "Oil Temperature",
-      "prompt_en": "Before frying fries, oil temperature should be:",
-      "prompt_km": "មុនចៀនដំឡូង សីតុណ្ហភាពប្រេងត្រូវជា៖",
+      "prompt_km": "មុនចៀនដំឡូង (fries) សីតុណ្ហភាពប្រេងត្រូវជា៖",
+      "prompt_en": "Before frying fries, the oil temperature should be:",
       "options": [
-        { "id": "A", "en": "Set by SOP (manager value)", "km": "តាម SOP (កំណត់ដោយអ្នកគ្រប់គ្រង)", "correct": true },
-        { "id": "B", "en": "As low as possible", "km": "ទាបបំផុត", "correct": false }
-      ],
-      "notes_en": "Replace with your SOP temperature range.",
-      "notes_km": "សូមជំនួសជាមួយជួរសីតុណ្ហភាព SOP។"
-    },
-    {
-      "id": "WAITRESS_COMPLAINT_FLOW",
-      "role": "Waitress",
-      "topic": "Customer Handling",
-      "prompt_en": "A customer complains their order is wrong. What is the correct first step?",
-      "prompt_km": "ភ្ញៀវត្អូញត្អែរ ថាបញ្ជាទិញខុស។ ជំហានដំបូងត្រឹមត្រូវគឺអ្វី?",
-      "options": [
-        { "id": "A", "en": "Apologize + confirm details (order + item) calmly", "km": "សុំទោស + បញ្ជាក់ព័ត៌មាន (order + item) ដោយស្ងប់ស្ងាត់", "correct": true },
-        { "id": "B", "en": "Argue and blame the kitchen", "km": "ជជែកទាស់ និងបន្ទោសផ្ទះបាយ", "correct": false }
+        { "id": "A", "km": "តាម SOP (ស្លាកនៅកន្លែង fryer) ✅", "en": "Per SOP station label ✅", "correct": true },
+        { "id": "B", "km": "ទាបបំផុតដើម្បីសន្សំប្រេង", "en": "As low as possible to save oil", "correct": false }
       ]
     },
     {
-      "id": "BARTENDER_ID_CHECK",
-      "role": "Bartender",
-      "topic": "Compliance",
-      "prompt_en": "Before serving alcohol, what should you do if the customer looks underage?",
-      "prompt_km": "មុនបម្រើស្រា បើភ្ញៀវមើលទៅក្មេង ត្រូវធ្វើអ្វី?",
+      "id": "FRY_03_OVERLOAD_BASKET",
+      "role": "Fryer",
+      "topic": "Quality",
+      "prompt_km": "បញ្ហាធំជាងគេបើដាក់សាច់/ដំឡូងច្រើនពេកក្នុង basket គឺអ្វី?",
+      "prompt_en": "What’s the biggest problem if you overload a fryer basket?",
       "options": [
-        { "id": "A", "en": "Request ID and follow policy", "km": "សុំប័ណ្ណសម្គាល់ និងអនុវត្តតាមគោលការណ៍", "correct": true },
-        { "id": "B", "en": "Serve anyway to avoid conflict", "km": "បម្រើទៅ ដើម្បីជៀសវាងជម្លោះ", "correct": false }
+        { "id": "A", "km": "សីតុណ្ហភាពធ្លាក់ → មិន crispy/ចៀនមិនស្មើ ✅", "en": "Temp drops → not crispy/uneven cook ✅", "correct": true },
+        { "id": "B", "km": "ធ្វើឲ្យលឿនជាងមុន", "en": "It makes cooking faster", "correct": false }
+      ]
+    },
+    {
+      "id": "FRY_04_SHAKE_DRAIN_STEP",
+      "role": "Fryer",
+      "topic": "Process",
+      "prompt_km": "ក្រោយយកចេញពីប្រេង ត្រូវធ្វើអ្វីមុនដាក់ចូល packaging?",
+      "prompt_en": "After lifting food from oil, what should you do before packaging?",
+      "options": [
+        { "id": "A", "km": "អោយទឹកប្រេងច្រោះ/រង់ចាំ drain + shake តាម SOP ✅", "en": "Drain/shake per SOP ✅", "correct": true },
+        { "id": "B", "km": "ដាក់ប៉ាន់ភ្លាមៗ", "en": "Pack immediately", "correct": false }
+      ]
+    },
+    {
+      "id": "FRY_05_OIL_FILTER_WHEN",
+      "role": "Fryer",
+      "topic": "Oil Management",
+      "prompt_km": "តើពេលណាត្រូវ filter/សំអាតប្រេង?",
+      "prompt_en": "When should you filter/clean fryer oil?",
+      "options": [
+        { "id": "A", "km": "តាម SOP schedule (shift/ថ្ងៃ) ✅", "en": "Per SOP schedule (shift/day) ✅", "correct": true },
+        { "id": "B", "km": "តែពេលខ្មៅខ្លាំងហើយ", "en": "Only when it is extremely black", "correct": false }
+      ],
+      "notes_km": "SOP schedule អាចខុសគ្នាតាមសាខា/ម៉ាស៊ីន។",
+      "notes_en": "SOP schedule can vary by branch/equipment."
+    },
+    {
+      "id": "FRY_06_RAW_COOKED_SEPARATION",
+      "role": "Fryer",
+      "topic": "Food Safety",
+      "prompt_km": "ការពារការឆ្លងមេរោគ (cross contamination) ត្រូវធ្វើអ្វី?",
+      "prompt_en": "To prevent cross-contamination, what must you do?",
+      "options": [
+        { "id": "A", "km": "បំបែកឧបករណ៍/ថាស raw vs cooked + លាងដៃ/ប្ដូរដៃស្រោម ✅", "en": "Separate raw vs cooked tools/trays + wash/change gloves ✅", "correct": true },
+        { "id": "B", "km": "ប្រើថាសដូចគ្នាបាន", "en": "Using the same tray is fine", "correct": false }
+      ]
+    },
+    {
+      "id": "FRY_07_HOLDING_TIME_FRIES",
+      "role": "Fryer",
+      "topic": "Holding",
+      "prompt_km": "Fries ចៀនរួចអាចទុកលើ warmer បានប៉ុន្មាន? (តាម SOP)",
+      "prompt_en": "How long can cooked fries be held in the warmer? (per SOP)",
+      "options": [
+        { "id": "A", "km": "តាម SOP holding time ✅", "en": "Per SOP holding time ✅", "correct": true },
+        { "id": "B", "km": "ទុកបានពេញ shift", "en": "All shift is fine", "correct": false }
+      ]
+    },
+    {
+      "id": "FRY_08_OIL_SMELL_COLOR",
+      "role": "Fryer",
+      "topic": "Quality",
+      "prompt_km": "សញ្ញាណាធ្វើអោយត្រូវជូនដំណឹង Manager អំពីប្រេង?",
+      "prompt_en": "Which sign means you should notify a manager about the oil?",
+      "options": [
+        { "id": "A", "km": "ក្លិនខ្លាំង/ពណ៌ខ្មៅខ្លាំង/foam ខ្លាំង ✅", "en": "Strong smell/dark color/heavy foam ✅", "correct": true },
+        { "id": "B", "km": "មើលទៅធម្មតា", "en": "Looks normal", "correct": false }
+      ]
+    },
+    {
+      "id": "FRY_09_TIMER_DISCIPLINE",
+      "role": "Fryer",
+      "topic": "Process",
+      "prompt_km": "ហេតុអ្វីត្រូវប្រើ timer តាម SOP?",
+      "prompt_en": "Why must you use the timer per SOP?",
+      "options": [
+        { "id": "A", "km": "ស្តង់ដារ + ស្មើគ្នាទាំងអស់ ✅", "en": "Standardized + consistent results ✅", "correct": true },
+        { "id": "B", "km": "តាមអារម្មណ៍គ្រប់គ្រាន់", "en": "Guessing is good enough", "correct": false }
+      ]
+    },
+    {
+      "id": "FRY_10_SALT_SEASONING",
+      "role": "Fryer",
+      "topic": "Quality",
+      "prompt_km": "Fries ត្រូវលាយអំបិលពេលណា? (តាម SOP)",
+      "prompt_en": "When should fries be salted? (per SOP)",
+      "options": [
+        { "id": "A", "km": "តាម SOP (ទើបចេញពី fryer/បន្ទាប់ drain) ✅", "en": "Per SOP (right after fryer/drain) ✅", "correct": true },
+        { "id": "B", "km": "មុនចៀន", "en": "Before frying", "correct": false }
+      ]
+    },
+
+    // ======================
+    // COOK (10)
+    // ======================
+    {
+      "id": "COOK_01_INTERNAL_TEMP_RULE",
+      "role": "Cook",
+      "topic": "Food Safety",
+      "prompt_km": "ការពិនិត្យសីតុណ្ហភាពសាច់ខាងក្នុងត្រូវធ្វើពេលណា? (តាម SOP)",
+      "prompt_en": "When must you check internal product temperature? (per SOP)",
+      "options": [
+        { "id": "A", "km": "តាម SOP checkpoint (batch/shift) ✅", "en": "Per SOP checkpoints (batch/shift) ✅", "correct": true },
+        { "id": "B", "km": "មិនចាំបាច់ ព្រោះមើលទៅចម្អិនហើយ", "en": "Not needed if it looks cooked", "correct": false }
+      ],
+      "notes_km": "👉 SOP temp target ខុសគ្នាតាម product។ ដាក់តម្លៃ SOP ពិតនៅស្លាកផ្ទះបាយ។",
+      "notes_en": "👉 SOP targets vary by product. Put your real SOP targets on the kitchen label."
+    },
+    {
+      "id": "COOK_02_THERMOMETER_SANITIZE",
+      "role": "Cook",
+      "topic": "Food Safety",
+      "prompt_km": "មុន/ក្រោយចាក់សីតុណ្ហភាព ត្រូវធ្វើអ្វីជាមួយ thermometer?",
+      "prompt_en": "Before/after probing temperature, what must you do with the thermometer?",
+      "options": [
+        { "id": "A", "km": "សំអាត/សម្លាប់មេរោគ probe ✅", "en": "Sanitize the probe ✅", "correct": true },
+        { "id": "B", "km": "លាងតែពេលមានពេលទេ", "en": "Only clean when you have time", "correct": false }
+      ]
+    },
+    {
+      "id": "COOK_03_RAW_COOKED_TOOLS",
+      "role": "Cook",
+      "topic": "Food Safety",
+      "prompt_km": "ឧបករណ៍/ក្តារកាប់ raw និង cooked ត្រូវបែបណា?",
+      "prompt_en": "How should raw vs cooked tools/boards be handled?",
+      "options": [
+        { "id": "A", "km": "បំបែកជាច្បាស់ (color/label) ✅", "en": "Clearly separated (color/label) ✅", "correct": true },
+        { "id": "B", "km": "ប្រើរួមបាន បើជូតលឿនៗ", "en": "Share if you wipe quickly", "correct": false }
+      ]
+    },
+    {
+      "id": "COOK_04_GLOVES_CHANGE",
+      "role": "Cook",
+      "topic": "Hygiene",
+      "prompt_km": "តើពេលណាត្រូវប្ដូរដៃស្រោម (gloves)?",
+      "prompt_en": "When must you change gloves?",
+      "options": [
+        { "id": "A", "km": "ប្ដូរពេលប្តូរភារកិច្ច/ពី raw ទៅ cooked/បន្ទាប់ប៉ះទូរស័ព្ទ ✅", "en": "When changing tasks/raw→cooked/after touching phone ✅", "correct": true },
+        { "id": "B", "km": "ថ្ងៃមួយប្ដូរម្តងគ្រប់គ្រាន់", "en": "Once a day is fine", "correct": false }
+      ]
+    },
+    {
+      "id": "COOK_05_MISE_PLACE",
+      "role": "Cook",
+      "topic": "Station Discipline",
+      "prompt_km": "មុនចាប់ផ្តើម cook shift ត្រូវធ្វើអ្វី?",
+      "prompt_en": "Before starting a cook shift, what must you do?",
+      "options": [
+        { "id": "A", "km": "Prep + station check តាម SOP (stock/tools/labels) ✅", "en": "Prep + station check per SOP (stock/tools/labels) ✅", "correct": true },
+        { "id": "B", "km": "ចាប់ផ្តើម cook ទៅទេ", "en": "Just start cooking", "correct": false }
+      ]
+    },
+    {
+      "id": "COOK_06_BATCH_LABEL",
+      "role": "Cook",
+      "topic": "Compliance",
+      "prompt_km": "Batch ដែល prep រួច ត្រូវមានអ្វី?",
+      "prompt_en": "Prepared batches must have what?",
+      "options": [
+        { "id": "A", "km": "Label (ពេល prep/expiry/initial) តាម SOP ✅", "en": "Label (prep/expiry/initial) per SOP ✅", "correct": true },
+        { "id": "B", "km": "មិនចាំបាច់ label", "en": "No label needed", "correct": false }
+      ]
+    },
+    {
+      "id": "COOK_07_REHEAT_RULE",
+      "role": "Cook",
+      "topic": "Food Safety",
+      "prompt_km": "បើត្រូវ reheat ត្រូវអនុវត្តតាមអ្វី?",
+      "prompt_en": "If reheating is required, what must you follow?",
+      "options": [
+        { "id": "A", "km": "Reheat SOP (time/temp + discard rules) ✅", "en": "Reheat SOP (time/temp + discard rules) ✅", "correct": true },
+        { "id": "B", "km": "កំដៅប៉ុន្មានក៏បាន", "en": "Any reheat is fine", "correct": false }
+      ]
+    },
+    {
+      "id": "COOK_08_ALLERGEN_ALERT",
+      "role": "Cook",
+      "topic": "Allergens",
+      "prompt_km": "បើ order មាន allergen note ត្រូវធ្វើអ្វី?",
+      "prompt_en": "If an order has an allergen note, what should you do?",
+      "options": [
+        { "id": "A", "km": "ជូនដំណឹង manager + បំបែក tools/area តាម SOP ✅", "en": "Notify manager + separate tools/area per SOP ✅", "correct": true },
+        { "id": "B", "km": "មិនអើពើ", "en": "Ignore it", "correct": false }
+      ]
+    },
+    {
+      "id": "COOK_09_OOS_STEP",
+      "role": "Cook",
+      "topic": "Ops",
+      "prompt_km": "បើ ingredient អស់ stock ត្រូវធ្វើអ្វី?",
+      "prompt_en": "If an ingredient is out of stock, what should you do?",
+      "options": [
+        { "id": "A", "km": "Update OOS (ជូនដំណឹង manager/mark OOS) ✅", "en": "Update OOS (notify manager/mark OOS) ✅", "correct": true },
+        { "id": "B", "km": "ស្ងៀមៗ ហើយ substitute ដោយខ្លួនឯង", "en": "Silent substitute yourself", "correct": false }
+      ]
+    },
+    {
+      "id": "COOK_10_FINAL_CHECK_BEFORE_PASS",
+      "role": "Cook",
+      "topic": "Quality",
+      "prompt_km": "មុន pass ទៅ packing ត្រូវធ្វើអ្វី?",
+      "prompt_en": "Before passing to packing, what should you do?",
+      "options": [
+        { "id": "A", "km": "Final visual check តាម SOP (count/quality) ✅", "en": "Final visual check per SOP (count/quality) ✅", "correct": true },
+        { "id": "B", "km": "អោយ packing កែខ្លួនឯង", "en": "Let packing fix it", "correct": false }
       ]
     }
   ]
