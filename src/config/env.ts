@@ -30,8 +30,8 @@ const EnvSchema = z.object({
 
   OWNER_NOTIFY_ISSUES: z.coerce.number().int().min(0).max(1).default(0).transform((v) => v === 1),
 
-  # Academy
-  STAFF_ALLOWLIST_IDS: z.string().optional(), // csv of staff telegram IDs
+  // Staff Academy
+  STAFF_ALLOWLIST_IDS: z.string().optional(), // comma-separated Telegram IDs
   ACADEMY_PASS_PERCENT: z.coerce.number().int().min(50).max(100).default(80)
 });
 
