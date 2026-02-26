@@ -1,1 +1,9 @@
-{ "version": 1, "profiles": {} }
+{
+  "version": 1,
+  "profiles": {
+    "5500590901": {
+      "role": "Fryer",
+      "updated_at": "2026-02-26T17:24:43.732Z"
+    }
+  }
+}
