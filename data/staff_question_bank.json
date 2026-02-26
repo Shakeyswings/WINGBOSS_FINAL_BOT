@@ -1,0 +1,54 @@
+{
+  "version": 1,
+  "questions": [
+    {
+      "id": "FRY_OIL_TEMP_CHICKEN",
+      "role": "Fryer",
+      "topic": "Oil Temperature",
+      "prompt_en": "Before frying chicken, oil temperature should be:",
+      "prompt_km": "មុនចៀនមាន់ សីតុណ្ហភាពប្រេងត្រូវជា៖",
+      "options": [
+        { "id": "A", "en": "Set by SOP (manager value)", "km": "តាម SOP (កំណត់ដោយអ្នកគ្រប់គ្រង)", "correct": true },
+        { "id": "B", "en": "Any temperature is fine", "km": "សីតុណ្ហភាពណាក៏បាន", "correct": false },
+        { "id": "C", "en": "Only after smoke appears", "km": "រង់ចាំឲ្យមានផ្សែងសិន", "correct": false }
+      ],
+      "notes_en": "Replace this with your exact SOP target range (°C/°F) once confirmed.",
+      "notes_km": "សូមជំនួសជាមួយតម្លៃ SOP ពិត (°C/°F) បន្ទាប់ពីបញ្ជាក់។"
+    },
+    {
+      "id": "FRY_OIL_TEMP_FRIES",
+      "role": "Fryer",
+      "topic": "Oil Temperature",
+      "prompt_en": "Before frying fries, oil temperature should be:",
+      "prompt_km": "មុនចៀនដំឡូង សីតុណ្ហភាពប្រេងត្រូវជា៖",
+      "options": [
+        { "id": "A", "en": "Set by SOP (manager value)", "km": "តាម SOP (កំណត់ដោយអ្នកគ្រប់គ្រង)", "correct": true },
+        { "id": "B", "en": "As low as possible", "km": "ទាបបំផុត", "correct": false }
+      ],
+      "notes_en": "Replace with your SOP temperature range.",
+      "notes_km": "សូមជំនួសជាមួយជួរសីតុណ្ហភាព SOP។"
+    },
+    {
+      "id": "WAITRESS_COMPLAINT_FLOW",
+      "role": "Waitress",
+      "topic": "Customer Handling",
+      "prompt_en": "A customer complains their order is wrong. What is the correct first step?",
+      "prompt_km": "ភ្ញៀវត្អូញត្អែរ ថាបញ្ជាទិញខុស។ ជំហានដំបូងត្រឹមត្រូវគឺអ្វី?",
+      "options": [
+        { "id": "A", "en": "Apologize + confirm details (order + item) calmly", "km": "សុំទោស + បញ្ជាក់ព័ត៌មាន (order + item) ដោយស្ងប់ស្ងាត់", "correct": true },
+        { "id": "B", "en": "Argue and blame the kitchen", "km": "ជជែកទាស់ និងបន្ទោសផ្ទះបាយ", "correct": false }
+      ]
+    },
+    {
+      "id": "BARTENDER_ID_CHECK",
+      "role": "Bartender",
+      "topic": "Compliance",
+      "prompt_en": "Before serving alcohol, what should you do if the customer looks underage?",
+      "prompt_km": "មុនបម្រើស្រា បើភ្ញៀវមើលទៅក្មេង ត្រូវធ្វើអ្វី?",
+      "options": [
+        { "id": "A", "en": "Request ID and follow policy", "km": "សុំប័ណ្ណសម្គាល់ និងអនុវត្តតាមគោលការណ៍", "correct": true },
+        { "id": "B", "en": "Serve anyway to avoid conflict", "km": "បម្រើទៅ ដើម្បីជៀសវាងជម្លោះ", "correct": false }
+      ]
+    }
+  ]
+}

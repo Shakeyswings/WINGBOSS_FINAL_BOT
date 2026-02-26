@@ -1,8 +1,8 @@
 import { Markup } from "telegraf";
 import type { WBContext } from "../bot.ts";
-import { ACADEMY_MODULES, type AcademyModuleId } from "./modules.ts";
-import { getProgress, markComplete, setCertified } from "./progress.repo.ts";
-import { grade } from "./quiz.ts";
+import { loadBank, pickForRole, gradeQuestion, type Role } from "./bank.ts";
+import { getRole, setRole } from "./profile.repo.ts";
+import { logAttempt } from "./attempts.repo.ts";
 
 function staffId(ctx: WBContext) {
   return String(ctx.from?.id ?? "");
@@ -17,12 +17,12 @@ function isAllowed(ctx: WBContext) {
   return allow.has(id);
 }
 
-function pickLang(ctx: WBContext) {
+function lang(ctx: WBContext) {
   return (ctx.session.lang ?? ctx.env.DEFAULT_LANG) === "km" ? "km" : "en";
 }
 
-function t(ctx: WBContext, km: string, en: string) {
-  return pickLang(ctx) === "km" ? km : en;
+function tr(ctx: WBContext, kmText: string, enText: string) {
+  return lang(ctx) === "km" ? kmText : enText;
 }
 
 function cbData(ctx: WBContext): string {
@@ -30,150 +30,93 @@ function cbData(ctx: WBContext): string {
   return typeof d === "string" ? d : "";
 }
 
-function msgText(ctx: WBContext): string {
-  const m = (ctx.message as any)?.text;
-  return typeof m === "string" ? m : "";
-}
-
-function normalizeStepFromText(text: string): string | null {
-  const s = text.trim().toLowerCase();
-  if (s.includes("continue")) return "academy:modules";
-  if (s.includes("modules")) return "academy:modules";
-  if (s.includes("progress")) return "academy:progress";
-  return null;
-}
-
 async function respond(ctx: WBContext, text: string, keyboard?: any) {
-  // Remove any leftover reply keyboard (e.g., Share Location) so Academy feels responsive.
-  // Then post the academy UI as INLINE buttons (callbacks).
   await ctx.reply(text, Markup.removeKeyboard());
   if (keyboard) return ctx.reply("—", keyboard);
-  return;
 }
+
+const ROLES: Role[] = ["Cook", "Fryer", "Waitress", "Bartender", "Manager"];
 
 export async function academyFlow(ctx: WBContext) {
   if (!isAllowed(ctx)) return ctx.reply("⛔ Staff Academy is gated.");
 
-  // Accept BOTH:
-  // - inline callback data: academy:...
-  // - fallback text buttons: "Continue Training", etc.
-  let data = cbData(ctx);
-  if (!data) {
-    const fallback = normalizeStepFromText(msgText(ctx));
-    if (fallback) data = fallback;
-  }
-  if (!data) data = "academy:home";
-
+  const data = cbData(ctx) || "academy:home";
   const parts = data.split(":");
   const step = parts[1] ?? "home";
   const a = parts[2];
   const b = parts[3];
 
   const sid = staffId(ctx);
-  const prog = await getProgress(sid);
+  const role = (await getRole(sid)) ?? "Cook";
 
   if (step === "home") {
     const kb = Markup.inlineKeyboard([
-      [Markup.button.callback("✅ Continue Training", "academy:modules")],
-      [Markup.button.callback("📘 Modules", "academy:modules")],
+      [Markup.button.callback("✅ Continue Training", "academy:drill")],
+      [Markup.button.callback("🧠 Quick Drill", "academy:drill")],
+      [Markup.button.callback(`🧑‍🍳 Role: ${role}`, "academy:role")],
       [Markup.button.callback("🧾 My Progress", "academy:progress")]
     ]);
     return respond(ctx, "🎓 Staff Academy\nTrain → Drill → Verify → Certify", kb);
   }
 
-  if (step === "modules") {
-    const m1Done = Boolean(prog.completed["M1_SOP_SEQUENCE"]);
-    const rows = ACADEMY_MODULES.map((m) => {
-      const done = Boolean(prog.completed[m.id]);
-      const locked = m.id === "M2_READY_CHECKLIST" && !m1Done;
-      const label = locked
-        ? `🔒 ${t(ctx, m.name_km, m.name_en)}`
-        : `${done ? "✅" : "⬜️"} ${t(ctx, m.name_km, m.name_en)}`;
-      const cb = locked ? "academy:locked" : `academy:lesson:${m.id}:0`;
-      return [Markup.button.callback(label, cb)];
-    });
+  if (step === "role") {
+    const rows = ROLES.map((r) => [Markup.button.callback(r, `academy:set_role:${r}`)]);
+    rows.push([Markup.button.callback("⬅️ Back", "academy:home")]);
+    return respond(ctx, "Choose your role:", Markup.inlineKeyboard(rows));
+  }
+
+  if (step === "set_role") {
+    const nextRole = a as Role;
+    if (!ROLES.includes(nextRole)) return respond(ctx, "Invalid role.", Markup.inlineKeyboard([[Markup.button.callback("⬅️ Back", "academy:role")]]));
+    await setRole(sid, nextRole);
+    return respond(ctx, `✅ Role set: ${nextRole}`, Markup.inlineKeyboard([[Markup.button.callback("🧠 Start Drill", "academy:drill")]]));
+  }
+
+  if (step === "drill") {
+    const bank = await loadBank();
+    const qs = pickForRole(bank, role);
+    if (qs.length === 0) return respond(ctx, "No questions yet for this role.", Markup.inlineKeyboard([[Markup.button.callback("🧑‍🍳 Set Role", "academy:role")]]));
+
+    const q = qs[Math.floor(Math.random() * qs.length)];
+    const prompt = lang(ctx) === "km" ? q.prompt_km : q.prompt_en;
+
+    const rows = q.options.map((o) => [Markup.button.callback(lang(ctx) === "km" ? o.km : o.en, `academy:answer:${q.id}:${o.id}`)]);
     rows.push([Markup.button.callback("⬅️ Home", "academy:home")]);
-    return respond(ctx, "📘 Modules:", Markup.inlineKeyboard(rows));
-  }
-
-  if (step === "locked") {
-    return respond(ctx, "🔒 Complete Module 1 first.", Markup.inlineKeyboard([[Markup.button.callback("📘 Modules", "academy:modules")]]));
-  }
-
-  if (step === "lesson") {
-    const moduleId = a as AcademyModuleId;
-    const idx = Math.max(0, Number(b ?? "0"));
-    const mod = ACADEMY_MODULES.find((m) => m.id === moduleId);
-    if (!mod) return respond(ctx, "Module not found.");
-
-    const screen = mod.screens[Math.min(idx, mod.screens.length - 1)];
-    const title = t(ctx, screen.title_km, screen.title_en);
-    const body = t(ctx, screen.body_km, screen.body_en);
-
-    const prev = idx > 0 ? Markup.button.callback("⬅️ Prev", `academy:lesson:${moduleId}:${idx - 1}`) : null;
-    const next =
-      idx < mod.screens.length - 1 ? Markup.button.callback("➡️ Next", `academy:lesson:${moduleId}:${idx + 1}`) : null;
-    const quizBtn = idx === mod.screens.length - 1 ? Markup.button.callback("🧠 Quiz", `academy:quiz:${moduleId}`) : null;
-
-    const navRow = [prev, next, quizBtn].filter(Boolean) as any[];
-    const kb = Markup.inlineKeyboard([navRow, [Markup.button.callback("📘 Modules", "academy:modules")]]);
-    return respond(ctx, `${title}\n\n${body}`, kb);
-  }
-
-  if (step === "quiz") {
-    const moduleId = a as AcademyModuleId;
-    const mod = ACADEMY_MODULES.find((m) => m.id === moduleId);
-    if (!mod) return respond(ctx, "Module not found.");
-
-    const q = t(ctx, mod.quiz.question_km, mod.quiz.question_en);
-    const rows = mod.quiz.options.map((o) => [Markup.button.callback(t(ctx, o.km, o.en), `academy:answer:${moduleId}:${o.id}`)]);
-    rows.push([Markup.button.callback("⬅️ Modules", "academy:modules")]);
-    return respond(ctx, `🧠 Quiz\n\n${q}`, Markup.inlineKeyboard(rows));
+    return respond(ctx, `🧠 Quick Drill (${role})\n\n${prompt}`, Markup.inlineKeyboard(rows));
   }
 
   if (step === "answer") {
-    const moduleId = a as AcademyModuleId;
-    const answerId = b ?? "";
-    const mod = ACADEMY_MODULES.find((m) => m.id === moduleId);
-    if (!mod) return respond(ctx, "Module not found.");
+    const qid = a ?? "";
+    const ans = b ?? "";
 
-    const score = grade(mod, answerId);
-    const pass = score >= ctx.env.ACADEMY_PASS_PERCENT;
+    const bank = await loadBank();
+    const q = bank.questions.find((x) => x.id === qid);
+    if (!q) return respond(ctx, "Question not found.", Markup.inlineKeyboard([[Markup.button.callback("🧠 Drill", "academy:drill")]]));
 
-    if (pass) await markComplete(sid, moduleId, score);
+    const g = gradeQuestion(q, ans);
 
-    const msg = pass ? `✅ Passed (${score}%). Next module unlocked.` : `❌ Not passed (${score}%). Review and retry.`;
-    const kb = Markup.inlineKeyboard([
-      [Markup.button.callback("📘 Modules", "academy:modules")],
-      [Markup.button.callback("🧾 My Progress", "academy:progress")],
-      [Markup.button.callback("🏠 Home", "academy:home")]
-    ]);
-    return respond(ctx, msg, kb);
+    await logAttempt({
+      ts: new Date().toISOString(),
+      staff_id: sid,
+      role,
+      question_id: qid,
+      answer_id: ans,
+      score: g.score,
+      passed: g.passed
+    });
+
+    const notes = lang(ctx) === "km" ? (q.notes_km ?? "") : (q.notes_en ?? "");
+    const msg = g.passed ? "✅ Correct." : "❌ Not correct.";
+    const extra = notes ? `\n\n📌 ${notes}` : "";
+    return respond(ctx, `${msg}${extra}`, Markup.inlineKeyboard([[Markup.button.callback("🧠 Next Drill", "academy:drill")], [Markup.button.callback("🏠 Home", "academy:home")]]));
   }
 
   if (step === "progress") {
-    const doneCount = Object.keys(prog.completed || {}).length;
-    const cert = prog.certified ? "✅ Certified" : "⬜️ Not certified";
-    const canCertify = Boolean(prog.completed["M1_SOP_SEQUENCE"] && prog.completed["M2_READY_CHECKLIST"]);
-    const rows: any[] = [
-      [Markup.button.callback("📘 Modules", "academy:modules")],
-      [Markup.button.callback("🏠 Home", "academy:home")]
-    ];
-    if (canCertify && !prog.certified) rows.unshift([Markup.button.callback("🏅 Request Certification", "academy:cert_request")]);
-    return respond(ctx, `🧾 Progress\nModules done: ${doneCount}/${ACADEMY_MODULES.length}\n${cert}`, Markup.inlineKeyboard(rows));
-  }
-
-  if (step === "cert_request") {
-    const kb = Markup.inlineKeyboard([[Markup.button.callback("✅ Certify (Owner only)", `academy:certify:${sid}`)]]);
-    return respond(ctx, "🏅 Certification requires manager approval.\nOwner: tap certify button.", kb);
-  }
-
-  if (step === "certify") {
-    if (String(ctx.from?.id ?? "") !== String(ctx.env.OWNER_TELEGRAM_ID)) return respond(ctx, "⛔ Owner only.");
-    const targetId = a ?? "";
-    if (!targetId) return respond(ctx, "Missing staff id.");
-    await setCertified(targetId, true);
-    return respond(ctx, `✅ Certified staff: ${targetId}`, Markup.inlineKeyboard([[Markup.button.callback("🧾 My Progress", "academy:progress")]]));
+    return respond(
+      ctx,
+      `🧾 Progress\nRole: ${role}\n\n(Quiz attempts logged to data/staff_quiz_attempts.json)`,
+      Markup.inlineKeyboard([[Markup.button.callback("🧠 Quick Drill", "academy:drill")], [Markup.button.callback("🏠 Home", "academy:home")]])
+    );
   }
 
   return respond(ctx, "Academy.", Markup.inlineKeyboard([[Markup.button.callback("🏠 Home", "academy:home")]]));
