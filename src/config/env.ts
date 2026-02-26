@@ -2,6 +2,8 @@ import { z } from "zod";
 
 const EnvSchema = z.object({
   BOT_TOKEN: z.string().min(10),
+  BOT_USERNAME: z.string().optional(),
+
   OWNER_TELEGRAM_ID: z.coerce.number().int().positive(),
   STAFF_CHAT_ID: z.coerce.number().int(),
 
@@ -11,6 +13,7 @@ const EnvSchema = z.object({
 
   TIMEZONE: z.string().default("Asia/Phnom_Penh"),
   USD_TO_KHR: z.coerce.number().int().positive().default(4100),
+
   DEFAULT_LANG: z.enum(["km", "en"]).default("km"),
   INCLUDE_ENGLISH_HINTS: z.coerce.number().int().min(0).max(1).default(0).transform((v) => v === 1),
 
@@ -25,7 +28,11 @@ const EnvSchema = z.object({
   GEOCODE_MODE: z.enum(["off", "osm"]).default("osm"),
   GEOCODE_CACHE_TTL_HOURS: z.coerce.number().int().min(1).max(720).default(168),
 
-  OWNER_NOTIFY_ISSUES: z.coerce.number().int().min(0).max(1).default(0).transform((v) => v === 1)
+  OWNER_NOTIFY_ISSUES: z.coerce.number().int().min(0).max(1).default(0).transform((v) => v === 1),
+
+  # Academy
+  STAFF_ALLOWLIST_IDS: z.string().optional(), // csv of staff telegram IDs
+  ACADEMY_PASS_PERCENT: z.coerce.number().int().min(50).max(100).default(80)
 });
 
 export type Env = z.infer<typeof EnvSchema>;
