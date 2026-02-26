@@ -1,9 +1,6 @@
 {
   "version": 1,
   "questions": [
-    // ======================
-    // FRYER (10)
-    // ======================
     {
       "id": "FRY_01_OIL_TEMP_BEFORE_CHICKEN",
       "role": "Fryer",
@@ -15,8 +12,8 @@
         { "id": "B", "km": "កំដៅតិចៗក៏បាន", "en": "Any low temperature is fine", "correct": false },
         { "id": "C", "km": "រង់ចាំឲ្យមានផ្សែងសិន", "en": "Wait until you see smoke", "correct": false }
       ],
-      "notes_km": "👉 សូមជំនួស SOP តម្លៃពិត (°C/°F) នៅស្លាក fryer ដើម្បី drill ឲ្យត្រឹមត្រូវ។",
-      "notes_en": "👉 Replace with your actual SOP target (°C/°F) from the fryer station label."
+      "notes_km": "👉 សូមជំនួស SOP តម្លៃពិត (°C) នៅស្លាក fryer ដើម្បី drill ឲ្យត្រឹមត្រូវ។",
+      "notes_en": "👉 Replace with your actual SOP target (°C) from the fryer station label."
     },
     {
       "id": "FRY_02_OIL_TEMP_BEFORE_FRIES",
@@ -119,10 +116,6 @@
         { "id": "B", "km": "មុនចៀន", "en": "Before frying", "correct": false }
       ]
     },
-
-    // ======================
-    // COOK (10)
-    // ======================
     {
       "id": "COOK_01_INTERNAL_TEMP_RULE",
       "role": "Cook",
