@@ -7,7 +7,6 @@ import { checkoutFlow } from "../flows/checkout.flow.ts";
 import { statusFlow } from "../flows/status.flow.ts";
 import { academyFlow } from "../staff_academy/flows.ts";
 import { handleStaffAction } from "../staff/actions.ts";
-import { handleAdminCommands } from "../admin/commands.ts";
 
 function cb(ctx: WBContext): string {
   const d = (ctx.update as any)?.callback_query?.data;
@@ -31,7 +30,6 @@ export async function routeUpdate(ctx: WBContext) {
   if (cb(ctx).startsWith("staff:")) return handleStaffAction(ctx);
 
   // admin commands
-  if (txt(ctx).startsWith("/")) return handleAdminCommands(ctx);
 
   // academy
   if (txt(ctx) === "/academy" || cb(ctx).startsWith("academy:")) return academyFlow(ctx);
