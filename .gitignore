@@ -22,3 +22,4 @@ backups/
 *.tar.gz
 *.zip
 node_modules/
+=
