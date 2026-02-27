@@ -860,6 +860,735 @@
         "name_en": "Drinks",
         "items": []
       }
+    ],
+    "flavors": [
+      {
+        "id": "S01",
+        "number": 1,
+        "token": "#1",
+        "name_en": "BUFFALO",
+        "name_km": "BUFFALO",
+        "heat_icon": "🌶️",
+        "tags": [
+          "SPICY"
+        ]
+      },
+      {
+        "id": "S02",
+        "number": 2,
+        "token": "#2",
+        "name_en": "BAYOU BILLY",
+        "name_km": "BAYOU BILLY",
+        "heat_icon": "🌶️",
+        "tags": [
+          "SPICY"
+        ]
+      },
+      {
+        "id": "S03",
+        "number": 3,
+        "token": "#3",
+        "name_en": "BUFFA-O",
+        "name_km": "BUFFA-O",
+        "heat_icon": "",
+        "tags": []
+      },
+      {
+        "id": "S04",
+        "number": 4,
+        "token": "#4",
+        "name_en": "BUFFALO-YAKI",
+        "name_km": "BUFFALO-YAKI",
+        "heat_icon": "",
+        "tags": []
+      },
+      {
+        "id": "S05",
+        "number": 5,
+        "token": "#5",
+        "name_en": "DOUBLE BUFFALO",
+        "name_km": "DOUBLE BUFFALO",
+        "heat_icon": "🌶️🌶️",
+        "tags": [
+          "SPICY"
+        ]
+      },
+      {
+        "id": "S06",
+        "number": 6,
+        "token": "#6",
+        "name_en": "GARGOYLE",
+        "name_km": "GARGOYLE",
+        "heat_icon": "☠️",
+        "tags": [
+          "REVENGE"
+        ]
+      },
+      {
+        "id": "S07",
+        "number": 7,
+        "token": "#7",
+        "name_en": "BUFFALO DRIP",
+        "name_km": "BUFFALO DRIP",
+        "heat_icon": "🌶️",
+        "tags": [
+          "SPICY"
+        ]
+      },
+      {
+        "id": "S08",
+        "number": 8,
+        "token": "#8",
+        "name_en": "MUFFALO",
+        "name_km": "MUFFALO",
+        "heat_icon": "🌶️🌶️🌶️",
+        "tags": [
+          "SPICY"
+        ]
+      },
+      {
+        "id": "S09",
+        "number": 9,
+        "token": "#9",
+        "name_en": "MUFFA Q",
+        "name_km": "MUFFA Q",
+        "heat_icon": "🌶️🌶️",
+        "tags": [
+          "SPICY"
+        ]
+      },
+      {
+        "id": "S10",
+        "number": 10,
+        "token": "#10",
+        "name_en": "JAMAICAN JERK",
+        "name_km": "JAMAICAN JERK",
+        "heat_icon": "🌶️",
+        "tags": [
+          "SPICY"
+        ]
+      },
+      {
+        "id": "S11",
+        "number": 11,
+        "token": "#11",
+        "name_en": "GODZILLA",
+        "name_km": "GODZILLA",
+        "heat_icon": "",
+        "tags": []
+      },
+      {
+        "id": "S12",
+        "number": 12,
+        "token": "#12",
+        "name_en": "GOJIRA",
+        "name_km": "GOJIRA",
+        "heat_icon": "🌶️🌶️🌶️",
+        "tags": [
+          "SPICY"
+        ]
+      },
+      {
+        "id": "S13",
+        "number": 13,
+        "token": "#13",
+        "name_en": "JERKY",
+        "name_km": "JERKY",
+        "heat_icon": "🌶️🌶️",
+        "tags": [
+          "SPICY"
+        ]
+      },
+      {
+        "id": "S14",
+        "number": 14,
+        "token": "#14",
+        "name_en": "JUGGALO",
+        "name_km": "JUGGALO",
+        "heat_icon": "🌶️",
+        "tags": [
+          "SPICY"
+        ]
+      },
+      {
+        "id": "S15",
+        "number": 15,
+        "token": "#15",
+        "name_en": "MAN JERK",
+        "name_km": "MAN JERK",
+        "heat_icon": "🌶️🌶️🌶️",
+        "tags": [
+          "SPICY"
+        ]
+      },
+      {
+        "id": "S16",
+        "number": 16,
+        "token": "#16",
+        "name_en": "VOLCANO",
+        "name_km": "VOLCANO",
+        "heat_icon": "☠️",
+        "tags": [
+          "REVENGE"
+        ]
+      },
+      {
+        "id": "S17",
+        "number": 17,
+        "token": "#17",
+        "name_en": "HONEY TERIYAKI",
+        "name_km": "HONEY TERIYAKI",
+        "heat_icon": "",
+        "tags": []
+      },
+      {
+        "id": "S18",
+        "number": 18,
+        "token": "#18",
+        "name_en": "MAUI",
+        "name_km": "MAUI",
+        "heat_icon": "",
+        "tags": []
+      },
+      {
+        "id": "S19",
+        "number": 19,
+        "token": "#19",
+        "name_en": "MAUL WOW WOWIE",
+        "name_km": "MAUL WOW WOWIE",
+        "heat_icon": "🌶️🌶️",
+        "tags": [
+          "SPICY"
+        ]
+      },
+      {
+        "id": "S20",
+        "number": 20,
+        "token": "#20",
+        "name_en": "PTERODACTYL",
+        "name_km": "PTERODACTYL",
+        "heat_icon": "",
+        "tags": []
+      },
+      {
+        "id": "S21",
+        "number": 21,
+        "token": "#21",
+        "name_en": "HOTTY",
+        "name_km": "HOTTY",
+        "heat_icon": "🌶️🌶️",
+        "tags": [
+          "SPICY"
+        ]
+      },
+      {
+        "id": "S22",
+        "number": 22,
+        "token": "#22",
+        "name_en": "TEMPEST",
+        "name_km": "TEMPEST",
+        "heat_icon": "🌶️🌶️🌶️",
+        "tags": [
+          "SPICY"
+        ]
+      },
+      {
+        "id": "S23",
+        "number": 23,
+        "token": "#23",
+        "name_en": "MATT'S MISTAKE",
+        "name_km": "MATT'S MISTAKE",
+        "heat_icon": "☠️",
+        "tags": [
+          "REVENGE"
+        ]
+      },
+      {
+        "id": "S24",
+        "number": 24,
+        "token": "#24",
+        "name_en": "TRAIN TO BUSAN",
+        "name_km": "TRAIN TO BUSAN",
+        "heat_icon": "🌶️",
+        "tags": [
+          "SPICY"
+        ]
+      },
+      {
+        "id": "S25",
+        "number": 25,
+        "token": "#25",
+        "name_en": "HONEY BUSAN",
+        "name_km": "HONEY BUSAN",
+        "heat_icon": "",
+        "tags": []
+      },
+      {
+        "id": "S26",
+        "number": 26,
+        "token": "#26",
+        "name_en": "FLAME TO BUSAN",
+        "name_km": "FLAME TO BUSAN",
+        "heat_icon": "☠️",
+        "tags": [
+          "REVENGE"
+        ]
+      },
+      {
+        "id": "S27",
+        "number": 27,
+        "token": "#27",
+        "name_en": "CONDUCTOR",
+        "name_km": "CONDUCTOR",
+        "heat_icon": "🌶️",
+        "tags": [
+          "SPICY"
+        ]
+      },
+      {
+        "id": "S28",
+        "number": 28,
+        "token": "#28",
+        "name_en": "\"CHOO CHOO\" (?)",
+        "name_km": "\"CHOO CHOO\" (?)",
+        "heat_icon": "",
+        "tags": []
+      },
+      {
+        "id": "S29",
+        "number": 29,
+        "token": "#29",
+        "name_en": "CHOO CHOO",
+        "name_km": "CHOO CHOO",
+        "heat_icon": "",
+        "tags": []
+      },
+      {
+        "id": "S30",
+        "number": 30,
+        "token": "#30",
+        "name_en": "BBQ",
+        "name_km": "BBQ",
+        "heat_icon": "",
+        "tags": []
+      },
+      {
+        "id": "S31",
+        "number": 31,
+        "token": "#31",
+        "name_en": "HBQ",
+        "name_km": "HBQ",
+        "heat_icon": "🌶️🌶️",
+        "tags": [
+          "SPICY"
+        ]
+      },
+      {
+        "id": "S32",
+        "number": 32,
+        "token": "#32",
+        "name_en": "JBO",
+        "name_km": "JBO",
+        "heat_icon": "",
+        "tags": []
+      },
+      {
+        "id": "S33",
+        "number": 33,
+        "token": "#33",
+        "name_en": "CHARLIE",
+        "name_km": "CHARLIE",
+        "heat_icon": "",
+        "tags": []
+      },
+      {
+        "id": "S34",
+        "number": 34,
+        "token": "#34",
+        "name_en": "SIMON SAYS",
+        "name_km": "SIMON SAYS",
+        "heat_icon": "🌶️🌶️🌶️",
+        "tags": [
+          "SPICY"
+        ]
+      },
+      {
+        "id": "S35",
+        "number": 35,
+        "token": "#35",
+        "name_en": "GOLD RUSH",
+        "name_km": "GOLD RUSH",
+        "heat_icon": "",
+        "tags": []
+      },
+      {
+        "id": "S36",
+        "number": 36,
+        "token": "#36",
+        "name_en": "SMOKIN YAKI",
+        "name_km": "SMOKIN YAKI",
+        "heat_icon": "",
+        "tags": []
+      },
+      {
+        "id": "S37",
+        "number": 37,
+        "token": "#37",
+        "name_en": "MANGO BBQ",
+        "name_km": "MANGO BBQ",
+        "heat_icon": "🌶️🌶️",
+        "tags": [
+          "SPICY"
+        ]
+      },
+      {
+        "id": "S38",
+        "number": 38,
+        "token": "#38",
+        "name_en": "BARBARIAN",
+        "name_km": "BARBARIAN",
+        "heat_icon": "☠️",
+        "tags": [
+          "REVENGE"
+        ]
+      },
+      {
+        "id": "S39",
+        "number": 39,
+        "token": "#39",
+        "name_en": "KHMER CHILI SIEM REAP",
+        "name_km": "KHMER CHILI SIEM REAP",
+        "heat_icon": "",
+        "tags": []
+      },
+      {
+        "id": "S40",
+        "number": 40,
+        "token": "#40",
+        "name_en": "HONEY KHMER",
+        "name_km": "HONEY KHMER",
+        "heat_icon": "",
+        "tags": []
+      },
+      {
+        "id": "S41",
+        "number": 41,
+        "token": "#41",
+        "name_en": "BATTAMBANG",
+        "name_km": "BATTAMBANG",
+        "heat_icon": "🌶️🌶️🌶️",
+        "tags": [
+          "SPICY"
+        ]
+      },
+      {
+        "id": "S42",
+        "number": 42,
+        "token": "#42",
+        "name_en": "KMJ",
+        "name_km": "KMJ",
+        "heat_icon": "🌶️🌶️",
+        "tags": [
+          "SPICY"
+        ]
+      },
+      {
+        "id": "S43",
+        "number": 43,
+        "token": "#43",
+        "name_en": "KUN KHMER",
+        "name_km": "KUN KHMER",
+        "heat_icon": "☠️",
+        "tags": [
+          "REVENGE"
+        ]
+      },
+      {
+        "id": "S44",
+        "number": 44,
+        "token": "#44",
+        "name_en": "KHMER BBQ",
+        "name_km": "KHMER BBQ",
+        "heat_icon": "",
+        "tags": []
+      },
+      {
+        "id": "S45",
+        "number": 45,
+        "token": "#45",
+        "name_en": "FIRE BONG",
+        "name_km": "FIRE BONG",
+        "heat_icon": "🌶️🌶️🌶️",
+        "tags": [
+          "SPICY"
+        ]
+      },
+      {
+        "id": "S46",
+        "number": 46,
+        "token": "#46",
+        "name_en": "CITRIC FIRESTORM",
+        "name_km": "CITRIC FIRESTORM",
+        "heat_icon": "☠️",
+        "tags": [
+          "REVENGE"
+        ]
+      },
+      {
+        "id": "S47",
+        "number": 47,
+        "token": "#47",
+        "name_en": "BUFFALO STORM",
+        "name_km": "BUFFALO STORM",
+        "heat_icon": "🌶️🌶️🌶️",
+        "tags": [
+          "SPICY"
+        ]
+      },
+      {
+        "id": "S48",
+        "number": 48,
+        "token": "#48",
+        "name_en": "FOUR HORSEMAN",
+        "name_km": "FOUR HORSEMAN",
+        "heat_icon": "☢️",
+        "tags": [
+          "NUCLEAR"
+        ]
+      },
+      {
+        "id": "S49",
+        "number": 49,
+        "token": "#49",
+        "name_en": "ANGRY JERK",
+        "name_km": "ANGRY JERK",
+        "heat_icon": "🌶️🌶️🌶️",
+        "tags": [
+          "SPICY"
+        ]
+      },
+      {
+        "id": "S50",
+        "number": 50,
+        "token": "#50",
+        "name_en": "NITRO BBQ",
+        "name_km": "NITRO BBQ",
+        "heat_icon": "🌶️🌶️🌶️",
+        "tags": [
+          "SPICY"
+        ]
+      },
+      {
+        "id": "S51",
+        "number": 51,
+        "token": "#51",
+        "name_en": "MONSOON",
+        "name_km": "MONSOON",
+        "heat_icon": "🌶️🌶️🌶️",
+        "tags": [
+          "SPICY"
+        ]
+      },
+      {
+        "id": "S52",
+        "number": 52,
+        "token": "#52",
+        "name_en": "FIRE YAKI",
+        "name_km": "FIRE YAKI",
+        "heat_icon": "🌶️🌶️🌶️",
+        "tags": [
+          "SPICY"
+        ]
+      },
+      {
+        "id": "S53",
+        "number": 53,
+        "token": "#53",
+        "name_en": "ORION",
+        "name_km": "ORION",
+        "heat_icon": "☢️",
+        "tags": [
+          "NUCLEAR"
+        ]
+      },
+      {
+        "id": "S54",
+        "number": 54,
+        "token": "#54",
+        "name_en": "BUFFALO DRY",
+        "name_km": "BUFFALO DRY",
+        "heat_icon": "🌶️",
+        "tags": [
+          "SPICY",
+          "DRY_RUB"
+        ]
+      },
+      {
+        "id": "S55",
+        "number": 55,
+        "token": "#55",
+        "name_en": "KAMPOT HONEY PEPPER",
+        "name_km": "KAMPOT HONEY PEPPER",
+        "heat_icon": "",
+        "tags": [
+          "DRY_RUB"
+        ]
+      },
+      {
+        "id": "S56",
+        "number": 56,
+        "token": "#56",
+        "name_en": "MIDNIGHT RUB",
+        "name_km": "MIDNIGHT RUB",
+        "heat_icon": "🌶️",
+        "tags": [
+          "SPICY",
+          "DRY_RUB"
+        ]
+      },
+      {
+        "id": "S57",
+        "number": 57,
+        "token": "#57",
+        "name_en": "HOUSE BLEND",
+        "name_km": "HOUSE BLEND",
+        "heat_icon": "",
+        "tags": [
+          "DRY_RUB"
+        ]
+      },
+      {
+        "id": "S58",
+        "number": 58,
+        "token": "#58",
+        "name_en": "CAJUN",
+        "name_km": "CAJUN",
+        "heat_icon": "🌶️",
+        "tags": [
+          "SPICY",
+          "DRY_RUB"
+        ]
+      },
+      {
+        "id": "S59",
+        "number": 59,
+        "token": "#59",
+        "name_en": "LEMON PEPPER",
+        "name_km": "LEMON PEPPER",
+        "heat_icon": "",
+        "tags": [
+          "DRY_RUB"
+        ]
+      },
+      {
+        "id": "S60",
+        "number": 60,
+        "token": "#60",
+        "name_en": "KHMER STYLE",
+        "name_km": "KHMER STYLE",
+        "heat_icon": "",
+        "tags": []
+      },
+      {
+        "id": "S61",
+        "number": 61,
+        "token": "#61",
+        "name_en": "HONEY MUSTARD",
+        "name_km": "HONEY MUSTARD",
+        "heat_icon": "",
+        "tags": []
+      },
+      {
+        "id": "S62",
+        "number": 62,
+        "token": "#62",
+        "name_en": "HONEY GARLIC",
+        "name_km": "HONEY GARLIC",
+        "heat_icon": "",
+        "tags": []
+      },
+      {
+        "id": "S63",
+        "number": 63,
+        "token": "#63",
+        "name_en": "NAKED",
+        "name_km": "NAKED",
+        "heat_icon": "",
+        "tags": []
+      },
+      {
+        "id": "S64",
+        "number": 64,
+        "token": "#64",
+        "name_en": "COMEBACK",
+        "name_km": "COMEBACK",
+        "heat_icon": "",
+        "tags": []
+      },
+      {
+        "id": "S65",
+        "number": 65,
+        "token": "#65",
+        "name_en": "SALT & MALT",
+        "name_km": "SALT & MALT",
+        "heat_icon": "",
+        "tags": []
+      },
+      {
+        "id": "S66",
+        "number": 66,
+        "token": "#66",
+        "name_en": "HOT HONEY",
+        "name_km": "HOT HONEY",
+        "heat_icon": "🌶️🌶️",
+        "tags": [
+          "SPICY"
+        ]
+      },
+      {
+        "id": "S67",
+        "number": 67,
+        "token": "#67",
+        "name_en": "HOT HONEY RANCH",
+        "name_km": "HOT HONEY RANCH",
+        "heat_icon": "🌶️",
+        "tags": [
+          "SPICY"
+        ]
+      },
+      {
+        "id": "S68",
+        "number": 68,
+        "token": "#68",
+        "name_en": "SPICY RANCH",
+        "name_km": "SPICY RANCH",
+        "heat_icon": "🌶️🌶️",
+        "tags": [
+          "SPICY"
+        ]
+      },
+      {
+        "id": "S69",
+        "number": 69,
+        "token": "#69",
+        "name_en": "MANGO HABANERO",
+        "name_km": "MANGO HABANERO",
+        "heat_icon": "☢️",
+        "tags": [
+          "NUCLEAR"
+        ]
+      },
+      {
+        "id": "S70",
+        "number": 70,
+        "token": "#70",
+        "name_en": "ARMAGEDDON",
+        "name_km": "ARMAGEDDON",
+        "heat_icon": "☢️",
+        "tags": [
+          "NUCLEAR"
+        ]
+      }
     ]
   }
 }
