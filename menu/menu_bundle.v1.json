@@ -1,127 +1,142 @@
 {
+  "bundle_version": "v1",
+  "brand": {
+    "name": "WING⚡BOSS",
+    "slogan_en": "Hand-Cut Daily • Never Frozen",
+    "currency_canonical": "USD",
+    "currency_alt": "KHR",
+    "usd_to_khr": 4100
+  },
   "meta": {
-    "version": "v1.0",
-    "export_type": "single-file",
-    "generated": "2026-02-21T17:51:32.587980Z",
-    "currency": "USD",
-    "notes": "Consolidated menu export including rules, flavors, pricing, and constraints."
+    "generated_at": "2026-02-27T00:00:00Z",
+    "source": "skeleton",
+    "notes": "Fill with production menu items."
   },
   "rules": {
-    "tossed_or_side_dip_default": true,
-    "tossed_only_exceptions": [
-      "easy_win_boxes",
-      "extreme_boneless"
+    "wing_sizes_bone_in": [
+      6,
+      12,
+      20,
+      36
     ],
-    "spice_tiers": {
-      "Original": 0.0,
-      "Hot": 0.25,
-      "Spicy": 0.5,
-      "Extreme": 0.75,
-      "Revenge": 1.0,
-      "Nuclear": 1.5
-    },
-    "spice_visibility_logic": "Revenge/Nuclear only visible for Extreme/Revenge base flavors",
-    "boneless_no_6pc": true,
-    "dip_standard_ml": 30,
-    "dip_upgrade_container_ml": 50
+    "wing_sizes_boneless": [
+      8,
+      12,
+      20,
+      36
+    ],
+    "party_tray_no_mix": true,
+    "party_tray_flavor_cap": 4,
+    "extra_flavor_price_usd": 1.0,
+    "max_flavors_total": 6
   },
-  "pricing": {
-    "bone_in": {
-      "6": 6.75,
-      "12": 12.5,
-      "20": 19.95
+  "heat_tiers": [
+    {
+      "id": "original",
+      "label_en": "Original",
+      "price_delta_usd": 0,
+      "rank": 0
     },
-    "boneless": {
-      "8": 9.5,
-      "12": 14.0,
-      "20": 22.0
+    {
+      "id": "hot",
+      "label_en": "Hot",
+      "price_delta_usd": 0.25,
+      "rank": 1
     },
-    "extreme_bone_in": {
-      "6": 7.75,
-      "12": 14.95,
-      "20": 22.5
+    {
+      "id": "spicy",
+      "label_en": "Spicy",
+      "price_delta_usd": 0.5,
+      "rank": 2
     },
-    "extreme_boneless": {
-      "8": 10.95,
-      "12": 15.95,
-      "20": 23.5
+    {
+      "id": "extreme",
+      "label_en": "Extreme",
+      "price_delta_usd": 0.75,
+      "rank": 3
+    },
+    {
+      "id": "revenge",
+      "label_en": "Revenge",
+      "price_delta_usd": 1.0,
+      "rank": 4
+    },
+    {
+      "id": "nuclear",
+      "label_en": "Nuclear",
+      "price_delta_usd": 1.5,
+      "rank": 5
     }
-  },
-  "flavor_counts": {
-    "bone_in": {
-      "6": {
-        "included": 1,
-        "extra_allowed": 0
+  ],
+  "flavors": [
+    {
+      "id": "f_1_buffalo",
+      "token": "1️⃣",
+      "name_en": "Buffalo",
+      "family": "Buffalo",
+      "emoji_profile": "🍯🧂🌶️",
+      "is_dry_rub": false,
+      "in_house_only": false,
+      "sold_out": false,
+      "heat_cap": "extreme"
+    }
+  ],
+  "pricing": {
+    "wings": {
+      "bone_in": {
+        "6": 6.75,
+        "12": 12.5,
+        "20": 19.95
       },
-      "12": {
-        "included": 2,
-        "extra_allowed": 1,
-        "extra_price": 1.0
-      },
-      "20": {
-        "included": 2,
-        "extra_allowed": 2,
-        "extra_price": 1.0
-      },
-      "36": {
-        "included": 3,
-        "extra_allowed": 3,
-        "extra_price": 1.0
+      "boneless": {
+        "8": 9.5,
+        "12": 14.0,
+        "20": 22.0
       }
     },
-    "boneless": {
-      "8": 2,
-      "12": 2,
-      "24": 3,
-      "36": 4
-    }
+    "combos": {}
   },
-  "combos": {
-    "buffalo_box": {
-      "price": 10.5,
-      "drink": false,
-      "upgrades_allowed": false
-    },
-    "lemon_pepper_box": {
-      "price": 10.5,
-      "drink": false,
-      "upgrades_allowed": false,
-      "dual_seasoning_upgrade": 0.5
-    },
-    "boneless_box": {
-      "price": 11.95,
-      "drink": false,
-      "upgrades_allowed": false
-    },
-    "wing_boss_box": {
-      "price": 12.5,
-      "drink": false
-    },
-    "king_box": {
-      "price": 15.95,
-      "drink": false
-    }
-  },
-  "extra_wings_addon": {
-    "2_wings": {
-      "price": 2.5,
-      "same_sauce_required": true
-    },
-    "3_wings": {
-      "price": 3.25,
-      "same_sauce_required": true,
-      "includes_extra_dip_same_sauce": true
-    }
-  },
-  "in_house_only_flavor_ids": [
-    16,
-    19,
-    23,
-    34,
-    38,
-    53,
-    65,
-    69,
-    70
-  ]
+  "catalog": {
+    "categories": [
+      {
+        "id": "best_sellers",
+        "sort": 0,
+        "emoji": "⭐",
+        "name_en": "Best Sellers",
+        "items": [
+          {
+            "id": "wing_boss_box",
+            "kind": "combo",
+            "name_en": "Wing Boss Box",
+            "price_usd": 12.5,
+            "tags": [
+              "best_seller"
+            ],
+            "sold_out": false
+          }
+        ]
+      },
+      {
+        "id": "wings",
+        "sort": 10,
+        "emoji": "🍗",
+        "name_en": "Wings",
+        "items": []
+      },
+      {
+        "id": "sides",
+        "sort": 20,
+        "emoji": "🍟",
+        "name_en": "Sides",
+        "items": []
+      },
+      {
+        "id": "drinks",
+        "sort": 30,
+        "emoji": "🥤",
+        "name_en": "Drinks",
+        "items": []
+      }
+    ]
+  }
 }
