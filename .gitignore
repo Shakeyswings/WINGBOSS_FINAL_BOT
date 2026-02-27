@@ -1,0 +1,15 @@
+
+# Local backups
+backups/
+
+# Local runtime (never commit)
+.env
+data/*.json
+data/geocode_cache.json
+
+# Dependencies (never commit)
+node_modules/
+
+# Local archives
+*.zip
+backups/
