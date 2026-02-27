@@ -11,7 +11,6 @@ function staffId(ctx: WBContext) {
 function isAllowed(ctx: WBContext) {
   const id = staffId(ctx);
   if (id === String(ctx.env.OWNER_TELEGRAM_ID)) return true;
-
   const csv = String(ctx.env.STAFF_ALLOWLIST_IDS ?? "");
   const allow = new Set(csv.split(",").map((s) => s.trim()).filter(Boolean));
   return allow.has(id);
@@ -23,8 +22,9 @@ function cbData(ctx: WBContext): string {
 }
 
 async function respond(ctx: WBContext, text: string, keyboard?: any) {
+  // ensure Academy never gets "stuck" behind a reply-keyboard
   await ctx.reply(text, Markup.removeKeyboard());
-  if (keyboard) return ctx.reply("—", keyboard);
+  if (keyboard) await ctx.reply("—", keyboard);
 }
 
 const ROLES: Role[] = ["Cook", "Fryer", "Waitress", "Bartender", "Manager"];
@@ -60,26 +60,40 @@ export async function academyFlow(ctx: WBContext) {
   if (step === "set_role") {
     const nextRole = a as Role;
     if (!ROLES.includes(nextRole)) {
-      return respond(ctx, "Invalid role.", Markup.inlineKeyboard([[Markup.button.callback("⬅️ Back", "academy:role")]]));
+      return respond(
+        ctx,
+        "Invalid role.",
+        Markup.inlineKeyboard([[Markup.button.callback("⬅️ Back", "academy:role")]])
+      );
     }
     await setRole(sid, nextRole);
-    return respond(ctx, `✅ Role set: ${nextRole}`, Markup.inlineKeyboard([[Markup.button.callback("🧠 Start Drill", "academy:drill")]]));
+    return respond(
+      ctx,
+      `✅ Role set: ${nextRole}`,
+      Markup.inlineKeyboard([[Markup.button.callback("🧠 Start Drill", "academy:drill")]])
+    );
   }
 
   if (step === "drill") {
     const bank = await loadBank();
     const qs = pickForRole(bank, role);
     if (qs.length === 0) {
-      return respond(ctx, "No questions yet for this role.", Markup.inlineKeyboard([[Markup.button.callback("🧑‍🍳 Set Role", "academy:role")]]));
+      return respond(
+        ctx,
+        "No questions yet for this role.",
+        Markup.inlineKeyboard([[Markup.button.callback("🧑‍🍳 Set Role", "academy:role")]])
+      );
     }
 
     const q = qs[Math.floor(Math.random() * qs.length)];
-    const prompt = `🧠 Quick Drill (${role})\n\n🇰🇭 ${q.prompt_km}\n🇺🇸 ${q.prompt_en}`;
+    const prompt =
+      `🧠 Quick Drill (${role})\n\n` +
+      `🇰🇭 ${q.prompt_km}\n` +
+      `🇺🇸 ${q.prompt_en}`;
 
     const rows = q.options.map((o) => [
       Markup.button.callback(`${o.km}  •  ${o.en}`, `academy:answer:${q.id}:${o.id}`)
-    ]).map((btn) => [btn]);
-
+    ]);
     rows.push([Markup.button.callback("⬅️ Home", "academy:home")]);
     return respond(ctx, prompt, Markup.inlineKeyboard(rows));
   }
@@ -90,7 +104,9 @@ export async function academyFlow(ctx: WBContext) {
 
     const bank = await loadBank();
     const q = bank.questions.find((x) => x.id === qid);
-    if (!q) return respond(ctx, "Question not found.", Markup.inlineKeyboard([[Markup.button.callback("🧠 Drill", "academy:drill")]]));
+    if (!q) {
+      return respond(ctx, "Question not found.", Markup.inlineKeyboard([[Markup.button.callback("🧠 Drill", "academy:drill")]]));
+    }
 
     const g = gradeQuestion(q, ans);
 
@@ -104,8 +120,11 @@ export async function academyFlow(ctx: WBContext) {
       passed: g.passed
     });
 
-    const notes = (q.notes_km || q.notes_en) ? `\n\n📌 ${q.notes_km ?? ""}\n📌 ${q.notes_en ?? ""}` : "";
+    const notesKm = (q.notes_km ?? "").trim();
+    const notesEn = (q.notes_en ?? "").trim();
+    const notes = (notesKm || notesEn) ? `\n\n📌 ${notesKm}\n📌 ${notesEn}` : "";
     const msg = g.passed ? "✅ Correct." : "❌ Not correct.";
+
     return respond(
       ctx,
       `${msg}${notes}`,
@@ -119,7 +138,7 @@ export async function academyFlow(ctx: WBContext) {
   if (step === "progress") {
     return respond(
       ctx,
-      `🧾 Progress\nRole: ${role}\n\nAttempts are logged in:\n/data/staff_quiz_attempts.json`,
+      `🧾 Progress\nRole: ${role}\n\nAttempts file:\n/data/staff_quiz_attempts.json`,
       Markup.inlineKeyboard([
         [Markup.button.callback("🧠 Quick Drill", "academy:drill")],
         [Markup.button.callback("🏠 Home", "academy:home")]
