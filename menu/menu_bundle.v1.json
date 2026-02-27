@@ -5,7 +5,8 @@
     "slogan_en": "Hand-Cut Daily • Never Frozen",
     "currency_canonical": "USD",
     "currency_alt": "KHR",
-    "usd_to_khr": 4100
+    "usd_to_khr": 4100,
+    "slogan": "Hand-Cut Daily • Never Frozen"
   },
   "meta": {
     "generated_at": "2026-02-27T00:00:00Z",
@@ -27,7 +28,7 @@
     ],
     "party_tray_no_mix": true,
     "party_tray_flavor_cap": 4,
-    "extra_flavor_price_usd": 1.0,
+    "extra_flavor_price_usd": 1,
     "max_flavors_total": 6
   },
   "heat_tiers": [
@@ -35,37 +36,43 @@
       "id": "original",
       "label_en": "Original",
       "price_delta_usd": 0,
-      "rank": 0
+      "rank": 0,
+      "label": "original"
     },
     {
       "id": "hot",
       "label_en": "Hot",
       "price_delta_usd": 0.25,
-      "rank": 1
+      "rank": 1,
+      "label": "hot"
     },
     {
       "id": "spicy",
       "label_en": "Spicy",
       "price_delta_usd": 0.5,
-      "rank": 2
+      "rank": 2,
+      "label": "spicy"
     },
     {
       "id": "extreme",
       "label_en": "Extreme",
       "price_delta_usd": 0.75,
-      "rank": 3
+      "rank": 3,
+      "label": "extreme"
     },
     {
       "id": "revenge",
       "label_en": "Revenge",
-      "price_delta_usd": 1.0,
-      "rank": 4
+      "price_delta_usd": 1,
+      "rank": 4,
+      "label": "revenge"
     },
     {
       "id": "nuclear",
       "label_en": "Nuclear",
       "price_delta_usd": 1.5,
-      "rank": 5
+      "rank": 5,
+      "label": "nuclear"
     }
   ],
   "flavors": [
@@ -90,8 +97,8 @@
       },
       "boneless": {
         "8": 9.5,
-        "12": 14.0,
-        "20": 22.0
+        "12": 14,
+        "20": 22
       }
     },
     "combos": {}
@@ -106,7 +113,7 @@
         "items": [
           {
             "id": "wing_boss_box",
-            "kind": "combo",
+            "kind": "fixed_combo",
             "name_en": "Wing Boss Box",
             "price_usd": 12.5,
             "tags": [
