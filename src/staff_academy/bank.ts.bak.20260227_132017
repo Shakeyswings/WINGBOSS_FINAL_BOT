@@ -1,0 +1,101 @@
+import fs from "node:fs/promises";
+
+export type Role = "Cook" | "Fryer" | "Waitress" | "Bartender" | "Manager";
+
+export type BankOption = { id: string; km: string; en: string; correct: boolean };
+export type BankQuestion = {
+  id: string;
+  role: Role;
+  km: string;
+  en: string;
+  options: BankOption[];
+  note_km?: string;
+  note_en?: string;
+};
+
+export type AnswerResult = {
+  score: number; // 0..100
+  passed: boolean;
+  correct: boolean;
+  correctOptionId?: string;
+};
+
+const BANK_PATH = "data/staff_question_bank.json";
+
+export async function loadBank(): Promise<BankQuestion[]> {
+  const raw = await fs.readFile(BANK_PATH, "utf8");
+  const data = JSON.parse(raw);
+
+  // allow either { questions: [...] } or direct [...]
+  const questions: any[] = Array.isArray(data) ? data : Array.isArray(data?.questions) ? data.questions : [];
+
+  // minimal normalization + safety
+  return questions
+    .filter(Boolean)
+    .map((q: any) => {
+      const options: any[] = Array.isArray(q?.options) ? q.options : [];
+      return {
+        id: String(q?.id ?? ""),
+        role: q?.role as Role,
+        km: String(q?.km ?? ""),
+        en: String(q?.en ?? ""),
+        note_km: q?.note_km ? String(q.note_km) : undefined,
+        note_en: q?.note_en ? String(q.note_en) : undefined,
+        options: options.map((o: any) => ({
+          id: String(o?.id ?? ""),
+          km: String(o?.km ?? ""),
+          en: String(o?.en ?? ""),
+          correct: Boolean(o?.correct),
+        })),
+      } as BankQuestion;
+    })
+    .filter((q) => q.id && q.role && q.km && q.en && Array.isArray(q.options) && q.options.length >= 2);
+}
+
+export function gradeAnswer(q: BankQuestion, answerId: string): AnswerResult {
+  const correctOpt = q.options.find((o) => o.correct);
+  const chosen = q.options.find((o) => o.id === answerId);
+
+  const correct = Boolean(chosen?.correct);
+  const score = correct ? 100 : 0;
+
+  return {
+    score,
+    passed: correct,
+    correct,
+    correctOptionId: correctOpt?.id,
+  };
+}
+
+export function gradeQuestion(q: any, answerId: string): { score: number; passed: boolean } {
+  const opt = (q?.options || []).find((o: any) => o?.id === answerId);
+  return { score: opt?.correct ? 100 : 0, passed: Boolean(opt?.correct) };
+}
+
+export function pickForRole(bank: any, role: any): any {
+  // Supports either: bank.questions[] OR bank[role][] OR bank[] (fallback)
+  const qs =
+    (bank?.questions && Array.isArray(bank.questions) ? bank.questions : null) ||
+    (role && bank?.[role] && Array.isArray(bank[role]) ? bank[role] : null) ||
+    (Array.isArray(bank) ? bank : []);
+  if (!qs.length) return null;
+  return qs[Math.floor(Math.random() * qs.length)];
+}
+
+import fs from "fs";
+import path from "path";
+
+export function loadBank(): any {
+  const root = process.cwd();
+  const candidates = [
+    path.join(root, "data", "staff_question_bank.json"),
+    path.join(root, "data", "staff_question_bank.v1.json"),
+    path.join(root, "data", "bank.json"),
+  ];
+  for (const p of candidates) {
+    try {
+      if (fs.existsSync(p)) return JSON.parse(fs.readFileSync(p, "utf8"));
+    } catch {}
+  }
+  return { questions: [] };
+}

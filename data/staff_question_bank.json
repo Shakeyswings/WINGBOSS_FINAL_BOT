@@ -1,0 +1,34 @@
+{
+  "version": 1,
+  "questions": [
+    {
+      "id": "FRY_01_OIL_TEMP_CHICKEN",
+      "role": "Fryer",
+      "topic": "Oil Temperature",
+      "prompt_km": "មុនចៀនមាន់ សីតុណ្ហភាពប្រេងត្រូវជា (°C)៖",
+      "prompt_en": "Before frying chicken, oil temperature should be (°C):",
+      "options": [
+        {
+          "id": "A",
+          "km": "តាម SOP (ស្លាក fryer) ✅",
+          "en": "Per SOP station label ✅",
+          "correct": true
+        },
+        {
+          "id": "B",
+          "km": "ទាបៗក៏បាន",
+          "en": "Any low temp is fine",
+          "correct": false
+        },
+        {
+          "id": "C",
+          "km": "រង់ចាំឲ្យមានផ្សែង",
+          "en": "Wait for smoke",
+          "correct": false
+        }
+      ],
+      "notes_km": "ដាក់តម្លៃ SOP ពិតនៅស្លាក fryer។",
+      "notes_en": "Put your real SOP target on the fryer label."
+    }
+  ]
+}

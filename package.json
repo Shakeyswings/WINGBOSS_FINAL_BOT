@@ -1,0 +1,23 @@
+{
+  "name": "wingboss-final-bot",
+  "version": "1.0.3",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "tsx src/index.ts",
+    "menu:check": "tsx src/tools/menu_check.ts",
+    "test": "vitest run",
+    "menu:apply70": "tsx src/tools/apply_flavors70.ts && npm run menu:check"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "telegraf": "^4.16.3",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.1",
+    "tsx": "^4.19.2",
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.8"
+  }
+}
