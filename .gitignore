@@ -13,3 +13,12 @@ node_modules/
 # Local archives
 *.zip
 backups/
+
+# Runtime/local-only
+.env
+data/*.json
+data/geocode_cache.json
+backups/
+*.tar.gz
+*.zip
+node_modules/
