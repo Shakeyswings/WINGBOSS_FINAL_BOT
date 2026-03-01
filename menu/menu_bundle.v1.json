@@ -41,7 +41,7 @@
     {
       "id": "revenge",
       "label_en": "Revenge",
-      "price_delta_usd": 1.0,
+      "price_delta_usd": 1,
       "rank": 4,
       "label": "Revenge"
     },
@@ -68,7 +68,7 @@
     ],
     "party_tray_no_mix": true,
     "party_tray_flavor_cap": 4,
-    "extra_flavor_price_usd": 1.0,
+    "extra_flavor_price_usd": 1,
     "max_flavors_total": 6
   },
   "pricing": {
@@ -80,8 +80,8 @@
       },
       "boneless": {
         "8": 9.5,
-        "12": 14.0,
-        "20": 22.0
+        "12": 14,
+        "20": 22
       }
     },
     "combos": {}
@@ -1045,7 +1045,7 @@
         "desc_en": "Guided wing builder (count → flavors → heat → extras).",
         "desc_km": null,
         "kind": "wings",
-        "price_usd": 0.0,
+        "price_usd": 0,
         "tags": [],
         "extra": {}
       },
@@ -1141,7 +1141,7 @@
         "desc_en": null,
         "desc_km": null,
         "kind": "burger",
-        "price_usd": 4.0,
+        "price_usd": 4,
         "tags": [],
         "extra": {}
       },
@@ -1152,7 +1152,7 @@
         "desc_en": null,
         "desc_km": null,
         "kind": "burger",
-        "price_usd": 7.0,
+        "price_usd": 7,
         "tags": [],
         "extra": {}
       },
@@ -1163,7 +1163,7 @@
         "desc_en": null,
         "desc_km": null,
         "kind": "burger",
-        "price_usd": 9.0,
+        "price_usd": 9,
         "tags": [],
         "extra": {}
       },
@@ -1174,7 +1174,7 @@
         "desc_en": null,
         "desc_km": null,
         "kind": "burger",
-        "price_usd": 7.0,
+        "price_usd": 7,
         "tags": [],
         "extra": {}
       },
@@ -1185,7 +1185,7 @@
         "desc_en": null,
         "desc_km": null,
         "kind": "burger",
-        "price_usd": 8.0,
+        "price_usd": 8,
         "tags": [],
         "extra": {}
       },
@@ -1196,7 +1196,7 @@
         "desc_en": null,
         "desc_km": null,
         "kind": "side",
-        "price_usd": 2.0,
+        "price_usd": 2,
         "tags": [],
         "extra": {}
       },
@@ -1218,7 +1218,7 @@
         "desc_en": null,
         "desc_km": null,
         "kind": "side",
-        "price_usd": 4.0,
+        "price_usd": 4,
         "tags": [],
         "extra": {}
       },
@@ -1229,7 +1229,7 @@
         "desc_en": null,
         "desc_km": null,
         "kind": "side",
-        "price_usd": 4.0,
+        "price_usd": 4,
         "tags": [],
         "extra": {}
       },
@@ -1251,7 +1251,7 @@
         "desc_en": null,
         "desc_km": null,
         "kind": "side",
-        "price_usd": 5.0,
+        "price_usd": 5,
         "tags": [],
         "extra": {}
       },
@@ -1317,7 +1317,7 @@
         "desc_en": null,
         "desc_km": null,
         "kind": "dip",
-        "price_usd": 1.0,
+        "price_usd": 1,
         "tags": [],
         "extra": {}
       },
@@ -1328,7 +1328,7 @@
         "desc_en": null,
         "desc_km": null,
         "kind": "dip",
-        "price_usd": 2.0,
+        "price_usd": 2,
         "tags": [],
         "extra": {}
       },
@@ -1515,7 +1515,7 @@
         "desc_en": null,
         "desc_km": null,
         "kind": "bottle",
-        "price_usd": 9.0,
+        "price_usd": 9,
         "tags": [],
         "extra": {}
       }
@@ -1531,7 +1531,10 @@
         "is_dry_rub": false,
         "in_house_only": false,
         "sold_out": false,
-        "heat_cap": "extreme"
+        "heat_cap": "extreme",
+        "number": 1,
+        "name": "BUFFALO",
+        "display": "1️⃣ BUFFALO"
       },
       {
         "id": "F02",
@@ -1543,7 +1546,10 @@
         "is_dry_rub": false,
         "in_house_only": false,
         "sold_out": false,
-        "heat_cap": "extreme"
+        "heat_cap": "extreme",
+        "number": 2,
+        "name": "BAYOU BILLY",
+        "display": "2️⃣ BAYOU BILLY"
       },
       {
         "id": "F03",
@@ -1555,7 +1561,10 @@
         "is_dry_rub": false,
         "in_house_only": false,
         "sold_out": false,
-        "heat_cap": "extreme"
+        "heat_cap": "extreme",
+        "number": 3,
+        "name": "BUFFA-O",
+        "display": "3️⃣ BUFFA-O"
       },
       {
         "id": "F04",
@@ -1567,7 +1576,10 @@
         "is_dry_rub": false,
         "in_house_only": false,
         "sold_out": false,
-        "heat_cap": "extreme"
+        "heat_cap": "extreme",
+        "number": 4,
+        "name": "BUFFALO-YAKI",
+        "display": "4️⃣ BUFFALO-YAKI"
       },
       {
         "id": "F05",
@@ -1579,7 +1591,10 @@
         "is_dry_rub": false,
         "in_house_only": false,
         "sold_out": false,
-        "heat_cap": "extreme"
+        "heat_cap": "extreme",
+        "number": 5,
+        "name": "DOUBLE BUFFALO",
+        "display": "5️⃣ DOUBLE BUFFALO"
       },
       {
         "id": "F06",
@@ -1591,7 +1606,10 @@
         "is_dry_rub": false,
         "in_house_only": false,
         "sold_out": false,
-        "heat_cap": "revenge"
+        "heat_cap": "revenge",
+        "number": 6,
+        "name": "GARGOYLE",
+        "display": "6️⃣ GARGOYLE"
       },
       {
         "id": "F07",
@@ -1603,7 +1621,10 @@
         "is_dry_rub": false,
         "in_house_only": false,
         "sold_out": false,
-        "heat_cap": "extreme"
+        "heat_cap": "extreme",
+        "number": 7,
+        "name": "BUFFALO DRIP",
+        "display": "7️⃣ BUFFALO DRIP"
       },
       {
         "id": "F08",
@@ -1615,7 +1636,10 @@
         "is_dry_rub": false,
         "in_house_only": false,
         "sold_out": false,
-        "heat_cap": "extreme"
+        "heat_cap": "extreme",
+        "number": 8,
+        "name": "MUFFALO",
+        "display": "8️⃣ MUFFALO"
       },
       {
         "id": "F09",
@@ -1627,7 +1651,10 @@
         "is_dry_rub": false,
         "in_house_only": false,
         "sold_out": false,
-        "heat_cap": "extreme"
+        "heat_cap": "extreme",
+        "number": 9,
+        "name": "MUFFA Q",
+        "display": "9️⃣ MUFFA Q"
       },
       {
         "id": "F10",
@@ -1639,7 +1666,10 @@
         "is_dry_rub": false,
         "in_house_only": false,
         "sold_out": false,
-        "heat_cap": "extreme"
+        "heat_cap": "extreme",
+        "number": 10,
+        "name": "JAMAICAN JERK",
+        "display": "1️⃣0️⃣ JAMAICAN JERK"
       },
       {
         "id": "F11",
@@ -1651,7 +1681,10 @@
         "is_dry_rub": false,
         "in_house_only": false,
         "sold_out": false,
-        "heat_cap": "extreme"
+        "heat_cap": "extreme",
+        "number": 11,
+        "name": "GODZILLA",
+        "display": "1️⃣1️⃣ GODZILLA"
       },
       {
         "id": "F12",
@@ -1663,7 +1696,10 @@
         "is_dry_rub": false,
         "in_house_only": false,
         "sold_out": false,
-        "heat_cap": "extreme"
+        "heat_cap": "extreme",
+        "number": 12,
+        "name": "GOJIRA",
+        "display": "1️⃣2️⃣ GOJIRA"
       },
       {
         "id": "F13",
@@ -1675,7 +1711,10 @@
         "is_dry_rub": false,
         "in_house_only": false,
         "sold_out": false,
-        "heat_cap": "extreme"
+        "heat_cap": "extreme",
+        "number": 13,
+        "name": "JERKY",
+        "display": "1️⃣3️⃣ JERKY"
       },
       {
         "id": "F14",
@@ -1687,7 +1726,10 @@
         "is_dry_rub": false,
         "in_house_only": false,
         "sold_out": false,
-        "heat_cap": "extreme"
+        "heat_cap": "extreme",
+        "number": 14,
+        "name": "JUGGALO",
+        "display": "1️⃣4️⃣ JUGGALO"
       },
       {
         "id": "F15",
@@ -1699,7 +1741,10 @@
         "is_dry_rub": false,
         "in_house_only": false,
         "sold_out": false,
-        "heat_cap": "extreme"
+        "heat_cap": "extreme",
+        "number": 15,
+        "name": "MAN JERK",
+        "display": "1️⃣5️⃣ MAN JERK"
       },
       {
         "id": "F16",
@@ -1711,7 +1756,10 @@
         "is_dry_rub": false,
         "in_house_only": true,
         "sold_out": false,
-        "heat_cap": "revenge"
+        "heat_cap": "revenge",
+        "number": 16,
+        "name": "VOLCANO",
+        "display": "1️⃣6️⃣ VOLCANO"
       },
       {
         "id": "F17",
@@ -1723,7 +1771,10 @@
         "is_dry_rub": false,
         "in_house_only": false,
         "sold_out": false,
-        "heat_cap": "extreme"
+        "heat_cap": "extreme",
+        "number": 17,
+        "name": "HONEY TERIYAKI",
+        "display": "1️⃣7️⃣ HONEY TERIYAKI"
       },
       {
         "id": "F18",
@@ -1735,7 +1786,10 @@
         "is_dry_rub": false,
         "in_house_only": false,
         "sold_out": false,
-        "heat_cap": "extreme"
+        "heat_cap": "extreme",
+        "number": 18,
+        "name": "MAUI",
+        "display": "1️⃣8️⃣ MAUI"
       },
       {
         "id": "F19",
@@ -1747,7 +1801,10 @@
         "is_dry_rub": false,
         "in_house_only": true,
         "sold_out": false,
-        "heat_cap": "extreme"
+        "heat_cap": "extreme",
+        "number": 19,
+        "name": "MAUL WOW WOWIE",
+        "display": "1️⃣9️⃣ MAUL WOW WOWIE"
       },
       {
         "id": "F20",
@@ -1759,7 +1816,10 @@
         "is_dry_rub": false,
         "in_house_only": false,
         "sold_out": false,
-        "heat_cap": "extreme"
+        "heat_cap": "extreme",
+        "number": 20,
+        "name": "PTERODACTYL",
+        "display": "2️⃣0️⃣ PTERODACTYL"
       },
       {
         "id": "F21",
@@ -1771,7 +1831,10 @@
         "is_dry_rub": false,
         "in_house_only": false,
         "sold_out": false,
-        "heat_cap": "extreme"
+        "heat_cap": "extreme",
+        "number": 21,
+        "name": "HOTTY",
+        "display": "2️⃣1️⃣ HOTTY"
       },
       {
         "id": "F22",
@@ -1783,7 +1846,10 @@
         "is_dry_rub": false,
         "in_house_only": false,
         "sold_out": false,
-        "heat_cap": "extreme"
+        "heat_cap": "extreme",
+        "number": 22,
+        "name": "TEMPEST",
+        "display": "2️⃣2️⃣ TEMPEST"
       },
       {
         "id": "F23",
@@ -1795,7 +1861,10 @@
         "is_dry_rub": false,
         "in_house_only": true,
         "sold_out": false,
-        "heat_cap": "revenge"
+        "heat_cap": "revenge",
+        "number": 23,
+        "name": "MATT'S MISTAKE",
+        "display": "2️⃣3️⃣ MATT'S MISTAKE"
       },
       {
         "id": "F24",
@@ -1807,7 +1876,10 @@
         "is_dry_rub": false,
         "in_house_only": false,
         "sold_out": false,
-        "heat_cap": "extreme"
+        "heat_cap": "extreme",
+        "number": 24,
+        "name": "TRAIN TO BUSAN",
+        "display": "2️⃣4️⃣ TRAIN TO BUSAN"
       },
       {
         "id": "F25",
@@ -1819,7 +1891,10 @@
         "is_dry_rub": false,
         "in_house_only": false,
         "sold_out": false,
-        "heat_cap": "extreme"
+        "heat_cap": "extreme",
+        "number": 25,
+        "name": "HONEY BUSAN",
+        "display": "2️⃣5️⃣ HONEY BUSAN"
       },
       {
         "id": "F26",
@@ -1831,7 +1906,10 @@
         "is_dry_rub": false,
         "in_house_only": false,
         "sold_out": false,
-        "heat_cap": "revenge"
+        "heat_cap": "revenge",
+        "number": 26,
+        "name": "FLAME TO BUSAN",
+        "display": "2️⃣6️⃣ FLAME TO BUSAN"
       },
       {
         "id": "F27",
@@ -1843,7 +1921,10 @@
         "is_dry_rub": false,
         "in_house_only": false,
         "sold_out": false,
-        "heat_cap": "extreme"
+        "heat_cap": "extreme",
+        "number": 27,
+        "name": "CONDUCTOR",
+        "display": "2️⃣7️⃣ CONDUCTOR"
       },
       {
         "id": "F28",
@@ -1855,7 +1936,10 @@
         "is_dry_rub": false,
         "in_house_only": false,
         "sold_out": false,
-        "heat_cap": "extreme"
+        "heat_cap": "extreme",
+        "number": 28,
+        "name": "\"CHOO CHOO\"?)",
+        "display": "2️⃣8️⃣ \"CHOO CHOO\"?)"
       },
       {
         "id": "F29",
@@ -1867,7 +1951,10 @@
         "is_dry_rub": false,
         "in_house_only": false,
         "sold_out": false,
-        "heat_cap": "extreme"
+        "heat_cap": "extreme",
+        "number": 29,
+        "name": "CHOO CHOO",
+        "display": "2️⃣9️⃣ CHOO CHOO"
       },
       {
         "id": "F30",
@@ -1879,7 +1966,10 @@
         "is_dry_rub": false,
         "in_house_only": false,
         "sold_out": false,
-        "heat_cap": "extreme"
+        "heat_cap": "extreme",
+        "number": 30,
+        "name": "BBQ",
+        "display": "3️⃣0️⃣ BBQ"
       },
       {
         "id": "F31",
@@ -1891,7 +1981,10 @@
         "is_dry_rub": false,
         "in_house_only": false,
         "sold_out": false,
-        "heat_cap": "extreme"
+        "heat_cap": "extreme",
+        "number": 31,
+        "name": "HBQ",
+        "display": "3️⃣1️⃣ HBQ"
       },
       {
         "id": "F32",
@@ -1903,7 +1996,10 @@
         "is_dry_rub": false,
         "in_house_only": false,
         "sold_out": false,
-        "heat_cap": "extreme"
+        "heat_cap": "extreme",
+        "number": 32,
+        "name": "JBO",
+        "display": "3️⃣2️⃣ JBO"
       },
       {
         "id": "F33",
@@ -1915,7 +2011,10 @@
         "is_dry_rub": false,
         "in_house_only": false,
         "sold_out": false,
-        "heat_cap": "extreme"
+        "heat_cap": "extreme",
+        "number": 33,
+        "name": "CHARLIE",
+        "display": "3️⃣3️⃣ CHARLIE"
       },
       {
         "id": "F34",
@@ -1927,7 +2026,10 @@
         "is_dry_rub": false,
         "in_house_only": true,
         "sold_out": false,
-        "heat_cap": "extreme"
+        "heat_cap": "extreme",
+        "number": 34,
+        "name": "SIMON SAYS",
+        "display": "3️⃣4️⃣ SIMON SAYS"
       },
       {
         "id": "F35",
@@ -1939,7 +2041,10 @@
         "is_dry_rub": false,
         "in_house_only": false,
         "sold_out": false,
-        "heat_cap": "extreme"
+        "heat_cap": "extreme",
+        "number": 35,
+        "name": "GOLD RUSH",
+        "display": "3️⃣5️⃣ GOLD RUSH"
       },
       {
         "id": "F36",
@@ -1951,7 +2056,10 @@
         "is_dry_rub": false,
         "in_house_only": false,
         "sold_out": false,
-        "heat_cap": "extreme"
+        "heat_cap": "extreme",
+        "number": 36,
+        "name": "SMOKIN YAKI",
+        "display": "3️⃣6️⃣ SMOKIN YAKI"
       },
       {
         "id": "F37",
@@ -1963,7 +2071,10 @@
         "is_dry_rub": false,
         "in_house_only": false,
         "sold_out": false,
-        "heat_cap": "extreme"
+        "heat_cap": "extreme",
+        "number": 37,
+        "name": "MANGO BBQ",
+        "display": "3️⃣7️⃣ MANGO BBQ"
       },
       {
         "id": "F38",
@@ -1975,7 +2086,10 @@
         "is_dry_rub": false,
         "in_house_only": true,
         "sold_out": false,
-        "heat_cap": "revenge"
+        "heat_cap": "revenge",
+        "number": 38,
+        "name": "BARBARIAN",
+        "display": "3️⃣8️⃣ BARBARIAN"
       },
       {
         "id": "F39",
@@ -1987,7 +2101,10 @@
         "is_dry_rub": false,
         "in_house_only": false,
         "sold_out": false,
-        "heat_cap": "extreme"
+        "heat_cap": "extreme",
+        "number": 39,
+        "name": "KHMER CHILI SIEM REAP",
+        "display": "3️⃣9️⃣ KHMER CHILI SIEM REAP"
       },
       {
         "id": "F40",
@@ -1999,7 +2116,10 @@
         "is_dry_rub": false,
         "in_house_only": false,
         "sold_out": false,
-        "heat_cap": "extreme"
+        "heat_cap": "extreme",
+        "number": 40,
+        "name": "HONEY KHMER",
+        "display": "4️⃣0️⃣ HONEY KHMER"
       },
       {
         "id": "F41",
@@ -2011,7 +2131,10 @@
         "is_dry_rub": false,
         "in_house_only": false,
         "sold_out": false,
-        "heat_cap": "extreme"
+        "heat_cap": "extreme",
+        "number": 41,
+        "name": "BATTAMBANG",
+        "display": "4️⃣1️⃣ BATTAMBANG"
       },
       {
         "id": "F42",
@@ -2023,7 +2146,10 @@
         "is_dry_rub": false,
         "in_house_only": false,
         "sold_out": false,
-        "heat_cap": "extreme"
+        "heat_cap": "extreme",
+        "number": 42,
+        "name": "KMJ",
+        "display": "4️⃣2️⃣ KMJ"
       },
       {
         "id": "F43",
@@ -2035,7 +2161,10 @@
         "is_dry_rub": false,
         "in_house_only": false,
         "sold_out": false,
-        "heat_cap": "revenge"
+        "heat_cap": "revenge",
+        "number": 43,
+        "name": "KUN KHMER",
+        "display": "4️⃣3️⃣ KUN KHMER"
       },
       {
         "id": "F44",
@@ -2047,7 +2176,10 @@
         "is_dry_rub": false,
         "in_house_only": false,
         "sold_out": false,
-        "heat_cap": "extreme"
+        "heat_cap": "extreme",
+        "number": 44,
+        "name": "KHMER BBQ",
+        "display": "4️⃣4️⃣ KHMER BBQ"
       },
       {
         "id": "F45",
@@ -2059,7 +2191,10 @@
         "is_dry_rub": false,
         "in_house_only": false,
         "sold_out": false,
-        "heat_cap": "extreme"
+        "heat_cap": "extreme",
+        "number": 45,
+        "name": "FIRE BONG",
+        "display": "4️⃣5️⃣ FIRE BONG"
       },
       {
         "id": "F46",
@@ -2071,7 +2206,10 @@
         "is_dry_rub": false,
         "in_house_only": false,
         "sold_out": false,
-        "heat_cap": "revenge"
+        "heat_cap": "revenge",
+        "number": 46,
+        "name": "CITRIC ERESTORM",
+        "display": "4️⃣6️⃣ CITRIC ERESTORM"
       },
       {
         "id": "F47",
@@ -2083,7 +2221,10 @@
         "is_dry_rub": false,
         "in_house_only": false,
         "sold_out": false,
-        "heat_cap": "extreme"
+        "heat_cap": "extreme",
+        "number": 47,
+        "name": "BUFFALO STORM",
+        "display": "4️⃣7️⃣ BUFFALO STORM"
       },
       {
         "id": "F48",
@@ -2095,7 +2236,10 @@
         "is_dry_rub": false,
         "in_house_only": false,
         "sold_out": false,
-        "heat_cap": "nuclear"
+        "heat_cap": "nuclear",
+        "number": 48,
+        "name": "FOUR HORSEMAN",
+        "display": "4️⃣8️⃣ FOUR HORSEMAN"
       },
       {
         "id": "F49",
@@ -2107,7 +2251,10 @@
         "is_dry_rub": false,
         "in_house_only": false,
         "sold_out": false,
-        "heat_cap": "extreme"
+        "heat_cap": "extreme",
+        "number": 49,
+        "name": "ANGRY JERK",
+        "display": "4️⃣9️⃣ ANGRY JERK"
       },
       {
         "id": "F50",
@@ -2119,7 +2266,10 @@
         "is_dry_rub": false,
         "in_house_only": false,
         "sold_out": false,
-        "heat_cap": "extreme"
+        "heat_cap": "extreme",
+        "number": 50,
+        "name": "NITRO BBQ",
+        "display": "5️⃣0️⃣ NITRO BBQ"
       },
       {
         "id": "F51",
@@ -2131,7 +2281,10 @@
         "is_dry_rub": false,
         "in_house_only": false,
         "sold_out": false,
-        "heat_cap": "extreme"
+        "heat_cap": "extreme",
+        "number": 51,
+        "name": "MONSOON",
+        "display": "5️⃣1️⃣ MONSOON"
       },
       {
         "id": "F52",
@@ -2143,7 +2296,10 @@
         "is_dry_rub": false,
         "in_house_only": false,
         "sold_out": false,
-        "heat_cap": "extreme"
+        "heat_cap": "extreme",
+        "number": 52,
+        "name": "FIRE YAKI",
+        "display": "5️⃣2️⃣ FIRE YAKI"
       },
       {
         "id": "F53",
@@ -2155,7 +2311,10 @@
         "is_dry_rub": false,
         "in_house_only": true,
         "sold_out": false,
-        "heat_cap": "nuclear"
+        "heat_cap": "nuclear",
+        "number": 53,
+        "name": "ORION",
+        "display": "5️⃣3️⃣ ORION"
       },
       {
         "id": "F54",
@@ -2167,7 +2326,10 @@
         "is_dry_rub": true,
         "in_house_only": false,
         "sold_out": false,
-        "heat_cap": "original"
+        "heat_cap": "original",
+        "number": 54,
+        "name": "BUFFALO DRY",
+        "display": "5️⃣4️⃣ BUFFALO DRY"
       },
       {
         "id": "F55",
@@ -2179,7 +2341,10 @@
         "is_dry_rub": true,
         "in_house_only": false,
         "sold_out": false,
-        "heat_cap": "original"
+        "heat_cap": "original",
+        "number": 55,
+        "name": "KAMPOT HONEY PEPPER",
+        "display": "5️⃣5️⃣ KAMPOT HONEY PEPPER"
       },
       {
         "id": "F56",
@@ -2191,7 +2356,10 @@
         "is_dry_rub": true,
         "in_house_only": false,
         "sold_out": false,
-        "heat_cap": "original"
+        "heat_cap": "original",
+        "number": 56,
+        "name": "MIDNIGHT RUB",
+        "display": "5️⃣6️⃣ MIDNIGHT RUB"
       },
       {
         "id": "F57",
@@ -2203,7 +2371,10 @@
         "is_dry_rub": true,
         "in_house_only": false,
         "sold_out": false,
-        "heat_cap": "original"
+        "heat_cap": "original",
+        "number": 57,
+        "name": "HOUSE BLEND",
+        "display": "5️⃣7️⃣ HOUSE BLEND"
       },
       {
         "id": "F58",
@@ -2215,7 +2386,10 @@
         "is_dry_rub": true,
         "in_house_only": false,
         "sold_out": false,
-        "heat_cap": "original"
+        "heat_cap": "original",
+        "number": 58,
+        "name": "CAJUN",
+        "display": "5️⃣8️⃣ CAJUN"
       },
       {
         "id": "F59",
@@ -2227,7 +2401,10 @@
         "is_dry_rub": true,
         "in_house_only": false,
         "sold_out": false,
-        "heat_cap": "original"
+        "heat_cap": "original",
+        "number": 59,
+        "name": "LEMON PEPPER",
+        "display": "5️⃣9️⃣ LEMON PEPPER"
       },
       {
         "id": "F60",
@@ -2239,7 +2416,10 @@
         "is_dry_rub": false,
         "in_house_only": false,
         "sold_out": false,
-        "heat_cap": "extreme"
+        "heat_cap": "extreme",
+        "number": 60,
+        "name": "KHMER STYLE",
+        "display": "6️⃣0️⃣ KHMER STYLE"
       },
       {
         "id": "F61",
@@ -2251,7 +2431,10 @@
         "is_dry_rub": false,
         "in_house_only": false,
         "sold_out": false,
-        "heat_cap": "extreme"
+        "heat_cap": "extreme",
+        "number": 61,
+        "name": "HONEY MUSTARD",
+        "display": "6️⃣1️⃣ HONEY MUSTARD"
       },
       {
         "id": "F62",
@@ -2263,7 +2446,10 @@
         "is_dry_rub": false,
         "in_house_only": false,
         "sold_out": false,
-        "heat_cap": "extreme"
+        "heat_cap": "extreme",
+        "number": 62,
+        "name": "HONEY GARLIC",
+        "display": "6️⃣2️⃣ HONEY GARLIC"
       },
       {
         "id": "F63",
@@ -2275,7 +2461,10 @@
         "is_dry_rub": false,
         "in_house_only": false,
         "sold_out": false,
-        "heat_cap": "extreme"
+        "heat_cap": "extreme",
+        "number": 63,
+        "name": "NAKED",
+        "display": "6️⃣3️⃣ NAKED"
       },
       {
         "id": "F64",
@@ -2287,7 +2476,10 @@
         "is_dry_rub": false,
         "in_house_only": false,
         "sold_out": false,
-        "heat_cap": "extreme"
+        "heat_cap": "extreme",
+        "number": 64,
+        "name": "COMEBACK",
+        "display": "6️⃣4️⃣ COMEBACK"
       },
       {
         "id": "F65",
@@ -2299,7 +2491,10 @@
         "is_dry_rub": false,
         "in_house_only": true,
         "sold_out": false,
-        "heat_cap": "extreme"
+        "heat_cap": "extreme",
+        "number": 65,
+        "name": "SALT & MALT",
+        "display": "6️⃣5️⃣ SALT & MALT"
       },
       {
         "id": "F66",
@@ -2311,7 +2506,10 @@
         "is_dry_rub": false,
         "in_house_only": false,
         "sold_out": false,
-        "heat_cap": "extreme"
+        "heat_cap": "extreme",
+        "number": 66,
+        "name": "HOT HONEY",
+        "display": "6️⃣6️⃣ HOT HONEY"
       },
       {
         "id": "F67",
@@ -2323,7 +2521,10 @@
         "is_dry_rub": false,
         "in_house_only": false,
         "sold_out": false,
-        "heat_cap": "extreme"
+        "heat_cap": "extreme",
+        "number": 67,
+        "name": "HOT HONEY RANCH",
+        "display": "6️⃣7️⃣ HOT HONEY RANCH"
       },
       {
         "id": "F68",
@@ -2335,7 +2536,10 @@
         "is_dry_rub": false,
         "in_house_only": false,
         "sold_out": false,
-        "heat_cap": "extreme"
+        "heat_cap": "extreme",
+        "number": 68,
+        "name": "SPICY RANCH",
+        "display": "6️⃣8️⃣ SPICY RANCH"
       },
       {
         "id": "F69",
@@ -2347,7 +2551,10 @@
         "is_dry_rub": false,
         "in_house_only": true,
         "sold_out": false,
-        "heat_cap": "nuclear"
+        "heat_cap": "nuclear",
+        "number": 69,
+        "name": "MANGO HABANERO",
+        "display": "6️⃣9️⃣ MANGO HABANERO"
       },
       {
         "id": "F70",
@@ -2359,7 +2566,10 @@
         "is_dry_rub": false,
         "in_house_only": true,
         "sold_out": false,
-        "heat_cap": "nuclear"
+        "heat_cap": "nuclear",
+        "number": 70,
+        "name": "ARMAGEDDON",
+        "display": "7️⃣0️⃣ ARMAGEDDON"
       }
     ]
   }
