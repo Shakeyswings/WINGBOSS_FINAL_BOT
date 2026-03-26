@@ -7,7 +7,7 @@ async function main() {
   console.log("✅ Boot:", { RUNTIME_MODE: env.RUNTIME_MODE, BACKEND_MODE: env.BACKEND_MODE, FAILOVER_MODE: env.FAILOVER_MODE });
 
   const bot = await buildBot(env);
-  await bot.launch();
+  await bot.launch({ dropPendingUpdates: true });
   console.log("✅ Bot launched (long-polling)");
 
   process.once("SIGINT", () => bot.stop("SIGINT"));
