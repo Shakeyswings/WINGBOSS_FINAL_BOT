@@ -15,6 +15,12 @@ function cb(ctx: WBContext): string {
   return typeof d === "string" ? d : "";
 }
 
+/* REPLY_KEYBOARD_TEXT_ROUTING */
+function msgText(ctx: WBContext): string {
+  const t = (ctx.update as any)?.message?.text;
+  return typeof t === "string" ? t.trim() : "";
+}
+
 function isWingsCategory(cat: any): boolean {
   const id = String(cat?.id ?? "").toLowerCase();
   const name = String(cat?.name_en ?? cat?.name ?? "").toLowerCase();
@@ -131,8 +137,16 @@ function kb(rows: any[][]) {
 }
 
 export async function orderFlow(ctx: WBContext) {
-  const data = cb(ctx);
+  let data = cb(ctx);
   const menu = await getMenu(ctx);
+
+  // If user pressed OLD reply-keyboard buttons, Telegram sends message.text (not callback data)
+  if (!data) {
+    const t = msgText(ctx);
+    const norm = t.replace(/\s+/g, " ").trim();
+    if (/start order/i.test(norm) || norm.includes("🍗")) data = "order:home";
+    else if (/view cart/i.test(norm) || norm.includes("🛒")) data = "order:cart";
+  }
 
   // default entry
   if (!data || data === "order" || data === "order:home") {
