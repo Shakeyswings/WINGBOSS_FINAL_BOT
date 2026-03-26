@@ -23,3 +23,4 @@ backups/
 *.zip
 node_modules/
 =
+menu/*.bak.*
