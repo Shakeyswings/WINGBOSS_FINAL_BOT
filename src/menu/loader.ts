@@ -101,6 +101,22 @@ export async function loadMenu(path: string): Promise<MenuBundleV1> {
     outAny.catalog = { ...(outAny.catalog || {}), items: __v1_keep.catalog.items };
   }
 
+// PRESERVE_CATEGORY_ITEMS_AFTER_SAFE_PARSE: schema may strip/empty category.items; merge from v1
+try {
+  const rawCats = (v1 as any)?.catalog?.categories;
+  const menuAny: any = parsed.data as any;
+  const menuCats = menuAny?.catalog?.categories;
+  if (Array.isArray(rawCats) && Array.isArray(menuCats)) {
+    const rawById = new Map(rawCats.map((c:any)=>[String(c?.id), c]));
+    for (const c of menuCats) {
+      const rc = rawById.get(String(c?.id));
+      if (rc?.items && (!Array.isArray((c as any).items) || (c as any).items.length === 0)) {
+        (c as any).items = rc.items;
+      }
+    }
+  }
+} catch {}
+
 cached = { path, mtimeMs: stat.mtimeMs, menu: parsed.data };
   return parsed.data;
 }
