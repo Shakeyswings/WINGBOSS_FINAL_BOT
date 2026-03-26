@@ -116,6 +116,24 @@ try {
     }
   }
 } catch {}
+  // PRESERVE_CATEGORY_ITEMS_FROM_RAWJSON:
+  // rawJson is the only source of truth for catalog.categories[].items (shimToV1 may drop them)
+  try {
+    const rawCats = (rawJson as any)?.catalog?.categories;
+    const menuAny: any = parsed.data as any;
+    const menuCats = menuAny?.catalog?.categories;
+    if (Array.isArray(rawCats) && Array.isArray(menuCats)) {
+      const rawById = new Map(rawCats.map((c:any)=>[String(c?.id), c]));
+      for (const c of menuCats) {
+        const rc = rawById.get(String(c?.id));
+        if (Array.isArray(rc?.items) && rc.items.length) {
+          const cur = (c as any).items;
+          if (!Array.isArray(cur) || cur.length === 0) (c as any).items = rc.items;
+        }
+      }
+    }
+  } catch {}
+
 
 cached = { path, mtimeMs: stat.mtimeMs, menu: parsed.data };
   return parsed.data;
