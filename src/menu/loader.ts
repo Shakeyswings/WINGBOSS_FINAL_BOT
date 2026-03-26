@@ -95,10 +95,10 @@ export async function loadMenu(path: string): Promise<MenuBundleV1> {
   }
 
     // PRESERVE_CATALOG_ITEMS_FROM_V1: schema may strip catalog.items; keep from v1 for category->item resolution
-  const v1Any: any = v1;
+  const __v1_keep: any = v1;
   const outAny: any = parsed.data;
-  if (v1Any?.catalog?.items && !outAny?.catalog?.items) {
-    outAny.catalog = { ...(outAny.catalog || {}), items: v1Any.catalog.items };
+  if (__v1_keep?.catalog?.items && !outAny?.catalog?.items) {
+    outAny.catalog = { ...(outAny.catalog || {}), items: __v1_keep.catalog.items };
   }
 
 cached = { path, mtimeMs: stat.mtimeMs, menu: parsed.data };
