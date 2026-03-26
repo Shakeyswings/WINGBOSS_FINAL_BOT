@@ -65,18 +65,26 @@ function buildItemIndex(items: any[]): Map<string, any> {
 }
 
 function itemsForCategory(menu: MenuAny, cat: any): any[] {
-  // Supports:
-  // - cat.items: embedded item objects
-  // - cat.item_ids: ids referencing catalog.items
-  // - cat.skus: ids referencing catalog.items
-  if (Array.isArray(cat?.items)) return cat.items;
-
   const allItems = getAllItems(menu);
   const idx = buildItemIndex(allItems);
 
+  // cat.items can be:
+  // - embedded item objects
+  // - array of item IDs (strings)
+  if (Array.isArray(cat?.items) && cat.items.length) {
+    const first = cat.items[0];
+    if (first && typeof first === "object") return cat.items;
+
+    // Treat as IDs
+    const resolved = cat.items.map((x: any) => idx.get(String(x))).filter(Boolean);
+    if (resolved.length) return resolved;
+  }
+
+  // Alternative ID lists
   const ids =
     (Array.isArray(cat?.item_ids) ? cat.item_ids : null) ||
     (Array.isArray(cat?.skus) ? cat.skus : null) ||
+    (Array.isArray(cat?.itemIds) ? cat.itemIds : null) ||
     [];
 
   const resolved = ids.map((x: any) => idx.get(String(x))).filter(Boolean);
