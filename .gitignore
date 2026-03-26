@@ -24,3 +24,7 @@ backups/
 node_modules/
 =
 menu/*.bak.*
+
+# Patch safety backups
+src/**/*.bak.*
+menu/**/*.bak.*
