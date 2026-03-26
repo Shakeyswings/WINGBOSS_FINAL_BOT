@@ -41,8 +41,11 @@ function chunk<T>(arr: T[], size: number): T[][] {
 }
 
 async function getMenu(ctx: WBContext): Promise<MenuAny> {
-  // Always load from configured path; loader should cache internally.
-  return loadMenu(ctx.env.MENU_PATH);
+  // Some message routes may not have ctx.env attached yet (reply-keyboard text, etc).
+  // Fall back to process.env + default menu path to prevent crashes.
+  const env: any = (ctx as any).env ?? process.env;
+  const menuPath = String(env.MENU_PATH || "./menu/menu_bundle.v1.json");
+  return loadMenu(menuPath);
 }
 
 function getCategories(menu: MenuAny): any[] {
