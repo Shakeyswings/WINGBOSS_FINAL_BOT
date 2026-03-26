@@ -81,6 +81,13 @@ export async function loadMenu(path: string): Promise<MenuBundleV1> {
   const rawJson = normalizeMenuRaw(JSON.parse(rawText));
 
   const v1 = shimToV1(rawJson);
+  // PRESERVE_ITEMS_RAW_TO_V1: shim may drop catalog.items; keep it for category->item resolution
+  const rawAny: any = rawJson;
+  const v1Any: any = v1;
+  if (rawAny?.catalog?.items && !v1Any?.catalog?.items) {
+    v1Any.catalog = { ...(v1Any.catalog || {}), items: rawAny.catalog.items };
+  }
+
   const parsed = MenuBundleV1Schema.safeParse(v1);
   if (!parsed.success) {
     const msg = parsed.error.issues.map((i) => `${i.path.join(".")}: ${i.message}`).join("\n");
