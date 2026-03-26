@@ -58,8 +58,10 @@ function getAllItems(menu: MenuAny): any[] {
 function buildItemIndex(items: any[]): Map<string, any> {
   const m = new Map<string, any>();
   for (const it of items) {
-    const id = String(it?.id ?? it?.sku ?? "");
+    const id = String(it?.id ?? "").trim();
+    const sku = String(it?.sku ?? "").trim();
     if (id) m.set(id, it);
+    if (sku) m.set(sku, it);
   }
   return m;
 }
@@ -76,7 +78,7 @@ function itemsForCategory(menu: MenuAny, cat: any): any[] {
     if (first && typeof first === "object") return cat.items;
 
     // Treat as IDs
-    const resolved = cat.items.map((x: any) => idx.get(String(x))).filter(Boolean);
+    const resolved = cat.items.map((x: any) => idx.get(String(x).trim())).filter(Boolean);
     if (resolved.length) return resolved;
   }
 
@@ -87,7 +89,7 @@ function itemsForCategory(menu: MenuAny, cat: any): any[] {
     (Array.isArray(cat?.itemIds) ? cat.itemIds : null) ||
     [];
 
-  const resolved = ids.map((x: any) => idx.get(String(x))).filter(Boolean);
+  const resolved = ids.map((x: any) => idx.get(String(x).trim())).filter(Boolean);
   if (resolved.length) return resolved;
 
   // fallback: filter items by category_id
