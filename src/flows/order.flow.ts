@@ -255,23 +255,37 @@ export async function orderFlow(ctx: WBContext) {
     const [, , itemId, pageStr] = data.split(":");
     const page = Math.max(0, Number(pageStr ?? "0"));
 
-    const flavors = getTelegramFlavors(menu); // already filters in-house-only
-    const pages = chunk(flavors, 12);
-    const p = Math.min(page, pages.length - 1);
+    
+const flavors = getTelegramFlavors(menu); // already filters in-house-only
 
-    const rows = pages[p].map((f: any) => {
-      const label = `${f.token} ${f.name}`;
-      return [Markup.button.callback(label, `order:add_wings:${itemId}:${f.number}`)];
-    });
+/* WB_FLAVOR_PAGES_GUARD */
+if (!Array.isArray(flavors) || flavors.length === 0) {
+  return ctx.reply("⚠️ No flavors available right now.", kb([
+    [Markup.button.callback("⬅️ Categories", "order:home")],
+    [Markup.button.callback("🛒 Cart", "order:cart")]
+  ]));
+}
 
-    const nav: any[] = [];
-    if (p > 0) nav.push(Markup.button.callback("⬅️ Prev", `order:flavor:${itemId}:${p - 1}`));
-    if (p < pages.length - 1) nav.push(Markup.button.callback("➡️ Next", `order:flavor:${itemId}:${p + 1}`));
-    if (nav.length) rows.push(nav);
+const pages = chunk(flavors, 12);
+const maxPage = Math.max(0, pages.length - 1);
+const p = Math.min(Math.max(page, 0), maxPage);
+const pageItems = pages[p] || [];
 
-    rows.push([Markup.button.callback("🛒 Cart", "order:cart"), Markup.button.callback("⬅️ Categories", "order:home")]);
-    return ctx.reply(`🌶️ Choose flavor (page ${p + 1}/${pages.length})`, kb(rows));
+const rows = pageItems.map((f: any) => {
+  const label = `${f.token} ${f.name}`;
+  return [Markup.button.callback(label, `order:add_wings:${itemId}:${f.number}`)];
+});
+
+const nav: any[] = [];
+if (p > 0) nav.push(Markup.button.callback("⬅️ Prev", `order:flavor:${itemId}:${p - 1}`));
+if (p < pages.length - 1) nav.push(Markup.button.callback("➡ Next", `order:flavor:${itemId}:${p + 1}`));
+if (nav.length) rows.push(nav);
+
+rows.push([Markup.button.callback("🛒 Cart", "order:cart"), Markup.button.callback("⬅️ Categories", "order:home")]);
+return ctx.reply(`🌶️ Choose flavor (page ${p + 1}/${pages.length})`, kb(rows));
+
   }
+
 
   // Add wings line with selected flavor number
   if (data.startsWith("order:add_wings:")) {
