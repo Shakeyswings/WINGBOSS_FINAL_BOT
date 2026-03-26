@@ -7,6 +7,8 @@ import { buildTranslator } from "./i18n/index.ts";
 import { initSessionMiddleware, type WBSession } from "./state/sessions.ts";
 import { routeUpdate } from "./state/machine.ts";
 import { makeLogger } from "./utils/log.ts";
+import { orderFlow } from "./flows/order.flow.ts";
+
 
 export type WBContext = Context & {
   session: WBSession;
@@ -21,7 +23,12 @@ export async function buildBot(env: Env) {
 
 
   // Customer contact (opens your public operator handle)
-  bot.command("contact", async (ctx) => {
+  
+// WB_REPLYKEYBOARD_ROUTES: support old ReplyKeyboard buttons (text messages)
+bot.hears(["🍗 Start Order", "Start Order"], async (ctx) => orderFlow(ctx as any));
+bot.hears(["🛒 View Cart", "View Cart"], async (ctx) => orderFlow(ctx as any));
+
+bot.command("contact", async (ctx) => {
     const u = String(ctx.env.CONTACT_USERNAME || "callwingboss").replace(/^@/, "");
     return ctx.reply("📩 Contact Wing⚡Boss:", {
       reply_markup: { inline_keyboard: [[{ text: "@" + u, url: "https://t.me/" + u }]] }
