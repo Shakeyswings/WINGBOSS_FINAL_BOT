@@ -133,6 +133,16 @@ try {
       }
     }
   } catch {}
+  // PRESERVE_FLAVORS_FROM_RAWJSON_AFTER_PARSE:
+  // shimToV1 may drop catalog.flavors; restore from rawJson (true source of truth).
+  try {
+    const menuAny: any = parsed.data as any;
+    const rawFl = (rawJson as any)?.catalog?.flavors;
+    if (Array.isArray(rawFl) && rawFl.length) {
+      menuAny.catalog = { ...(menuAny.catalog || {}), flavors: rawFl };
+    }
+  } catch {}
+
 
 
 cached = { path, mtimeMs: stat.mtimeMs, menu: parsed.data };
