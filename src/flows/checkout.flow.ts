@@ -19,12 +19,12 @@ export async function checkoutFlow(ctx: WBContext) {
     const url = ctx.env.BOT_USERNAME ? `https://t.me/${ctx.env.BOT_USERNAME}` : "Open bot in private chat";
     // WB_DM_BUTTON: In groups, checkout must be done in DM (location + privacy). Provide a one-tap DM link.
     const botUser = String(ctx.env.BOT_USERNAME || "WingsBoss_bot").replace(/^@/,"");
-    const url = botUser ? `https://t.me/${botUser}` : "https://t.me/";
+    const dmUrl = botUser ? `https://t.me/${botUser}` : "https://t.me/";
     // Popup (existing behavior)
     ctx.answerCbQuery("DM-only. Open bot in private.", { show_alert: true }).catch(() => null);
     // Helpful message with button (new behavior)
     await ctx.reply("✅ Checkout continues in DM (private chat). Tap below:", Markup.inlineKeyboard([
-      [Markup.button.url("📩 Open DM with bot", url)]
+      [Markup.button.url("📩 Open DM with bot", dmUrl)]
     ])).catch(() => null);
     return;
   }
