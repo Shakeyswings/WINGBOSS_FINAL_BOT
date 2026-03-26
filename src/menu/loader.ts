@@ -90,3 +90,32 @@ export async function loadMenu(path: string): Promise<MenuBundleV1> {
   cached = { path, mtimeMs: stat.mtimeMs, menu: parsed.data };
   return parsed.data;
 }
+
+
+/**
+ * Telegram-safe flavor list (MENU70).
+ * - Source of truth: menu.catalog.flavors (fallback: menu.flavors.classic)
+ * - Filters in-house-only numbers: 16,19,23,34,38,53,65,69,70
+ */
+export function getTelegramFlavors(menu: any) {
+  const inHouseOnly = new Set([16, 19, 23, 34, 38, 53, 65, 69, 70]);
+
+  const list =
+    (menu?.catalog?.flavors && Array.isArray(menu.catalog.flavors) ? menu.catalog.flavors : null) ||
+    (menu?.flavors?.classic && Array.isArray(menu.flavors.classic) ? menu.flavors.classic : null) ||
+    [];
+
+  return list
+    .map((f: any, i: number) => {
+      const number = Number(f?.number ?? (i + 1));
+      const name = String(f?.name ?? "").trim();
+      const token = String(f?.token ?? "").trim();
+      const family = String(f?.family ?? "Other").trim();
+      const is_dry_rub = Boolean(f?.is_dry_rub);
+      const display = String(f?.display ?? (token && name ? `${token} ${name}` : name)).trim();
+      return { ...f, number, name, token, family, is_dry_rub, display };
+    })
+    .filter((f: any) => f.number >= 1 && f.number <= 70)
+    .filter((f: any) => !inHouseOnly.has(f.number))
+    .filter((f: any) => f.name && f.token && f.display);
+}
