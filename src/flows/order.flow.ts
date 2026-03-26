@@ -110,7 +110,7 @@ function fmtName(ctx: WBContext, obj: any): string {
   // Khmer priority if present
   const km = String(obj?.name_km ?? obj?.km ?? "").trim();
   const en = String(obj?.name_en ?? obj?.name ?? obj?.en ?? "").trim();
-  const lang = (ctx.session.lang ?? ctx.env.DEFAULT_LANG) === "km" ? "km" : "en";
+  const lang = ((ctx.session?.lang ?? (ctx as any).env?.DEFAULT_LANG ?? "en") === "km") ? "km" : "en";
   if (lang === "km" && km) return km;
   return en || km || "-";
 }
@@ -140,6 +140,8 @@ function kb(rows: any[][]) {
 }
 
 export async function orderFlow(ctx: WBContext) {
+  /* WB_SESSION_GUARD */
+  (ctx as any).session = (ctx as any).session ?? {};
   let data = cb(ctx);
   const menu = await getMenu(ctx);
 
