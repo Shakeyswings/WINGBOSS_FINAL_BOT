@@ -78,7 +78,9 @@ export function shimToV1(raw: any): MenuBundleV1 {
       is_dry_rub: isDry,
       dry_rub_icon: isDry ? "🌵" : undefined,
       in_house_only,
-      heat_cap: "extreme"
+      heat_cap: (f.heat_cap && ["nuclear", "extreme", "spicy", "hot", "mild"].includes(String(f.heat_cap).toLowerCase())) 
+        ? String(f.heat_cap).toLowerCase() as "nuclear" | "extreme" | "spicy" | "hot" | "mild"
+        : "mild"
     };
   });
 
