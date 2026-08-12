@@ -50,9 +50,17 @@ const CategorySchema = z.object({
 }).passthrough();
 
 const ModifierOptionSchema = z.object({
-  id: z.string().min(1),
+  id: z.string().min(1).optional(),
+  item_id: z.string().min(1).optional(),
   price: MoneySchema.optional(),
-}).passthrough();
+}).passthrough().superRefine((option, ctx) => {
+  if (!option.id && !option.item_id) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "Modifier option must identify either id or item_id",
+    });
+  }
+});
 
 const ModifierGroupSchema = z.object({
   id: z.string().min(1),
@@ -101,6 +109,17 @@ const CurrentMenuSchema = z.object({
             message: `Item ${item.code} references missing modifier group ${groupId}`,
           });
         }
+      }
+    }
+  }
+
+  for (const group of menu.catalog.modifier_groups) {
+    for (const option of group.options) {
+      if (option.item_id && !itemIds.has(option.item_id)) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: `Modifier group ${group.id} references missing item ${option.item_id}`,
+        });
       }
     }
   }
