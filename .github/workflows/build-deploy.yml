@@ -61,15 +61,18 @@ jobs:
       - name: Run Vitest
         run: npm test
 
-      - name: Validate Legacy Menu Bundle
+      - name: Validate Legacy Runtime Menu Bundle
         run: npm run menu:check
+
+      - name: Validate Canonical Current Menu
+        run: npm run menu:current:check
 
       - name: Validate Environment Config
         run: |
           echo "Checking .env.example structure..."
           test -f .env.example
           test -f menu/menu_bundle.v1.json
-          echo "✅ Legacy menu bundle present"
+          echo "✅ Legacy runtime menu bundle present"
           test -f authoritative-sources/menu.current.json
           echo "✅ Canonical current menu source present"
 
@@ -243,7 +246,8 @@ jobs:
           echo "|-------|--------|" >> $GITHUB_STEP_SUMMARY
           echo "| TypeScript | ✅ blocking |" >> $GITHUB_STEP_SUMMARY
           echo "| Vitest | ✅ blocking |" >> $GITHUB_STEP_SUMMARY
-          echo "| Menu baseline | ✅ blocking |" >> $GITHUB_STEP_SUMMARY
+          echo "| Legacy runtime menu | ✅ blocking |" >> $GITHUB_STEP_SUMMARY
+          echo "| Canonical current menu | ✅ blocking |" >> $GITHUB_STEP_SUMMARY
           echo "| Secret scan | ✅ blocking |" >> $GITHUB_STEP_SUMMARY
           echo "| Dependency audit | ℹ️ informational pending separate remediation |" >> $GITHUB_STEP_SUMMARY
           echo "| Deployment baseline | ✅ prerequisites present |" >> $GITHUB_STEP_SUMMARY
