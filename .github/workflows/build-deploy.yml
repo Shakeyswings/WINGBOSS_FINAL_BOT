@@ -24,57 +24,58 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '22'
           cache: 'npm'
-      
+
       - name: Install dependencies
         run: npm ci
-      
+
       - name: Check TypeScript
         run: npm run build
-        continue-on-error: true
-      
+
       - name: Lint & Format Check
         run: |
-          echo "✅ Audit: TypeScript compilation validated"
-        continue-on-error: true
+          echo "ℹ️ No dedicated lint/format script is configured yet."
+          echo "TypeScript compilation is the current blocking code-quality gate."
 
   test:
-    name: Menu & Configuration Validation
+    name: Test & Menu Validation
     runs-on: ubuntu-latest
     needs: audit
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '22'
           cache: 'npm'
-      
+
       - name: Install dependencies
         run: npm ci
-      
-      - name: Validate Menu Bundle
-        run: npm run menu:check || echo "⚠️ Menu validation skipped (tool pending)"
-        continue-on-error: true
-      
+
+      - name: Run Vitest
+        run: npm test
+
+      - name: Validate Legacy Menu Bundle
+        run: npm run menu:check
+
       - name: Validate Environment Config
         run: |
           echo "Checking .env.example structure..."
-          test -f .env.example && echo "✅ .env.example exists" || echo "⚠️ .env.example missing"
-          test -f menu/menu_bundle.v1.json && echo "✅ Menu bundle v1 found" || echo "⚠️ Menu bundle missing"
-      
-      - name: Test Menu Loading
+          test -f .env.example
+          test -f menu/menu_bundle.v1.json
+          echo "✅ Legacy menu bundle present"
+          test -f authoritative-sources/menu.current.json
+          echo "✅ Canonical current menu source present"
+
+      - name: Test Node Environment
         run: |
-          node --input-type=module -e "
-            console.log('✅ Node.js environment validated');
-            console.log('Ready for menu bundle parsing');
-          "
+          node --input-type=module -e "console.log('✅ Node.js environment validated')"
 
   build:
     name: Build Application
@@ -82,60 +83,72 @@ jobs:
     needs: [audit, test]
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '22'
           cache: 'npm'
-      
+
       - name: Install dependencies
         run: npm ci
-      
+
       - name: Compile TypeScript
         run: npm run build
-      
+
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: dist-build
           path: dist/
           retention-days: 5
-        continue-on-error: true
-      
+
       - name: Build Status Report
         run: |
-          echo "## 🏗️ Build Summary" >> $GITHUB_STEP_SUMMARY
+          echo "## Build Summary" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "✅ TypeScript compiled successfully" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Tests passed" >> $GITHUB_STEP_SUMMARY
           echo "✅ Dependencies installed" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**Artifacts**: dist/ ready for deployment" >> $GITHUB_STEP_SUMMARY
+          echo "**Artifacts**: dist/ ready for further deployment validation" >> $GITHUB_STEP_SUMMARY
 
   security:
     name: Security Scan
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '22'
           cache: 'npm'
-      
-      - name: Audit Dependencies
-        run: npm audit --audit-level=moderate || true
-      
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Dependency Audit Report
+        run: |
+          set +e
+          npm audit --audit-level=moderate
+          AUDIT_EXIT=$?
+          set -e
+          if [ "$AUDIT_EXIT" -ne 0 ]; then
+            echo "⚠️ Dependency vulnerabilities are present and require a separate remediation PR." >> $GITHUB_STEP_SUMMARY
+            echo "Dependency audit is currently informational to preserve the recovered dependency baseline."
+          else
+            echo "✅ Dependency audit found no moderate-or-higher vulnerabilities." >> $GITHUB_STEP_SUMMARY
+          fi
+
       - name: Check for Secrets
         run: |
-          echo "🔐 Scanning for exposed secrets..."
+          echo "Scanning tracked source for hardcoded BOT_TOKEN assignments..."
           if grep -r "BOT_TOKEN\s*=" --include="*.ts" --include="*.js" src/ 2>/dev/null; then
-            echo "⚠️ Warning: Found hardcoded secrets in source files"
-          else
-            echo "✅ No hardcoded secrets detected"
+            echo "❌ Hardcoded BOT_TOKEN assignment found in source files"
+            exit 1
           fi
-        continue-on-error: true
+          echo "✅ No hardcoded BOT_TOKEN assignment detected in tracked source"
 
   deploy-ready:
     name: Deployment Readiness Check
@@ -145,62 +158,67 @@ jobs:
       ready: ${{ steps.check.outputs.ready }}
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Check Deployment Prerequisites
         id: check
         run: |
           echo "Validating deployment prerequisites..."
-          
+
           READY=true
-          
+
           if [ ! -f ".env.example" ]; then
             echo "❌ .env.example missing"
             READY=false
           else
             echo "✅ .env.example found"
           fi
-          
+
           if [ ! -f "package.json" ]; then
             echo "❌ package.json missing"
             READY=false
           else
             echo "✅ package.json found"
           fi
-          
+
           if [ ! -f "menu/menu_bundle.v1.json" ]; then
-            echo "⚠️ menu/menu_bundle.v1.json missing (required for production)"
+            echo "❌ legacy menu/menu_bundle.v1.json missing"
             READY=false
           else
-            echo "✅ menu/menu_bundle.v1.json found"
+            echo "✅ legacy menu/menu_bundle.v1.json found"
           fi
-          
+
+          if [ ! -f "authoritative-sources/menu.current.json" ]; then
+            echo "❌ canonical authoritative-sources/menu.current.json missing"
+            READY=false
+          else
+            echo "✅ canonical current menu source found"
+          fi
+
           if [ ! -f "tsconfig.json" ]; then
             echo "❌ tsconfig.json missing"
             READY=false
           else
             echo "✅ tsconfig.json found"
           fi
-          
+
           echo "ready=$READY" >> $GITHUB_OUTPUT
-      
+
+          if [ "$READY" != "true" ]; then
+            exit 1
+          fi
+
       - name: Generate Deployment Report
         run: |
-          echo "## 📋 Deployment Readiness Report" >> $GITHUB_STEP_SUMMARY
+          echo "## Deployment Readiness Report" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          if [ "${{ steps.check.outputs.ready }}" == "true" ]; then
-            echo "### ✅ Ready for Deployment" >> $GITHUB_STEP_SUMMARY
-          else
-            echo "### ⚠️ Prerequisites Missing" >> $GITHUB_STEP_SUMMARY
-          fi
+          echo "### ✅ Baseline prerequisites present" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**Build Status**: Passed" >> $GITHUB_STEP_SUMMARY
-          echo "**Security Audit**: Completed" >> $GITHUB_STEP_SUMMARY
-          echo "**Configuration**: Validated" >> $GITHUB_STEP_SUMMARY
+          echo "**Test Status**: Passed" >> $GITHUB_STEP_SUMMARY
+          echo "**Security Scan**: Completed" >> $GITHUB_STEP_SUMMARY
+          echo "**Configuration**: Baseline validated" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### Next Steps:" >> $GITHUB_STEP_SUMMARY
-          echo "1. Update .env with production values" >> $GITHUB_STEP_SUMMARY
-          echo "2. Upload menu data via menu update workflow" >> $GITHUB_STEP_SUMMARY
-          echo "3. Deploy to Termux or server environment" >> $GITHUB_STEP_SUMMARY
+          echo "This is a recovery baseline, not a production deployment authorization." >> $GITHUB_STEP_SUMMARY
 
   notify:
     name: Notify Completion
@@ -210,22 +228,22 @@ jobs:
     steps:
       - name: Check Pipeline Status
         run: |
-          if [ "${{ needs.deploy-ready.outputs.ready }}" == "true" ]; then
-            echo "✅ Pipeline Complete - Ready for Deployment"
-            exit 0
-          else
-            echo "⚠️ Pipeline Complete - Prerequisites Missing"
+          if [ "${{ needs.deploy-ready.result }}" == "success" ] && [ "${{ needs.deploy-ready.outputs.ready }}" == "true" ]; then
+            echo "✅ Pipeline complete - validated recovery baseline"
             exit 0
           fi
-      
+          echo "❌ Pipeline incomplete or prerequisites failed"
+          exit 1
+
       - name: Summary
         run: |
-          echo "## 🎯 WINGBOSS Pipeline Summary" >> $GITHUB_STEP_SUMMARY
+          echo "## WINGBOSS Pipeline Summary" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "| Stage | Status |" >> $GITHUB_STEP_SUMMARY
           echo "|-------|--------|" >> $GITHUB_STEP_SUMMARY
-          echo "| Code Audit | ✅ |" >> $GITHUB_STEP_SUMMARY
-          echo "| Testing | ✅ |" >> $GITHUB_STEP_SUMMARY
-          echo "| Build | ✅ |" >> $GITHUB_STEP_SUMMARY
-          echo "| Security | ✅ |" >> $GITHUB_STEP_SUMMARY
-          echo "| Deployment Ready | Ready |" >> $GITHUB_STEP_SUMMARY
+          echo "| TypeScript | ✅ blocking |" >> $GITHUB_STEP_SUMMARY
+          echo "| Vitest | ✅ blocking |" >> $GITHUB_STEP_SUMMARY
+          echo "| Menu baseline | ✅ blocking |" >> $GITHUB_STEP_SUMMARY
+          echo "| Secret scan | ✅ blocking |" >> $GITHUB_STEP_SUMMARY
+          echo "| Dependency audit | ℹ️ informational pending separate remediation |" >> $GITHUB_STEP_SUMMARY
+          echo "| Deployment baseline | ✅ prerequisites present |" >> $GITHUB_STEP_SUMMARY
