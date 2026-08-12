@@ -50,17 +50,9 @@ const CategorySchema = z.object({
 }).passthrough();
 
 const ModifierOptionSchema = z.object({
-  id: z.string().min(1).optional(),
-  item_id: z.string().min(1).optional(),
+  ref: z.string().min(1),
   price: MoneySchema.optional(),
-}).passthrough().superRefine((option, ctx) => {
-  if (!option.id && !option.item_id) {
-    ctx.addIssue({
-      code: z.ZodIssueCode.custom,
-      message: "Modifier option must identify either id or item_id",
-    });
-  }
-});
+}).passthrough();
 
 const ModifierGroupSchema = z.object({
   id: z.string().min(1),
@@ -88,6 +80,7 @@ const CurrentMenuSchema = z.object({
 }).passthrough().superRefine((menu, ctx) => {
   const categoryIds = new Set<string>();
   const itemIds = new Set<string>();
+  const variantIds = new Set<string>();
   const groupIds = new Set(menu.catalog.modifier_groups.map((group) => group.id));
 
   for (const category of menu.catalog.categories) {
@@ -102,6 +95,13 @@ const CurrentMenuSchema = z.object({
       }
       itemIds.add(item.id);
 
+      for (const variant of item.variants ?? []) {
+        if (variantIds.has(variant.id)) {
+          ctx.addIssue({ code: z.ZodIssueCode.custom, message: `Duplicate variant id: ${variant.id}` });
+        }
+        variantIds.add(variant.id);
+      }
+
       for (const groupId of item.modifier_groups) {
         if (!groupIds.has(groupId)) {
           ctx.addIssue({
@@ -115,10 +115,10 @@ const CurrentMenuSchema = z.object({
 
   for (const group of menu.catalog.modifier_groups) {
     for (const option of group.options) {
-      if (option.item_id && !itemIds.has(option.item_id)) {
+      if (!option.ref) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: `Modifier group ${group.id} references missing item ${option.item_id}`,
+          message: `Modifier group ${group.id} contains an empty ref`,
         });
       }
     }
@@ -130,11 +130,17 @@ async function main() {
   const parsed = CurrentMenuSchema.parse(JSON.parse(raw));
 
   const itemCount = parsed.catalog.categories.reduce((count, category) => count + category.items.length, 0);
+  const variantCount = parsed.catalog.categories.reduce(
+    (count, category) => count + category.items.reduce((itemCount, item) => itemCount + (item.variants?.length ?? 0), 0),
+    0,
+  );
+
   console.log("✅ Canonical current menu OK");
   console.log("Source:", CANONICAL_MENU_PATH);
   console.log("Schema:", parsed.schema_version);
   console.log("Categories:", parsed.catalog.categories.length);
   console.log("Items:", itemCount);
+  console.log("Variants:", variantCount);
   console.log("Modifier groups:", parsed.catalog.modifier_groups.length);
 }
 
