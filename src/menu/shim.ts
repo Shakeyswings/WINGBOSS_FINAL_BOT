@@ -62,6 +62,9 @@ export function shimToV1(raw: any): MenuBundleV1 {
     }
   }
 
+  const canonicalHeatCaps = ["original", "hot", "spicy", "extreme", "revenge", "nuclear"] as const;
+  type CanonicalHeatCap = (typeof canonicalHeatCaps)[number];
+
   const flavors = flat.map((f: any) => {
     const display = String(f.display ?? f.name_en ?? f.name ?? f.code ?? "Flavor");
     const { token, name_en } = splitTokenAndName(display);
@@ -70,17 +73,20 @@ export function shimToV1(raw: any): MenuBundleV1 {
     const code = String(f.code ?? f.id ?? slug(name_en));
     const id = String(f.id ?? `f_${code}_${slug(name_en)}`);
     const in_house_only = inHouseIds.includes(String(f.code ?? "")) || Boolean(f.in_house_only);
+    const rawHeatCap = String(f.heat_cap ?? "").toLowerCase();
+    const heat_cap: CanonicalHeatCap = canonicalHeatCaps.includes(rawHeatCap as CanonicalHeatCap)
+      ? (rawHeatCap as CanonicalHeatCap)
+      : "original";
+
     return {
       id,
       token,
       name_en,
       family: String(f.family ?? group ?? "classic"),
       is_dry_rub: isDry,
-      dry_rub_icon: isDry ? "🌵" : undefined,
+      dry_rub_icon: isDry ? "🌵" as const : undefined,
       in_house_only,
-      heat_cap: (f.heat_cap && ["nuclear", "extreme", "spicy", "hot", "mild"].includes(String(f.heat_cap).toLowerCase())) 
-        ? String(f.heat_cap).toLowerCase() as "nuclear" | "extreme" | "spicy" | "hot" | "mild"
-        : "mild"
+      heat_cap
     };
   });
 
