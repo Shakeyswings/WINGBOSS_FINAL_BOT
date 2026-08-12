@@ -13,11 +13,425 @@
     "location_override_policy": "Optional location overrides may disable availability; they may not silently mutate canonical base menu data."
   },
   "catalog": {
-    "categories": [],
-    "modifier_groups": [],
+    "categories": [
+      {
+        "id": "a_wings",
+        "code": "A",
+        "name": "WINGS",
+        "display_order": 1,
+        "items": [
+          {
+            "id": "a1_bone_in_combo",
+            "code": "A1",
+            "name": "BONE-IN COMBO",
+            "display_name": "Bone-In Combo",
+            "type": "variant",
+            "description": "Wings • Fries • Dip",
+            "variants": [
+              {
+                "id": "a1_6pc",
+                "code": "6pc",
+                "name": "6pc",
+                "price": { "currency": "USD", "amount_minor": 1095 },
+                "availability": { "status": "active" }
+              },
+              {
+                "id": "a1_10pc",
+                "code": "10pc",
+                "name": "10pc",
+                "price": { "currency": "USD", "amount_minor": 1495 },
+                "availability": { "status": "active" }
+              }
+            ],
+            "modifier_groups": [],
+            "availability": { "status": "active" },
+            "source": "image"
+          },
+          {
+            "id": "a2_boneless_combo",
+            "code": "A2",
+            "name": "BONELESS COMBO",
+            "display_name": "Boneless Combo",
+            "type": "variant",
+            "description": "Boneless Wings • Fries • Dip",
+            "variants": [
+              {
+                "id": "a2_8pc",
+                "code": "8pc",
+                "name": "8pc",
+                "price": { "currency": "USD", "amount_minor": 1395 },
+                "availability": { "status": "active" }
+              },
+              {
+                "id": "a2_12pc",
+                "code": "12pc",
+                "name": "12pc",
+                "price": { "currency": "USD", "amount_minor": 1795 },
+                "availability": { "status": "active" }
+              }
+            ],
+            "modifier_groups": [],
+            "availability": { "status": "active" },
+            "source": "image"
+          },
+          {
+            "id": "a3_flavor_box",
+            "code": "A3",
+            "name": "FLAVOR BOX",
+            "display_name": "Flavor Box",
+            "type": "bundle",
+            "description": "Wings + XXL Fries + Dry Rub + Drizzle + Dip",
+            "variants": [
+              {
+                "id": "a3_8pc",
+                "code": "8pc",
+                "name": "8pc",
+                "price": { "currency": "USD", "amount_minor": 1495 },
+                "availability": { "status": "active" }
+              }
+            ],
+            "modifier_groups": ["modifier_group_a3_boneless_upgrade"],
+            "availability": { "status": "active" },
+            "source": "owner_decision"
+          },
+          {
+            "id": "a4_wings",
+            "code": "A4",
+            "name": "WINGS",
+            "display_name": "Wings",
+            "type": "variant",
+            "description": "Wing flavor allocation varies by size",
+            "variants": [
+              { "id": "a4_6pc", "code": "6pc", "name": "6pc", "price": { "currency": "USD", "amount_minor": 675 }, "availability": { "status": "active" } },
+              { "id": "a4_10pc", "code": "10pc", "name": "10pc", "price": { "currency": "USD", "amount_minor": 1295 }, "availability": { "status": "active" } },
+              { "id": "a4_20pc", "code": "20pc", "name": "20pc", "price": { "currency": "USD", "amount_minor": 2075 }, "availability": { "status": "active" } },
+              { "id": "a4_36pc", "code": "36pc", "name": "36pc", "price": { "currency": "USD", "amount_minor": 3595 }, "availability": { "status": "active" } },
+              { "id": "a4_50pc", "code": "50pc", "name": "50pc", "price": { "currency": "USD", "amount_minor": 4995 }, "availability": { "status": "active" } },
+              { "id": "a4_extra_sauce", "code": "extra_sauce", "name": "Extra Sauce", "price": { "currency": "USD", "amount_minor": 100 }, "availability": { "status": "active" } },
+              { "id": "a4_sauce_on_side", "code": "sauce_on_side", "name": "Sauce On The Side", "display_name": "Sauce on the Side", "portion_ml": 30, "price": { "currency": "USD", "amount_minor": 100 }, "availability": { "status": "by_request" }, "type": "side_sauce", "eligible_sauces": ["s2_jerk", "s3_buffalo", "s4_texas_bbq", "s5_korean", "s6_honey_teriyaki", "s7_spicy_peanut"], "excluded_sauces": ["s1_fire_storm"], "pricing_context": "side_sauce", "modifier_groups": [], "source": "owner_decision" },
+              { "id": "a4_dusted_rub", "code": "dusted_rub", "name": "DUSTED RUB", "display_name": "Dusted Rub", "price": { "currency": "USD", "amount_minor": 50 }, "pricing_model": { "kind": "per_6_wings", "charge_units": "applicable_wing_quantity_divided_by_6" }, "availability": { "status": "active" }, "type": "quantity_scaled_modifier", "modifier_groups": [], "source": "owner_decision" }
+            ],
+            "modifier_groups": [],
+            "availability": { "status": "active" },
+            "source": "image"
+          },
+          {
+            "id": "a5_boneless_wings",
+            "code": "A5",
+            "name": "BONELESS WINGS",
+            "display_name": "Boneless Wings",
+            "type": "variant",
+            "description": "12 Wings = 2 Flavors",
+            "variants": [
+              { "id": "a5_8pc", "code": "8pc", "name": "8pc", "price": { "currency": "USD", "amount_minor": 950 }, "availability": { "status": "active" } },
+              { "id": "a5_12pc", "code": "12pc", "name": "12pc", "price": { "currency": "USD", "amount_minor": 1395 }, "availability": { "status": "active" } },
+              { "id": "a5_24pc", "code": "24pc", "name": "24pc", "price": { "currency": "USD", "amount_minor": 2650 }, "availability": { "status": "active" } },
+              { "id": "a5_48pc", "code": "48pc", "name": "48pc", "price": { "currency": "USD", "amount_minor": 5195 }, "availability": { "status": "active" } }
+            ],
+            "modifier_groups": [],
+            "availability": { "status": "active" },
+            "source": "image"
+          }
+        ]
+      },
+      {
+        "id": "b_burgers",
+        "code": "B",
+        "name": "BURGERS",
+        "display_order": 2,
+        "items": [
+          { "id": "b1_single", "code": "B1", "name": "SINGLE", "display_name": "Single", "price": { "currency": "USD", "amount_minor": 400 }, "availability": { "status": "active" }, "type": "product", "modifier_groups": [], "source": "image" },
+          { "id": "b2_double", "code": "B2", "name": "DOUBLE", "display_name": "Double", "price": { "currency": "USD", "amount_minor": 700 }, "availability": { "status": "active" }, "type": "product", "modifier_groups": [], "source": "image" },
+          { "id": "b3_western_bbq", "code": "B3", "name": "WESTERN BBQ", "display_name": "Western BBQ", "price": { "currency": "USD", "amount_minor": 900 }, "availability": { "status": "active" }, "type": "product", "modifier_groups": [], "source": "image" },
+          { "id": "b4_sauce_boss", "code": "B4", "name": "SAUCE BOSS", "display_name": "Sauce Boss", "price": { "currency": "USD", "amount_minor": 900 }, "availability": { "status": "active" }, "type": "product", "modifier_groups": [], "source": "image" }
+        ]
+      },
+      {
+        "id": "c_sides",
+        "code": "C",
+        "name": "SIDES",
+        "display_order": 3,
+        "items": [
+          { "id": "c1_cajun_fried_corn", "code": "C1", "name": "CAJUN FRIED CORN", "display_name": "Cajun Fried Corn", "description": "Deep-fried battered corn on the cob.", "price": { "currency": "USD", "amount_minor": 400 }, "availability": { "status": "active" }, "type": "product", "modifier_groups": ["modifier_group_c1_dry_rub", "modifier_group_c1_finish_choice"], "aliases": ["FRIED CORN", "DEEP FRIED CORN"], "source": "owner_decision" },
+          { "id": "c2_cajun_fries", "code": "C2", "name": "CAJUN FRIES", "display_name": "Cajun Fries", "price": { "currency": "USD", "amount_minor": 400 }, "availability": { "status": "active" }, "type": "product", "modifier_groups": [], "source": "image" },
+          { "id": "c3_onion_rings", "code": "C3", "name": "ONION RINGS", "display_name": "Onion Rings", "price": { "currency": "USD", "amount_minor": 500 }, "availability": { "status": "active" }, "type": "product", "modifier_groups": [], "source": "image" },
+          { "id": "c4_garlic_fries", "code": "C4", "name": "GARLIC FRIES", "display_name": "Garlic Fries", "price": { "currency": "USD", "amount_minor": 500 }, "availability": { "status": "active" }, "type": "product", "modifier_groups": [], "source": "image" },
+          { "id": "c5_sides_sampler", "code": "C5", "name": "SIDES SAMPLER", "display_name": "Sides Sampler", "description": "All 4 Sides + Dip", "price": { "currency": "USD", "amount_minor": 1300 }, "availability": { "status": "active" }, "type": "bundle", "modifier_groups": [], "source": "image" }
+        ]
+      },
+      {
+        "id": "s_sauces",
+        "code": "S",
+        "name": "SAUCES",
+        "display_order": 4,
+        "items": [
+          { "id": "s1_fire_storm", "code": "S1", "name": "FIRE STORM", "display_name": "Fire Storm", "price": { "currency": "USD", "amount_minor": 0 }, "availability": { "status": "active" }, "type": "modifier", "pricing_context": "included_primary_flavor", "modifier_groups": [], "source": "owner_decision" },
+          { "id": "s2_jerk", "code": "S2", "name": "JERK", "display_name": "Jerk", "price": { "currency": "USD", "amount_minor": 0 }, "availability": { "status": "active" }, "type": "modifier", "pricing_context": "included_primary_flavor", "modifier_groups": [], "source": "owner_decision" },
+          { "id": "s3_buffalo", "code": "S3", "name": "BUFFALO", "display_name": "Buffalo", "price": { "currency": "USD", "amount_minor": 0 }, "availability": { "status": "active" }, "type": "modifier", "pricing_context": "included_primary_flavor", "modifier_groups": [], "source": "owner_decision" },
+          { "id": "s4_texas_bbq", "code": "S4", "name": "TEXAS BBQ", "display_name": "Texas BBQ", "price": { "currency": "USD", "amount_minor": 0 }, "availability": { "status": "active" }, "type": "modifier", "pricing_context": "included_primary_flavor", "modifier_groups": [], "source": "owner_decision" },
+          { "id": "s5_korean", "code": "S5", "name": "KOREAN", "display_name": "Korean", "price": { "currency": "USD", "amount_minor": 0 }, "availability": { "status": "active" }, "type": "modifier", "pricing_context": "included_primary_flavor", "modifier_groups": [], "source": "owner_decision" },
+          { "id": "s6_honey_teriyaki", "code": "S6", "name": "HONEY TERIYAKI", "display_name": "Honey Teriyaki", "price": { "currency": "USD", "amount_minor": 0 }, "availability": { "status": "active" }, "type": "modifier", "pricing_context": "included_primary_flavor", "modifier_groups": [], "source": "owner_decision" },
+          { "id": "s7_spicy_peanut", "code": "S7", "name": "SPICY PEANUT", "display_name": "Spicy Peanut", "price": { "currency": "USD", "amount_minor": 0 }, "availability": { "status": "active" }, "type": "modifier", "pricing_context": "included_primary_flavor", "modifier_groups": [], "source": "owner_decision" }
+        ]
+      },
+      {
+        "id": "r_dry_rub",
+        "code": "R",
+        "name": "DRY RUB",
+        "display_order": 5,
+        "items": [
+          { "id": "r1_cajun", "code": "R1", "name": "CAJUN", "display_name": "Cajun", "price": { "currency": "USD", "amount_minor": 0 }, "availability": { "status": "active" }, "type": "modifier", "pricing_context": "included_primary_flavor", "modifier_groups": [], "source": "owner_decision" },
+          { "id": "r2_midnight_rub", "code": "R2", "name": "MIDNIGHT RUB", "display_name": "Midnight Rub", "price": { "currency": "USD", "amount_minor": 0 }, "availability": { "status": "active" }, "type": "modifier", "pricing_context": "included_primary_flavor", "modifier_groups": [], "source": "owner_decision" },
+          { "id": "r3_buffalo_dust", "code": "R3", "name": "BUFFALO DUST", "display_name": "Buffalo Dust", "price": { "currency": "USD", "amount_minor": 0 }, "availability": { "status": "active" }, "type": "modifier", "pricing_context": "included_primary_flavor", "modifier_groups": [], "source": "owner_decision" },
+          { "id": "r4_kampot_pepper_hot_honey", "code": "R4", "name": "KAMPOT PEPPER HOT HONEY", "display_name": "Kampot Pepper Hot Honey", "price": { "currency": "USD", "amount_minor": 0 }, "availability": { "status": "active" }, "type": "modifier", "pricing_context": "included_primary_flavor", "modifier_groups": [], "source": "owner_decision" },
+          { "id": "r5_lemon_pepper", "code": "R5", "name": "LEMON PEPPER", "display_name": "Lemon Pepper", "price": { "currency": "USD", "amount_minor": 0 }, "availability": { "status": "active" }, "type": "modifier", "pricing_context": "included_primary_flavor", "modifier_groups": [], "source": "owner_decision" },
+          { "id": "r6_garlic_parm", "code": "R6", "name": "GARLIC PARM", "display_name": "Garlic Parm", "price": { "currency": "USD", "amount_minor": 0 }, "availability": { "status": "active" }, "type": "modifier", "pricing_context": "included_primary_flavor", "modifier_groups": [], "source": "owner_decision" }
+        ]
+      },
+      {
+        "id": "d_drizzles",
+        "code": "D",
+        "name": "DRIZZLES",
+        "display_order": 6,
+        "items": [
+          { "id": "d1_ranch", "code": "D1", "name": "RANCH", "display_name": "Ranch", "price": { "currency": "USD", "amount_minor": 50 }, "availability": { "status": "active" }, "type": "modifier", "pricing_context": "paid_drizzle", "modifier_groups": [], "source": "owner_decision" },
+          { "id": "d2_fireback", "code": "D2", "name": "FIREBACK", "display_name": "Fireback", "price": { "currency": "USD", "amount_minor": 50 }, "availability": { "status": "active" }, "type": "modifier", "pricing_context": "paid_drizzle", "modifier_groups": [], "source": "owner_decision" },
+          { "id": "d3_hot_honey", "code": "D3", "name": "HOT HONEY", "display_name": "Hot Honey", "price": { "currency": "USD", "amount_minor": 50 }, "availability": { "status": "active" }, "type": "modifier", "pricing_context": "paid_drizzle", "modifier_groups": [], "source": "owner_decision" },
+          { "id": "d4_triple_drizz", "code": "D4", "name": "TRIPLE DRIZZ", "display_name": "Triple Drizz", "aliases": ["ALL 3"], "price": { "currency": "USD", "amount_minor": 100 }, "availability": { "status": "active" }, "type": "modifier", "pricing_context": "triple_drizz", "modifier_groups": [], "source": "owner_decision" }
+        ]
+      },
+      {
+        "id": "extras_panel",
+        "code": "X",
+        "name": "EXTRAS",
+        "display_order": 7,
+        "items": [
+          { "id": "x_a3_boneless_upgrade", "code": "A3_BONeless", "name": "BONELESS UPGRADE", "display_name": "Boneless", "price": { "currency": "USD", "amount_minor": 150 }, "availability": { "status": "active" }, "type": "modifier", "pricing_context": "upgrade_modifier", "modifier_groups": [], "source": "owner_decision" },
+          { "id": "x_drink", "code": "DRINK", "name": "DRINK", "display_name": "Drink", "price": { "currency": "USD", "amount_minor": 125 }, "availability": { "status": "active" }, "type": "modifier", "modifier_groups": [], "source": "owner_decision" },
+          { "id": "x_carrots", "code": "CARROTS", "name": "CARROTS", "display_name": "Carrots", "price": { "currency": "USD", "amount_minor": 75 }, "availability": { "status": "active" }, "type": "modifier", "modifier_groups": [], "source": "owner_decision" },
+          { "id": "x_gloves", "code": "GLOVES", "name": "GLOVES", "display_name": "Gloves", "price": { "currency": "USD", "amount_minor": 50 }, "availability": { "status": "active" }, "type": "modifier", "modifier_groups": [], "source": "owner_decision" },
+          { "id": "x_add_plus_one_sauce_rub", "code": "+1_SAUCE_RUB", "name": "ADD +1 WING FLAVOR", "display_name": "Add +1 Wing Flavor", "price": { "currency": "USD", "amount_minor": 100 }, "availability": { "status": "active" }, "type": "modifier", "pricing_context": "additional_wing_flavor", "eligibility": { "minimum_wing_quantity": 20, "allowed_flavor_families": ["sauce", "dry_rub"] }, "modifier_groups": [], "source": "owner_decision" },
+          { "id": "x_add_plus_one_beef_patty", "code": "+1_BEEF_PATTY", "name": "ADD +1 BEEF PATTY", "display_name": "Add +1 Beef Patty", "price": { "currency": "USD", "amount_minor": 225 }, "availability": { "status": "active" }, "type": "modifier", "modifier_groups": [], "source": "owner_decision" },
+          { "id": "x_add_plus_one_cheese", "code": "+1_CHEESE", "name": "ADD +1 CHEESE", "display_name": "Add +1 Cheese", "price": { "currency": "USD", "amount_minor": 75 }, "availability": { "status": "active" }, "type": "modifier", "modifier_groups": [], "source": "owner_decision" },
+          { "id": "x_add_plus_two_wings", "code": "+2_WINGS", "name": "ADD +2 WINGS", "display_name": "Add +2 Wings", "price": { "currency": "USD", "amount_minor": 250 }, "availability": { "status": "active" }, "type": "modifier", "modifier_groups": [], "source": "owner_decision" },
+          { "id": "x_dip_ranch", "code": "DIP_RANCH", "name": "DIP RANCH", "display_name": "Ranch Dip", "price": { "currency": "USD", "amount_minor": 75 }, "availability": { "status": "active" }, "type": "modifier", "modifier_groups": [], "source": "owner_decision" },
+          { "id": "x_dip_fireback", "code": "DIP_FIREBACK", "name": "DIP FIREBACK", "display_name": "Fireback Dip", "price": { "currency": "USD", "amount_minor": 75 }, "availability": { "status": "active" }, "type": "modifier", "modifier_groups": [], "source": "owner_decision" },
+          { "id": "x_dip_ketchup", "code": "DIP_KETCHUP", "name": "DIP KETCHUP", "display_name": "Ketchup Dip", "price": { "currency": "USD", "amount_minor": 75 }, "availability": { "status": "active" }, "type": "modifier", "modifier_groups": [], "source": "owner_decision" },
+          { "id": "x_dip_bbq", "code": "DIP_BBQ", "name": "DIP BBQ", "display_name": "BBQ Dip", "price": { "currency": "USD", "amount_minor": 75 }, "availability": { "status": "active" }, "type": "modifier", "modifier_groups": [], "source": "owner_decision" },
+          { "id": "x_spice_mild", "code": "MILD", "name": "MILD", "display_name": "Mild", "price": { "currency": "USD", "amount_minor": 0 }, "availability": { "status": "active" }, "type": "modifier", "pricing_context": "heat_upgrade", "modifier_groups": [], "source": "owner_decision" },
+          { "id": "x_spice_hot", "code": "HOT", "name": "HOT", "display_name": "Hot", "price": { "currency": "USD", "amount_minor": 25 }, "availability": { "status": "active" }, "type": "modifier", "pricing_context": "heat_upgrade", "modifier_groups": [], "source": "owner_decision" },
+          { "id": "x_spice_spicy", "code": "SPICY", "name": "SPICY", "display_name": "Spicy", "price": { "currency": "USD", "amount_minor": 50 }, "availability": { "status": "active" }, "type": "modifier", "pricing_context": "heat_upgrade", "modifier_groups": [], "source": "owner_decision" },
+          { "id": "x_spice_extreme", "code": "EXTREME", "name": "EXTREME", "display_name": "Extreme", "price": { "currency": "USD", "amount_minor": 75 }, "availability": { "status": "active" }, "type": "modifier", "pricing_context": "heat_upgrade", "modifier_groups": [], "source": "owner_decision" },
+          { "id": "x_spice_nuclear", "code": "NUCLEAR", "name": "NUCLEAR", "display_name": "Nuclear", "price": { "currency": "USD", "amount_minor": 100 }, "availability": { "status": "active" }, "type": "modifier", "pricing_context": "heat_upgrade", "modifier_groups": [], "source": "owner_decision" }
+        ]
+      }
+    ],
+    "modifier_groups": [
+      {
+        "id": "modifier_group_primary_flavor",
+        "code": "PRIMARY_FLAVOR",
+        "name": "Primary Flavor",
+        "minimum_select": 1,
+        "maximum_select": 1,
+        "selection_rule": "sauce_or_dry_rub",
+        "options": [
+          { "ref": "s1_fire_storm", "price": { "currency": "USD", "amount_minor": 0 } },
+          { "ref": "s2_jerk", "price": { "currency": "USD", "amount_minor": 0 } },
+          { "ref": "s3_buffalo", "price": { "currency": "USD", "amount_minor": 0 } },
+          { "ref": "s4_texas_bbq", "price": { "currency": "USD", "amount_minor": 0 } },
+          { "ref": "s5_korean", "price": { "currency": "USD", "amount_minor": 0 } },
+          { "ref": "s6_honey_teriyaki", "price": { "currency": "USD", "amount_minor": 0 } },
+          { "ref": "s7_spicy_peanut", "price": { "currency": "USD", "amount_minor": 0 } },
+          { "ref": "r1_cajun", "price": { "currency": "USD", "amount_minor": 0 } },
+          { "ref": "r2_midnight_rub", "price": { "currency": "USD", "amount_minor": 0 } },
+          { "ref": "r3_buffalo_dust", "price": { "currency": "USD", "amount_minor": 0 } },
+          { "ref": "r4_kampot_pepper_hot_honey", "price": { "currency": "USD", "amount_minor": 0 } },
+          { "ref": "r5_lemon_pepper", "price": { "currency": "USD", "amount_minor": 0 } },
+          { "ref": "r6_garlic_parm", "price": { "currency": "USD", "amount_minor": 0 } }
+        ],
+        "source": "owner_decision"
+      },
+      {
+        "id": "modifier_group_wing_flavor_upgrade",
+        "code": "WING_FLAVOR_UPGRADE",
+        "name": "Wing Flavor Upgrade",
+        "minimum_select": 0,
+        "maximum_select": 1,
+        "eligible_order_item_codes": ["A4"],
+        "minimum_wing_quantity": 20,
+        "options": [
+          { "ref": "x_add_plus_one_sauce_rub", "price": { "currency": "USD", "amount_minor": 100 } }
+        ],
+        "source": "owner_decision"
+      },
+      {
+        "id": "modifier_group_sauce_on_the_side",
+        "code": "SIDE_SAUCE",
+        "name": "Sauce On The Side",
+        "minimum_select": 0,
+        "maximum_select": 1,
+        "eligible_order_item_codes": ["A4"],
+        "portion_ml": 30,
+        "excluded_option_ids": ["s1_fire_storm"],
+        "options": [
+          { "ref": "s2_jerk", "price": { "currency": "USD", "amount_minor": 100 } },
+          { "ref": "s3_buffalo", "price": { "currency": "USD", "amount_minor": 100 } },
+          { "ref": "s4_texas_bbq", "price": { "currency": "USD", "amount_minor": 100 } },
+          { "ref": "s5_korean", "price": { "currency": "USD", "amount_minor": 100 } },
+          { "ref": "s6_honey_teriyaki", "price": { "currency": "USD", "amount_minor": 100 } },
+          { "ref": "s7_spicy_peanut", "price": { "currency": "USD", "amount_minor": 100 } }
+        ],
+        "source": "owner_decision"
+      },
+      {
+        "id": "modifier_group_dusted_rub",
+        "code": "DUSTED_RUB",
+        "name": "Dusted Rub",
+        "minimum_select": 0,
+        "maximum_select": 1,
+        "eligible_order_item_codes": ["A4"],
+        "eligible_base_flavor_family": "dry_rub",
+        "pricing_model": { "kind": "per_6_wings", "charge_per_units": 6, "amount_minor_per_unit": 50 },
+        "options": [
+          { "ref": "r1_cajun" },
+          { "ref": "r2_midnight_rub" },
+          { "ref": "r3_buffalo_dust" },
+          { "ref": "r4_kampot_pepper_hot_honey" },
+          { "ref": "r5_lemon_pepper" },
+          { "ref": "r6_garlic_parm" }
+        ],
+        "source": "owner_decision"
+      },
+      {
+        "id": "modifier_group_a3_boneless_upgrade",
+        "code": "A3_BONUS",
+        "name": "A3 Boneless Upgrade",
+        "minimum_select": 0,
+        "maximum_select": 1,
+        "options": [
+          { "ref": "x_a3_boneless_upgrade", "price": { "currency": "USD", "amount_minor": 150 } }
+        ],
+        "source": "owner_decision"
+      },
+      {
+        "id": "modifier_group_c1_dry_rub",
+        "code": "C1_DRY_RUB",
+        "name": "C1 Dry Rub",
+        "minimum_select": 1,
+        "maximum_select": 1,
+        "options": [
+          { "ref": "r1_cajun", "price": { "currency": "USD", "amount_minor": 0 } },
+          { "ref": "r2_midnight_rub", "price": { "currency": "USD", "amount_minor": 0 } },
+          { "ref": "r3_buffalo_dust", "price": { "currency": "USD", "amount_minor": 0 } },
+          { "ref": "r4_kampot_pepper_hot_honey", "price": { "currency": "USD", "amount_minor": 0 } },
+          { "ref": "r5_lemon_pepper", "price": { "currency": "USD", "amount_minor": 0 } },
+          { "ref": "r6_garlic_parm", "price": { "currency": "USD", "amount_minor": 0 } }
+        ],
+        "source": "owner_decision"
+      },
+      {
+        "id": "modifier_group_c1_finish_choice",
+        "code": "C1_FINISH",
+        "name": "C1 Finish Choice",
+        "minimum_select": 1,
+        "maximum_select": 1,
+        "selection_rule": "one_of_two_families",
+        "choice_sets": [
+          ["d1_ranch", "d2_fireback", "d3_hot_honey"],
+          ["x_dip_ranch", "x_dip_fireback", "x_dip_ketchup", "x_dip_bbq"]
+        ],
+        "options": [
+          { "ref": "d1_ranch", "price": { "currency": "USD", "amount_minor": 0 } },
+          { "ref": "d2_fireback", "price": { "currency": "USD", "amount_minor": 0 } },
+          { "ref": "d3_hot_honey", "price": { "currency": "USD", "amount_minor": 0 } },
+          { "ref": "x_dip_ranch", "price": { "currency": "USD", "amount_minor": 0 } },
+          { "ref": "x_dip_fireback", "price": { "currency": "USD", "amount_minor": 0 } },
+          { "ref": "x_dip_ketchup", "price": { "currency": "USD", "amount_minor": 0 } },
+          { "ref": "x_dip_bbq", "price": { "currency": "USD", "amount_minor": 0 } }
+        ],
+        "source": "owner_decision"
+      },
+      {
+        "id": "modifier_group_additional_dry_rub",
+        "code": "ADD_DRY_RUB",
+        "name": "Additional Dry Rub",
+        "minimum_select": 0,
+        "maximum_select": 1,
+        "options": [
+          { "ref": "r1_cajun", "price": { "currency": "USD", "amount_minor": 50 } },
+          { "ref": "r2_midnight_rub", "price": { "currency": "USD", "amount_minor": 50 } },
+          { "ref": "r3_buffalo_dust", "price": { "currency": "USD", "amount_minor": 50 } },
+          { "ref": "r4_kampot_pepper_hot_honey", "price": { "currency": "USD", "amount_minor": 50 } },
+          { "ref": "r5_lemon_pepper", "price": { "currency": "USD", "amount_minor": 50 } },
+          { "ref": "r6_garlic_parm", "price": { "currency": "USD", "amount_minor": 50 } }
+        ],
+        "source": "owner_decision"
+      },
+      {
+        "id": "modifier_group_additional_drizzle",
+        "code": "ADD_DRIZZLE",
+        "name": "Additional Drizzle",
+        "minimum_select": 0,
+        "maximum_select": 1,
+        "options": [
+          { "ref": "d1_ranch", "price": { "currency": "USD", "amount_minor": 50 } },
+          { "ref": "d2_fireback", "price": { "currency": "USD", "amount_minor": 50 } },
+          { "ref": "d3_hot_honey", "price": { "currency": "USD", "amount_minor": 50 } }
+        ],
+        "source": "owner_decision"
+      },
+      {
+        "id": "modifier_group_triple_drizz",
+        "code": "TRIPLE_DRIZZ",
+        "name": "Triple Drizz",
+        "minimum_select": 0,
+        "maximum_select": 1,
+        "options": [
+          { "ref": "d4_triple_drizz", "price": { "currency": "USD", "amount_minor": 100 } }
+        ],
+        "source": "owner_decision"
+      },
+      {
+        "id": "modifier_group_spice_level",
+        "code": "SPICE_LEVEL",
+        "name": "Spice Level",
+        "minimum_select": 0,
+        "maximum_select": 1,
+        "selection_rule": "order_level_heat_upgrade",
+        "options": [
+          { "ref": "x_spice_mild", "price": { "currency": "USD", "amount_minor": 0 } },
+          { "ref": "x_spice_hot", "price": { "currency": "USD", "amount_minor": 25 } },
+          { "ref": "x_spice_spicy", "price": { "currency": "USD", "amount_minor": 50 } },
+          { "ref": "x_spice_extreme", "price": { "currency": "USD", "amount_minor": 75 } },
+          { "ref": "x_spice_nuclear", "price": { "currency": "USD", "amount_minor": 100 } }
+        ],
+        "source": "owner_decision"
+      },
+      {
+        "id": "modifier_group_dips",
+        "code": "DIPS",
+        "name": "Dips",
+        "minimum_select": 0,
+        "maximum_select": 1,
+        "options": [
+          { "ref": "x_dip_ranch", "price": { "currency": "USD", "amount_minor": 75 } },
+          { "ref": "x_dip_fireback", "price": { "currency": "USD", "amount_minor": 75 } },
+          { "ref": "x_dip_ketchup", "price": { "currency": "USD", "amount_minor": 75 } },
+          { "ref": "x_dip_bbq", "price": { "currency": "USD", "amount_minor": 75 } }
+        ],
+        "source": "owner_decision"
+      }
+    ],
     "location_overrides": []
   },
-  "owner_confirmation_required": [],
+  "owner_confirmation_required": [
+    {
+      "field": "Most Popular block text",
+      "item": "bottom-right promotional block",
+      "what_is_unclear": "The exact transcription of one small promotional text fragment is not sufficiently clear in the source image.",
+      "what_was_not_guessed": "No active purchasable data was derived from the unclear fragment."
+    }
+  ],
   "historical_reference_boundary": {
     "historical_70_flavor_system": "reference_only",
     "active_customer_menu_authority": true,
