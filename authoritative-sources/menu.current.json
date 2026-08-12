@@ -1,0 +1,26 @@
+{
+  "schema_version": "2026-08-12.current-menu.v1",
+  "authority_status": "ACTIVE_CURRENT_MENU",
+  "source_artifact": "authoritative-sources/00_CURRENT_MENU_APPROVED_2026-08-12.jpg",
+  "source_date": "2026-08-12",
+  "currency": {
+    "code": "USD",
+    "amount_minor_unit": 2,
+    "representation": "amount_minor"
+  },
+  "scope": {
+    "business_scope": "Business",
+    "location_override_policy": "Optional location overrides may disable availability; they may not silently mutate canonical base menu data."
+  },
+  "catalog": {
+    "categories": [],
+    "modifier_groups": [],
+    "location_overrides": []
+  },
+  "owner_confirmation_required": [],
+  "historical_reference_boundary": {
+    "historical_70_flavor_system": "reference_only",
+    "active_customer_menu_authority": true,
+    "notes": "Historical menu/flavor data does not populate active current-menu data."
+  }
+}
