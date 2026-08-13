@@ -4,6 +4,8 @@ import util from "node:util";
 import { z } from "zod";
 
 const CANONICAL_MENU_PATH = "./authoritative-sources/menu.current.json";
+const SUPPORTED_SCHEMA_VERSION = "2026-08-12.current-menu.v1";
+const AUTHORITATIVE_SOURCE_ARTIFACT = "authoritative-sources/00_CURRENT_MENU_APPROVED_2026-08-12.jpg";
 
 const MoneySchema = z.object({
   currency: z.literal("USD"),
@@ -14,13 +16,28 @@ const AvailabilitySchema = z.object({
   status: z.string().min(1),
 });
 
+const ActiveCatalogSourceSchema = z.enum(["image", "owner_decision"]);
+
+const PricingModelSchema = z.object({
+  amount_minor_per_unit: z.number().int().nonnegative().optional(),
+}).passthrough();
+
 const VariantSchema = z.object({
   id: z.string().min(1),
   code: z.string().min(1),
   name: z.string().min(1),
   price: MoneySchema.optional(),
   availability: AvailabilitySchema,
-}).passthrough();
+  modifier_groups: z.array(z.string().min(1)).default([]),
+  pricing_model: PricingModelSchema.optional(),
+}).passthrough().superRefine((variant, ctx) => {
+  if (["active", "by_request"].includes(variant.availability.status) && !variant.price) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: `Purchasable variant ${variant.code} has no authoritative price`,
+    });
+  }
+});
 
 const CatalogItemSchema = z.object({
   id: z.string().min(1),
@@ -29,14 +46,14 @@ const CatalogItemSchema = z.object({
   availability: AvailabilitySchema,
   variants: z.array(VariantSchema).optional(),
   price: MoneySchema.optional(),
-  modifier_groups: z.array(z.string()).default([]),
+  modifier_groups: z.array(z.string().min(1)).default([]),
+  source: ActiveCatalogSourceSchema,
 }).passthrough().superRefine((item, ctx) => {
-  const hasPrice = Boolean(item.price);
-  const hasPricedVariant = item.variants?.some((variant) => Boolean(variant.price)) ?? false;
-  if (!hasPrice && !hasPricedVariant) {
+  const hasVariants = (item.variants?.length ?? 0) > 0;
+  if (!hasVariants && ["active", "by_request"].includes(item.availability.status) && !item.price) {
     ctx.addIssue({
       code: z.ZodIssueCode.custom,
-      message: `Purchasable catalog item ${item.code} has no price or priced variant`,
+      message: `Purchasable catalog item ${item.code} has no authoritative price`,
     });
   }
 });
@@ -56,14 +73,31 @@ const ModifierOptionSchema = z.object({
 
 const ModifierGroupSchema = z.object({
   id: z.string().min(1),
+  minimum_select: z.number().int().nonnegative(),
+  maximum_select: z.number().int().nonnegative(),
   options: z.array(ModifierOptionSchema),
-}).passthrough();
+  pricing_model: PricingModelSchema.optional(),
+  source: ActiveCatalogSourceSchema,
+}).passthrough().superRefine((group, ctx) => {
+  if (group.minimum_select > group.maximum_select) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: `Modifier group ${group.id} has minimum_select greater than maximum_select`,
+    });
+  }
+  if (group.maximum_select > group.options.length) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: `Modifier group ${group.id} allows more selections than available options`,
+    });
+  }
+});
 
 const CurrentMenuSchema = z.object({
-  schema_version: z.string().min(1),
+  schema_version: z.literal(SUPPORTED_SCHEMA_VERSION),
   authority_status: z.literal("ACTIVE_CURRENT_MENU"),
-  source_artifact: z.string().min(1),
-  source_date: z.string().min(1),
+  source_artifact: z.literal(AUTHORITATIVE_SOURCE_ARTIFACT),
+  source_date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "source_date must use YYYY-MM-DD"),
   currency: z.object({
     code: z.literal("USD"),
     amount_minor_unit: z.literal(2),
@@ -81,7 +115,14 @@ const CurrentMenuSchema = z.object({
   const categoryIds = new Set<string>();
   const itemIds = new Set<string>();
   const variantIds = new Set<string>();
-  const groupIds = new Set(menu.catalog.modifier_groups.map((group) => group.id));
+  const groupIds = new Set<string>();
+
+  for (const group of menu.catalog.modifier_groups) {
+    if (groupIds.has(group.id)) {
+      ctx.addIssue({ code: z.ZodIssueCode.custom, message: `Duplicate modifier group id: ${group.id}` });
+    }
+    groupIds.add(group.id);
+  }
 
   for (const category of menu.catalog.categories) {
     if (categoryIds.has(category.id)) {
@@ -101,7 +142,13 @@ const CurrentMenuSchema = z.object({
         }
         variantIds.add(variant.id);
       }
+    }
+  }
 
+  const catalogEntryIds = new Set([...itemIds, ...variantIds]);
+
+  for (const category of menu.catalog.categories) {
+    for (const item of category.items) {
       for (const groupId of item.modifier_groups) {
         if (!groupIds.has(groupId)) {
           ctx.addIssue({
@@ -110,15 +157,26 @@ const CurrentMenuSchema = z.object({
           });
         }
       }
+
+      for (const variant of item.variants ?? []) {
+        for (const groupId of variant.modifier_groups) {
+          if (!groupIds.has(groupId)) {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: `Variant ${variant.code} references missing modifier group ${groupId}`,
+            });
+          }
+        }
+      }
     }
   }
 
   for (const group of menu.catalog.modifier_groups) {
     for (const option of group.options) {
-      if (!option.ref) {
+      if (!catalogEntryIds.has(option.ref)) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: `Modifier group ${group.id} contains an empty ref`,
+          message: `Modifier group ${group.id} references missing catalog entry ${option.ref}`,
         });
       }
     }
