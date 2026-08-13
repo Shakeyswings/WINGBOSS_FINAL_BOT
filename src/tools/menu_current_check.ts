@@ -98,6 +98,13 @@ const ModifierGroupSchema = z.object({
       message: `Modifier group ${group.id} allows more selections than available options`,
     });
   }
+  const hasOptionWithoutPrice = group.options.some((option) => !option.price);
+  if (hasOptionWithoutPrice && !group.pricing_model) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: `Modifier group ${group.id} has unpriced options without an authoritative pricing model`,
+    });
+  }
 });
 
 const CurrentMenuSchema = z.object({
