@@ -6,6 +6,7 @@ import { z } from "zod";
 const CANONICAL_MENU_PATH = "./authoritative-sources/menu.current.json";
 const SUPPORTED_SCHEMA_VERSION = "2026-08-12.current-menu.v1";
 const AUTHORITATIVE_SOURCE_ARTIFACT = "authoritative-sources/00_CURRENT_MENU_APPROVED_2026-08-12.jpg";
+const AUTHORITATIVE_SOURCE_DATE = "2026-08-12";
 
 const MoneySchema = z.object({
   currency: z.literal("USD"),
@@ -13,13 +14,17 @@ const MoneySchema = z.object({
 });
 
 const AvailabilitySchema = z.object({
-  status: z.string().min(1),
+  status: z.enum(["active", "by_request"]),
 });
 
 const ActiveCatalogSourceSchema = z.enum(["image", "owner_decision"]);
 
-const PricingModelSchema = z.object({
+const VariantPricingModelSchema = z.object({
   amount_minor_per_unit: z.number().int().nonnegative().optional(),
+}).passthrough();
+
+const GroupPricingModelSchema = z.object({
+  amount_minor_per_unit: z.number().int().nonnegative(),
 }).passthrough();
 
 const VariantSchema = z.object({
@@ -29,9 +34,10 @@ const VariantSchema = z.object({
   price: MoneySchema.optional(),
   availability: AvailabilitySchema,
   modifier_groups: z.array(z.string().min(1)).default([]),
-  pricing_model: PricingModelSchema.optional(),
+  pricing_model: VariantPricingModelSchema.optional(),
+  source: ActiveCatalogSourceSchema.optional(),
 }).passthrough().superRefine((variant, ctx) => {
-  if (["active", "by_request"].includes(variant.availability.status) && !variant.price) {
+  if (!variant.price) {
     ctx.addIssue({
       code: z.ZodIssueCode.custom,
       message: `Purchasable variant ${variant.code} has no authoritative price`,
@@ -50,7 +56,7 @@ const CatalogItemSchema = z.object({
   source: ActiveCatalogSourceSchema,
 }).passthrough().superRefine((item, ctx) => {
   const hasVariants = (item.variants?.length ?? 0) > 0;
-  if (!hasVariants && ["active", "by_request"].includes(item.availability.status) && !item.price) {
+  if (!hasVariants && !item.price) {
     ctx.addIssue({
       code: z.ZodIssueCode.custom,
       message: `Purchasable catalog item ${item.code} has no authoritative price`,
@@ -76,7 +82,8 @@ const ModifierGroupSchema = z.object({
   minimum_select: z.number().int().nonnegative(),
   maximum_select: z.number().int().nonnegative(),
   options: z.array(ModifierOptionSchema),
-  pricing_model: PricingModelSchema.optional(),
+  pricing_model: GroupPricingModelSchema.optional(),
+  eligible_order_item_codes: z.array(z.string().min(1)).optional(),
   source: ActiveCatalogSourceSchema,
 }).passthrough().superRefine((group, ctx) => {
   if (group.minimum_select > group.maximum_select) {
@@ -97,7 +104,7 @@ const CurrentMenuSchema = z.object({
   schema_version: z.literal(SUPPORTED_SCHEMA_VERSION),
   authority_status: z.literal("ACTIVE_CURRENT_MENU"),
   source_artifact: z.literal(AUTHORITATIVE_SOURCE_ARTIFACT),
-  source_date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "source_date must use YYYY-MM-DD"),
+  source_date: z.literal(AUTHORITATIVE_SOURCE_DATE),
   currency: z.object({
     code: z.literal("USD"),
     amount_minor_unit: z.literal(2),
@@ -114,6 +121,7 @@ const CurrentMenuSchema = z.object({
 }).passthrough().superRefine((menu, ctx) => {
   const categoryIds = new Set<string>();
   const itemIds = new Set<string>();
+  const itemCodes = new Set<string>();
   const variantIds = new Set<string>();
   const groupIds = new Set<string>();
 
@@ -135,13 +143,29 @@ const CurrentMenuSchema = z.object({
         ctx.addIssue({ code: z.ZodIssueCode.custom, message: `Duplicate item id: ${item.id}` });
       }
       itemIds.add(item.id);
+      itemCodes.add(item.code);
 
       for (const variant of item.variants ?? []) {
         if (variantIds.has(variant.id)) {
           ctx.addIssue({ code: z.ZodIssueCode.custom, message: `Duplicate variant id: ${variant.id}` });
         }
+        if (itemIds.has(variant.id)) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: `Catalog id ${variant.id} is shared by an item and variant`,
+          });
+        }
         variantIds.add(variant.id);
       }
+    }
+  }
+
+  for (const itemId of itemIds) {
+    if (variantIds.has(itemId)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: `Catalog id ${itemId} is shared by an item and variant`,
+      });
     }
   }
 
@@ -177,6 +201,15 @@ const CurrentMenuSchema = z.object({
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           message: `Modifier group ${group.id} references missing catalog entry ${option.ref}`,
+        });
+      }
+    }
+
+    for (const itemCode of group.eligible_order_item_codes ?? []) {
+      if (!itemCodes.has(itemCode)) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: `Modifier group ${group.id} references missing eligible order item code ${itemCode}`,
         });
       }
     }
