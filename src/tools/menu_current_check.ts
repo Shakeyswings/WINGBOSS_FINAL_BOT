@@ -24,6 +24,8 @@ const VariantPricingModelSchema = z.object({
 }).passthrough();
 
 const GroupPricingModelSchema = z.object({
+  kind: z.literal("per_6_wings"),
+  charge_per_units: z.number().int().positive(),
   amount_minor_per_unit: z.number().int().nonnegative(),
 }).passthrough();
 
@@ -131,6 +133,7 @@ const CurrentMenuSchema = z.object({
   const itemCodes = new Set<string>();
   const variantIds = new Set<string>();
   const groupIds = new Set<string>();
+  const groupsById = new Map(menu.catalog.modifier_groups.map((group) => [group.id, group] as const));
 
   for (const group of menu.catalog.modifier_groups) {
     if (groupIds.has(group.id)) {
@@ -150,6 +153,10 @@ const CurrentMenuSchema = z.object({
         ctx.addIssue({ code: z.ZodIssueCode.custom, message: `Duplicate item id: ${item.id}` });
       }
       itemIds.add(item.id);
+
+      if (itemCodes.has(item.code)) {
+        ctx.addIssue({ code: z.ZodIssueCode.custom, message: `Duplicate item code: ${item.code}` });
+      }
       itemCodes.add(item.code);
 
       for (const variant of item.variants ?? []) {
@@ -181,20 +188,36 @@ const CurrentMenuSchema = z.object({
   for (const category of menu.catalog.categories) {
     for (const item of category.items) {
       for (const groupId of item.modifier_groups) {
-        if (!groupIds.has(groupId)) {
+        const group = groupsById.get(groupId);
+        if (!group) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
             message: `Item ${item.code} references missing modifier group ${groupId}`,
+          });
+          continue;
+        }
+        if (group.eligible_order_item_codes && !group.eligible_order_item_codes.includes(item.code)) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: `Item ${item.code} attaches modifier group ${groupId} but is outside its eligibility scope`,
           });
         }
       }
 
       for (const variant of item.variants ?? []) {
         for (const groupId of variant.modifier_groups) {
-          if (!groupIds.has(groupId)) {
+          const group = groupsById.get(groupId);
+          if (!group) {
             ctx.addIssue({
               code: z.ZodIssueCode.custom,
               message: `Variant ${variant.code} references missing modifier group ${groupId}`,
+            });
+            continue;
+          }
+          if (group.eligible_order_item_codes && !group.eligible_order_item_codes.includes(item.code)) {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: `Variant ${variant.code} of item ${item.code} attaches modifier group ${groupId} but the item is outside its eligibility scope`,
             });
           }
         }
