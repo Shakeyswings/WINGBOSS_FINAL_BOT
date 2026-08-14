@@ -20,12 +20,13 @@ const AvailabilitySchema = z.object({
 const ActiveCatalogSourceSchema = z.enum(["image", "owner_decision"]);
 
 const VariantPricingModelSchema = z.object({
-  amount_minor_per_unit: z.number().int().nonnegative().optional(),
+  kind: z.literal("per_6_wings"),
+  charge_units: z.literal("applicable_wing_quantity_divided_by_6"),
 }).passthrough();
 
 const GroupPricingModelSchema = z.object({
   kind: z.literal("per_6_wings"),
-  charge_per_units: z.number().int().positive(),
+  charge_per_units: z.literal(6),
   amount_minor_per_unit: z.number().int().nonnegative(),
 }).passthrough();
 
@@ -86,6 +87,8 @@ const ModifierGroupSchema = z.object({
   options: z.array(ModifierOptionSchema),
   pricing_model: GroupPricingModelSchema.optional(),
   eligible_order_item_codes: z.array(z.string().min(1)).optional(),
+  minimum_wing_quantity: z.number().int().positive().optional(),
+  choice_sets: z.array(z.array(z.string().min(1)).min(1)).optional(),
   source: ActiveCatalogSourceSchema,
 }).passthrough().superRefine((group, ctx) => {
   if (group.minimum_select > group.maximum_select) {
@@ -106,6 +109,24 @@ const ModifierGroupSchema = z.object({
       code: z.ZodIssueCode.custom,
       message: `Modifier group ${group.id} has unpriced options without an authoritative pricing model`,
     });
+  }
+  if (group.id === "modifier_group_wing_flavor_upgrade" && group.minimum_wing_quantity !== 20) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: `Modifier group ${group.id} must require the authoritative minimum wing quantity of 20`,
+    });
+  }
+
+  const optionRefs = new Set(group.options.map((option) => option.ref));
+  for (const choiceSet of group.choice_sets ?? []) {
+    for (const ref of choiceSet) {
+      if (!optionRefs.has(ref)) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: `Modifier group ${group.id} choice set references option ${ref} outside the authoritative option set`,
+        });
+      }
+    }
   }
 });
 
