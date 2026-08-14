@@ -48,6 +48,11 @@ const GroupPricingModelSchema = z.object({
   amount_minor_per_unit: z.number().int().nonnegative(),
 }).passthrough();
 
+const LocationOverridesSchema = z.array(z.unknown()).max(
+  0,
+  "Location overrides must remain empty until explicit override semantics are implemented",
+);
+
 const VariantSchema = z.object({
   id: z.string().min(1),
   code: z.string().min(1),
@@ -334,6 +339,7 @@ const CurrentMenuSchema = z.object({
   catalog: z.object({
     categories: z.array(CategorySchema).min(1),
     modifier_groups: z.array(ModifierGroupSchema),
+    location_overrides: LocationOverridesSchema,
   }).passthrough(),
   historical_reference_boundary: z.object({
     historical_70_flavor_system: z.literal("reference_only"),
