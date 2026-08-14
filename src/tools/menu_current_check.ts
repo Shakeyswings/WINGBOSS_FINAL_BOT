@@ -420,6 +420,17 @@ const CurrentMenuSchema = z.object({
         });
       }
 
+      if (item.code === "C1") {
+        for (const requiredGroupId of ["modifier_group_c1_dry_rub", "modifier_group_c1_finish_choice"] as const) {
+          if (!item.modifier_groups.includes(requiredGroupId)) {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: `Authoritative C1 item must attach ${requiredGroupId}`,
+            });
+          }
+        }
+      }
+
       for (const groupId of item.modifier_groups) {
         const group = groupsById.get(groupId);
         if (!group) {
