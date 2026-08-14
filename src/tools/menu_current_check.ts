@@ -46,6 +46,17 @@ const VariantSchema = z.object({
       message: `Purchasable variant ${variant.code} has no authoritative price`,
     });
   }
+
+  const seenModifierGroups = new Set<string>();
+  for (const groupId of variant.modifier_groups) {
+    if (seenModifierGroups.has(groupId)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: `Variant ${variant.code} has duplicate modifier group attachment ${groupId}`,
+      });
+    }
+    seenModifierGroups.add(groupId);
+  }
 });
 
 const CatalogItemSchema = z.object({
@@ -64,6 +75,17 @@ const CatalogItemSchema = z.object({
       code: z.ZodIssueCode.custom,
       message: `Purchasable catalog item ${item.code} has no authoritative price`,
     });
+  }
+
+  const seenModifierGroups = new Set<string>();
+  for (const groupId of item.modifier_groups) {
+    if (seenModifierGroups.has(groupId)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: `Item ${item.code} has duplicate modifier group attachment ${groupId}`,
+      });
+    }
+    seenModifierGroups.add(groupId);
   }
 });
 
@@ -110,14 +132,35 @@ const ModifierGroupSchema = z.object({
       message: `Modifier group ${group.id} has unpriced options without an authoritative pricing model`,
     });
   }
-  if (group.id === "modifier_group_wing_flavor_upgrade" && group.minimum_wing_quantity !== 20) {
-    ctx.addIssue({
-      code: z.ZodIssueCode.custom,
-      message: `Modifier group ${group.id} must require the authoritative minimum wing quantity of 20`,
-    });
+  if (group.id === "modifier_group_wing_flavor_upgrade") {
+    if (group.minimum_wing_quantity !== 20) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: `Modifier group ${group.id} must require the authoritative minimum wing quantity of 20`,
+      });
+    }
+    if (
+      group.eligible_order_item_codes?.length !== 1
+      || group.eligible_order_item_codes[0] !== "A4"
+    ) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: `Modifier group ${group.id} must be eligible only for authoritative order item A4`,
+      });
+    }
   }
 
-  const optionRefs = new Set(group.options.map((option) => option.ref));
+  const optionRefs = new Set<string>();
+  for (const option of group.options) {
+    if (optionRefs.has(option.ref)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: `Modifier group ${group.id} has duplicate option ref ${option.ref}`,
+      });
+    }
+    optionRefs.add(option.ref);
+  }
+
   for (const choiceSet of group.choice_sets ?? []) {
     for (const ref of choiceSet) {
       if (!optionRefs.has(ref)) {
