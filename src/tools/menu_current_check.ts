@@ -17,7 +17,92 @@ const AUTHORITATIVE_SIDE_SAUCE_ELIGIBLE = [
   "s7_spicy_peanut",
 ] as const;
 const AUTHORITATIVE_SIDE_SAUCE_EXCLUDED = ["s1_fire_storm"] as const;
+const AUTHORITATIVE_PRIMARY_FLAVOR_OPTIONS = [
+  "s1_fire_storm",
+  "s2_jerk",
+  "s3_buffalo",
+  "s4_texas_bbq",
+  "s5_korean",
+  "s6_honey_teriyaki",
+  "s7_spicy_peanut",
+  "r1_cajun",
+  "r2_midnight_rub",
+  "r3_buffalo_dust",
+  "r4_kampot_pepper_hot_honey",
+  "r5_lemon_pepper",
+  "r6_garlic_parm",
+] as const;
+const AUTHORITATIVE_ITEM_IDS = [
+  "a1_bone_in_combo",
+  "a2_boneless_combo",
+  "a3_flavor_box",
+  "a4_wings",
+  "a5_boneless_wings",
+  "b1_single",
+  "b2_double",
+  "b3_western_bbq",
+  "b4_sauce_boss",
+  "c1_cajun_fried_corn",
+  "c2_cajun_fries",
+  "c3_onion_rings",
+  "c4_garlic_fries",
+  "c5_sides_sampler",
+  "s1_fire_storm",
+  "s2_jerk",
+  "s3_buffalo",
+  "s4_texas_bbq",
+  "s5_korean",
+  "s6_honey_teriyaki",
+  "s7_spicy_peanut",
+  "r1_cajun",
+  "r2_midnight_rub",
+  "r3_buffalo_dust",
+  "r4_kampot_pepper_hot_honey",
+  "r5_lemon_pepper",
+  "r6_garlic_parm",
+  "d1_ranch",
+  "d2_fireback",
+  "d3_hot_honey",
+  "d4_triple_drizz",
+  "x_a3_boneless_upgrade",
+  "x_drink",
+  "x_carrots",
+  "x_gloves",
+  "x_add_plus_one_sauce_rub",
+  "x_add_plus_one_beef_patty",
+  "x_add_plus_one_cheese",
+  "x_add_plus_two_wings",
+  "x_dip_ranch",
+  "x_dip_fireback",
+  "x_dip_ketchup",
+  "x_dip_bbq",
+  "x_spice_mild",
+  "x_spice_hot",
+  "x_spice_spicy",
+  "x_spice_extreme",
+  "x_spice_nuclear",
+] as const;
+const AUTHORITATIVE_VARIANT_IDS = [
+  "a1_6pc",
+  "a1_10pc",
+  "a2_8pc",
+  "a2_12pc",
+  "a3_8pc",
+  "a4_6pc",
+  "a4_10pc",
+  "a4_20pc",
+  "a4_36pc",
+  "a4_50pc",
+  "a4_extra_sauce",
+  "a4_sauce_on_side",
+  "a4_dusted_rub",
+  "a5_8pc",
+  "a5_12pc",
+  "a5_24pc",
+  "a5_48pc",
+] as const;
 const REQUIRED_MODIFIER_GROUP_IDS = [
+  "modifier_group_primary_flavor",
   "modifier_group_wing_flavor_upgrade",
   "modifier_group_sauce_on_the_side",
   "modifier_group_dusted_rub",
@@ -84,6 +169,13 @@ const VariantSchema = z.object({
   }
 
   if (variant.id === "a4_sauce_on_side") {
+    if (variant.availability.status !== "by_request") {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Variant a4_sauce_on_side must preserve authoritative by-request availability",
+      });
+    }
+
     const eligibleSauces = variant.eligible_sauces ?? [];
     const excludedSauces = variant.excluded_sauces ?? [];
     if (
@@ -242,6 +334,19 @@ const ModifierGroupSchema = z.object({
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         message: `Modifier group ${group.id} contains option ${option.ref} outside its authoritative catalog family`,
+      });
+    }
+  }
+
+  if (group.id === "modifier_group_primary_flavor") {
+    const optionRefs = new Set(group.options.map((option) => option.ref));
+    if (
+      optionRefs.size !== AUTHORITATIVE_PRIMARY_FLAVOR_OPTIONS.length
+      || AUTHORITATIVE_PRIMARY_FLAVOR_OPTIONS.some((ref) => !optionRefs.has(ref))
+    ) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Modifier group modifier_group_primary_flavor must preserve the complete authoritative sauce and dry-rub option set",
       });
     }
   }
@@ -409,6 +514,25 @@ const CurrentMenuSchema = z.object({
     }
   }
 
+  if (
+    itemIds.size !== AUTHORITATIVE_ITEM_IDS.length
+    || AUTHORITATIVE_ITEM_IDS.some((id) => !itemIds.has(id))
+  ) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "Canonical catalog items must preserve the complete authoritative item membership",
+    });
+  }
+  if (
+    variantIds.size !== AUTHORITATIVE_VARIANT_IDS.length
+    || AUTHORITATIVE_VARIANT_IDS.some((id) => !variantIds.has(id))
+  ) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "Canonical catalog variants must preserve the complete authoritative variant membership",
+    });
+  }
+
   const catalogEntryIds = new Set([...itemIds, ...variantIds]);
 
   for (const category of menu.catalog.categories) {
@@ -449,6 +573,13 @@ const CurrentMenuSchema = z.object({
       }
 
       for (const variant of item.variants ?? []) {
+        if ((variant.id === "a4_sauce_on_side" || variant.id === "a4_dusted_rub") && item.code !== "A4") {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: `Authoritative contextual variant ${variant.id} must remain under item A4`,
+          });
+        }
+
         if (variant.id === "a4_sauce_on_side") {
           const eligibleSauces = variant.eligible_sauces ?? [];
           const excludedSauces = new Set(variant.excluded_sauces ?? []);
