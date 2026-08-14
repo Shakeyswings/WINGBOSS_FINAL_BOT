@@ -38,6 +38,8 @@ const VariantSchema = z.object({
   availability: AvailabilitySchema,
   modifier_groups: z.array(z.string().min(1)).default([]),
   pricing_model: VariantPricingModelSchema.optional(),
+  eligible_sauces: z.array(z.string().min(1)).optional(),
+  excluded_sauces: z.array(z.string().min(1)).optional(),
   source: ActiveCatalogSourceSchema.optional(),
 }).passthrough().superRefine((variant, ctx) => {
   if (!variant.price) {
@@ -149,6 +151,14 @@ const ModifierGroupSchema = z.object({
       });
     }
   }
+  if (group.id === "modifier_group_c1_finish_choice") {
+    if (group.minimum_select !== 1 || group.maximum_select !== 1) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: `Modifier group ${group.id} must require exactly one authoritative finish choice`,
+      });
+    }
+  }
 
   const optionRefs = new Set<string>();
   for (const option of group.options) {
@@ -161,12 +171,32 @@ const ModifierGroupSchema = z.object({
     optionRefs.add(option.ref);
   }
 
+  const choiceSetMembership = new Map<string, number>();
   for (const choiceSet of group.choice_sets ?? []) {
     for (const ref of choiceSet) {
       if (!optionRefs.has(ref)) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           message: `Modifier group ${group.id} choice set references option ${ref} outside the authoritative option set`,
+        });
+      }
+      const membershipCount = (choiceSetMembership.get(ref) ?? 0) + 1;
+      choiceSetMembership.set(ref, membershipCount);
+      if (membershipCount > 1) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: `Modifier group ${group.id} assigns option ${ref} to multiple choice sets`,
+        });
+      }
+    }
+  }
+
+  if (group.id === "modifier_group_c1_finish_choice") {
+    for (const ref of optionRefs) {
+      if (choiceSetMembership.get(ref) !== 1) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: `Modifier group ${group.id} must assign authoritative option ${ref} to exactly one choice set`,
         });
       }
     }
@@ -251,6 +281,13 @@ const CurrentMenuSchema = z.object({
 
   for (const category of menu.catalog.categories) {
     for (const item of category.items) {
+      if (item.code === "A3" && !item.modifier_groups.includes("modifier_group_a3_boneless_upgrade")) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Authoritative A3 item must attach modifier_group_a3_boneless_upgrade",
+        });
+      }
+
       for (const groupId of item.modifier_groups) {
         const group = groupsById.get(groupId);
         if (!group) {
@@ -269,6 +306,35 @@ const CurrentMenuSchema = z.object({
       }
 
       for (const variant of item.variants ?? []) {
+        if (variant.id === "a4_sauce_on_side") {
+          const eligibleSauces = variant.eligible_sauces ?? [];
+          const excludedSauces = new Set(variant.excluded_sauces ?? []);
+
+          for (const sauceId of eligibleSauces) {
+            if (!catalogEntryIds.has(sauceId)) {
+              ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: `Variant ${variant.id} references missing eligible sauce ${sauceId}`,
+              });
+            }
+            if (excludedSauces.has(sauceId)) {
+              ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: `Variant ${variant.id} lists sauce ${sauceId} as both eligible and excluded`,
+              });
+            }
+          }
+
+          for (const sauceId of excludedSauces) {
+            if (!catalogEntryIds.has(sauceId)) {
+              ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: `Variant ${variant.id} references missing excluded sauce ${sauceId}`,
+              });
+            }
+          }
+        }
+
         for (const groupId of variant.modifier_groups) {
           const group = groupsById.get(groupId);
           if (!group) {
