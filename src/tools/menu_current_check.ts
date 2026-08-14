@@ -8,6 +8,24 @@ const SUPPORTED_SCHEMA_VERSION = "2026-08-12.current-menu.v1";
 const AUTHORITATIVE_SOURCE_ARTIFACT = "authoritative-sources/00_CURRENT_MENU_APPROVED_2026-08-12.jpg";
 const AUTHORITATIVE_SOURCE_DATE = "2026-08-12";
 
+const AUTHORITATIVE_SIDE_SAUCE_ELIGIBLE = [
+  "s2_jerk",
+  "s3_buffalo",
+  "s4_texas_bbq",
+  "s5_korean",
+  "s6_honey_teriyaki",
+  "s7_spicy_peanut",
+] as const;
+const AUTHORITATIVE_SIDE_SAUCE_EXCLUDED = ["s1_fire_storm"] as const;
+const REQUIRED_MODIFIER_GROUP_IDS = [
+  "modifier_group_wing_flavor_upgrade",
+  "modifier_group_sauce_on_the_side",
+  "modifier_group_dusted_rub",
+  "modifier_group_a3_boneless_upgrade",
+  "modifier_group_c1_dry_rub",
+  "modifier_group_c1_finish_choice",
+] as const;
+
 const MoneySchema = z.object({
   currency: z.literal("USD"),
   amount_minor: z.number().int().nonnegative(),
@@ -59,6 +77,29 @@ const VariantSchema = z.object({
     }
     seenModifierGroups.add(groupId);
   }
+
+  if (variant.id === "a4_sauce_on_side") {
+    const eligibleSauces = variant.eligible_sauces ?? [];
+    const excludedSauces = variant.excluded_sauces ?? [];
+    if (
+      eligibleSauces.length !== AUTHORITATIVE_SIDE_SAUCE_ELIGIBLE.length
+      || AUTHORITATIVE_SIDE_SAUCE_ELIGIBLE.some((id) => !eligibleSauces.includes(id))
+    ) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Variant a4_sauce_on_side must preserve the authoritative eligible sauce set",
+      });
+    }
+    if (
+      excludedSauces.length !== AUTHORITATIVE_SIDE_SAUCE_EXCLUDED.length
+      || AUTHORITATIVE_SIDE_SAUCE_EXCLUDED.some((id) => !excludedSauces.includes(id))
+    ) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Variant a4_sauce_on_side must preserve the authoritative Fire Storm exclusion",
+      });
+    }
+  }
 });
 
 const CatalogItemSchema = z.object({
@@ -89,6 +130,17 @@ const CatalogItemSchema = z.object({
     }
     seenModifierGroups.add(groupId);
   }
+
+  const seenVariantCodes = new Set<string>();
+  for (const variant of item.variants ?? []) {
+    if (seenVariantCodes.has(variant.code)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: `Item ${item.code} has duplicate variant code ${variant.code}`,
+      });
+    }
+    seenVariantCodes.add(variant.code);
+  }
 });
 
 const CategorySchema = z.object({
@@ -103,6 +155,35 @@ const ModifierOptionSchema = z.object({
   ref: z.string().min(1),
   price: MoneySchema.optional(),
 }).passthrough();
+
+function optionRefMatchesGroupFamily(groupId: string, ref: string): boolean {
+  switch (groupId) {
+    case "modifier_group_primary_flavor":
+      return /^s[1-7]_/.test(ref) || /^r[1-6]_/.test(ref);
+    case "modifier_group_wing_flavor_upgrade":
+      return ref === "x_add_plus_one_sauce_rub";
+    case "modifier_group_sauce_on_the_side":
+      return AUTHORITATIVE_SIDE_SAUCE_ELIGIBLE.includes(ref as typeof AUTHORITATIVE_SIDE_SAUCE_ELIGIBLE[number]);
+    case "modifier_group_dusted_rub":
+    case "modifier_group_c1_dry_rub":
+    case "modifier_group_additional_dry_rub":
+      return /^r[1-6]_/.test(ref);
+    case "modifier_group_c1_finish_choice":
+      return /^d[1-3]_/.test(ref) || /^x_dip_/.test(ref);
+    case "modifier_group_additional_drizzle":
+      return /^d[1-3]_/.test(ref);
+    case "modifier_group_triple_drizz":
+      return ref === "d4_triple_drizz";
+    case "modifier_group_spice_level":
+      return /^x_spice_/.test(ref);
+    case "modifier_group_dips":
+      return /^x_dip_/.test(ref);
+    case "modifier_group_a3_boneless_upgrade":
+      return ref === "x_a3_boneless_upgrade";
+    default:
+      return true;
+  }
+}
 
 const ModifierGroupSchema = z.object({
   id: z.string().min(1),
@@ -127,13 +208,39 @@ const ModifierGroupSchema = z.object({
       message: `Modifier group ${group.id} allows more selections than available options`,
     });
   }
-  const hasOptionWithoutPrice = group.options.some((option) => !option.price);
-  if (hasOptionWithoutPrice && !group.pricing_model) {
+
+  if (group.pricing_model && group.id !== "modifier_group_dusted_rub") {
     ctx.addIssue({
       code: z.ZodIssueCode.custom,
-      message: `Modifier group ${group.id} has unpriced options without an authoritative pricing model`,
+      message: `Modifier group ${group.id} cannot use the Dusted Rub per-six-wings pricing model`,
     });
   }
+
+  const hasOptionWithoutPrice = group.options.some((option) => !option.price);
+  if (hasOptionWithoutPrice && group.id !== "modifier_group_dusted_rub") {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: `Modifier group ${group.id} has unpriced options outside the authoritative Dusted Rub pricing model`,
+    });
+  }
+  if (group.id === "modifier_group_dusted_rub") {
+    if (!group.pricing_model || group.pricing_model.amount_minor_per_unit !== 50) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: `Modifier group ${group.id} must preserve the authoritative $0.50 per 6 wings amount`,
+      });
+    }
+  }
+
+  for (const option of group.options) {
+    if (!optionRefMatchesGroupFamily(group.id, option.ref)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: `Modifier group ${group.id} contains option ${option.ref} outside its authoritative catalog family`,
+      });
+    }
+  }
+
   if (group.id === "modifier_group_wing_flavor_upgrade") {
     if (group.minimum_wing_quantity !== 20) {
       ctx.addIssue({
@@ -141,6 +248,17 @@ const ModifierGroupSchema = z.object({
         message: `Modifier group ${group.id} must require the authoritative minimum wing quantity of 20`,
       });
     }
+    if (
+      group.eligible_order_item_codes?.length !== 1
+      || group.eligible_order_item_codes[0] !== "A4"
+    ) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: `Modifier group ${group.id} must be eligible only for authoritative order item A4`,
+      });
+    }
+  }
+  if (group.id === "modifier_group_sauce_on_the_side" || group.id === "modifier_group_dusted_rub") {
     if (
       group.eligible_order_item_codes?.length !== 1
       || group.eligible_order_item_codes[0] !== "A4"
@@ -234,6 +352,14 @@ const CurrentMenuSchema = z.object({
       ctx.addIssue({ code: z.ZodIssueCode.custom, message: `Duplicate modifier group id: ${group.id}` });
     }
     groupIds.add(group.id);
+  }
+  for (const requiredGroupId of REQUIRED_MODIFIER_GROUP_IDS) {
+    if (!groupIds.has(requiredGroupId)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: `Missing required authoritative modifier group: ${requiredGroupId}`,
+      });
+    }
   }
 
   for (const category of menu.catalog.categories) {
@@ -332,6 +458,19 @@ const CurrentMenuSchema = z.object({
                 message: `Variant ${variant.id} references missing excluded sauce ${sauceId}`,
               });
             }
+          }
+        }
+
+        if (variant.id === "a4_dusted_rub") {
+          const dustedRubGroup = groupsById.get("modifier_group_dusted_rub");
+          if (
+            variant.price?.amount_minor !== 50
+            || dustedRubGroup?.pricing_model?.amount_minor_per_unit !== variant.price.amount_minor
+          ) {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: "A4 Dusted Rub variant and modifier group must agree on the authoritative $0.50 per-six-wings amount",
+            });
           }
         }
 
