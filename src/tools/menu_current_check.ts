@@ -222,6 +222,19 @@ const VariantSchema = z.object({
       });
     }
   }
+
+  if (variant.id === "a4_dusted_rub") {
+    if (
+      !variant.pricing_model
+      || variant.pricing_model.kind !== "per_6_wings"
+      || variant.pricing_model.charge_units !== "applicable_wing_quantity_divided_by_6"
+    ) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Variant a4_dusted_rub must preserve the authoritative per-six-wings pricing model",
+      });
+    }
+  }
 });
 
 const CatalogItemSchema = z.object({
@@ -232,6 +245,10 @@ const CatalogItemSchema = z.object({
   variants: z.array(VariantSchema).optional(),
   price: MoneySchema.optional(),
   modifier_groups: z.array(z.string().min(1)).default([]),
+  eligibility: z.object({
+    minimum_wing_quantity: z.number().int().positive(),
+    allowed_flavor_families: z.array(z.enum(["sauce", "dry_rub"])),
+  }).optional(),
   source: ActiveCatalogSourceSchema,
 }).passthrough().superRefine((item, ctx) => {
   const hasVariants = (item.variants?.length ?? 0) > 0;
@@ -262,6 +279,18 @@ const CatalogItemSchema = z.object({
       });
     }
     seenVariantCodes.add(variant.code);
+  }
+
+  if (item.id === "x_add_plus_one_sauce_rub") {
+    if (
+      item.eligibility?.minimum_wing_quantity !== 20
+      || !hasExactMembers(item.eligibility?.allowed_flavor_families ?? [], ["sauce", "dry_rub"])
+    ) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Catalog item x_add_plus_one_sauce_rub must preserve the authoritative wing quantity and flavor-family eligibility",
+      });
+    }
   }
 });
 
@@ -441,6 +470,14 @@ const ModifierGroupSchema = z.object({
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         message: `Modifier group ${group.id} must be eligible only for authoritative order item A4`,
+      });
+    }
+  }
+  if (group.id === "modifier_group_spice_level") {
+    if ((group as { selection_rule?: unknown }).selection_rule !== "order_level_heat_upgrade") {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: `Modifier group ${group.id} must preserve the authoritative order-level heat upgrade selection rule`,
       });
     }
   }
