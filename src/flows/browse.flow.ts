@@ -10,8 +10,9 @@ export async function browseFlow(ctx: WBContext, menu: MenuBundleV1, _repos: Rep
 
   if (!sub || sub === "root") {
     const rows = menu.catalog.categories.map((c) => [Markup.button.callback(`${c.emoji} ${c.name_en}`, `browse:cat:${c.id}`)]);
+    rows.push([Markup.button.callback("⚡ Boss Mode", "arch:boss"), Markup.button.callback("🍰 Sweet Lab", "arch:sweet")]);
     rows.push([Markup.button.callback("⬅️ Home", "home:back")]);
-    return ctx.editMessageText("Browse menu — pick a category:", Markup.inlineKeyboard(rows));
+    return ctx.editMessageText("Browse menu — pick a category or review approved architecture:", Markup.inlineKeyboard(rows));
   }
 
   if (sub === "cat") {

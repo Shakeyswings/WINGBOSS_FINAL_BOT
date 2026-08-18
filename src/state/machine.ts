@@ -5,6 +5,7 @@ import { browseFlow } from "../flows/browse.flow.ts";
 import { orderFlow } from "../flows/order.flow.ts";
 import { checkoutFlow } from "../flows/checkout.flow.ts";
 import { statusFlow } from "../flows/status.flow.ts";
+import { architectureFlow } from "../flows/architecture.flow.ts";
 import { handleStaffAction } from "../staff/actions.ts";
 import { cmdStaffTestOrder } from "../admin/commands.ts";
 
@@ -33,6 +34,7 @@ export async function routeUpdate(ctx: WBContext) {
   if (data.startsWith("home:")) return startFlow(ctx, menu, repos);
   if (data.startsWith("edu:")) return educationFlow(ctx, menu, repos);
   if (data.startsWith("browse:")) return browseFlow(ctx, menu, repos);
+  if (data.startsWith("arch:")) return architectureFlow(ctx);
   if (data.startsWith("order:")) return orderFlow(ctx, menu, repos);
   if (data.startsWith("checkout:") || ctx.session.state === "S11_PROOF") return checkoutFlow(ctx, menu, repos);
   if (data.startsWith("status:")) return statusFlow(ctx, menu, repos);
