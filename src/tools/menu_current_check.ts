@@ -82,6 +82,56 @@ const AUTHORITATIVE_ITEM_IDS = [
   "x_spice_extreme",
   "x_spice_nuclear",
 ] as const;
+const AUTHORITATIVE_ITEM_TYPES = new Map<string, string>([
+  ["a1_bone_in_combo", "variant"],
+  ["a2_boneless_combo", "variant"],
+  ["a3_flavor_box", "bundle"],
+  ["a4_wings", "variant"],
+  ["a5_boneless_wings", "variant"],
+  ["b1_single", "product"],
+  ["b2_double", "product"],
+  ["b3_western_bbq", "product"],
+  ["b4_sauce_boss", "product"],
+  ["c1_cajun_fried_corn", "product"],
+  ["c2_cajun_fries", "product"],
+  ["c3_onion_rings", "product"],
+  ["c4_garlic_fries", "product"],
+  ["c5_sides_sampler", "bundle"],
+  ["s1_fire_storm", "modifier"],
+  ["s2_jerk", "modifier"],
+  ["s3_buffalo", "modifier"],
+  ["s4_texas_bbq", "modifier"],
+  ["s5_korean", "modifier"],
+  ["s6_honey_teriyaki", "modifier"],
+  ["s7_spicy_peanut", "modifier"],
+  ["r1_cajun", "modifier"],
+  ["r2_midnight_rub", "modifier"],
+  ["r3_buffalo_dust", "modifier"],
+  ["r4_kampot_pepper_hot_honey", "modifier"],
+  ["r5_lemon_pepper", "modifier"],
+  ["r6_garlic_parm", "modifier"],
+  ["d1_ranch", "modifier"],
+  ["d2_fireback", "modifier"],
+  ["d3_hot_honey", "modifier"],
+  ["d4_triple_drizz", "modifier"],
+  ["x_a3_boneless_upgrade", "modifier"],
+  ["x_drink", "modifier"],
+  ["x_carrots", "modifier"],
+  ["x_gloves", "modifier"],
+  ["x_add_plus_one_sauce_rub", "modifier"],
+  ["x_add_plus_one_beef_patty", "modifier"],
+  ["x_add_plus_one_cheese", "modifier"],
+  ["x_add_plus_two_wings", "modifier"],
+  ["x_dip_ranch", "modifier"],
+  ["x_dip_fireback", "modifier"],
+  ["x_dip_ketchup", "modifier"],
+  ["x_dip_bbq", "modifier"],
+  ["x_spice_mild", "modifier"],
+  ["x_spice_hot", "modifier"],
+  ["x_spice_spicy", "modifier"],
+  ["x_spice_extreme", "modifier"],
+  ["x_spice_nuclear", "modifier"],
+]);
 const AUTHORITATIVE_VARIANT_IDS = [
   "a1_6pc",
   "a1_10pc",
@@ -241,6 +291,7 @@ const CatalogItemSchema = z.object({
   id: z.string().min(1),
   code: z.string().min(1),
   name: z.string().min(1),
+  type: z.string().min(1),
   availability: AvailabilitySchema,
   variants: z.array(VariantSchema).optional(),
   price: MoneySchema.optional(),
@@ -256,6 +307,20 @@ const CatalogItemSchema = z.object({
     ctx.addIssue({
       code: z.ZodIssueCode.custom,
       message: `Purchasable catalog item ${item.code} has no authoritative price`,
+    });
+  }
+  if (hasVariants && item.price) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: `Variant-backed catalog item ${item.code} must not define an item-level base price`,
+    });
+  }
+
+  const authoritativeType = AUTHORITATIVE_ITEM_TYPES.get(item.id);
+  if (!authoritativeType || item.type !== authoritativeType) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: `Catalog item ${item.id} must preserve authoritative type ${authoritativeType ?? "<missing>"}`,
     });
   }
 
@@ -279,6 +344,13 @@ const CatalogItemSchema = z.object({
       });
     }
     seenVariantCodes.add(variant.code);
+  }
+
+  if (item.id !== "x_add_plus_one_sauce_rub" && item.eligibility) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: `Catalog item ${item.id} must not define wing-specific eligibility`,
+    });
   }
 
   if (item.id === "x_add_plus_one_sauce_rub") {
@@ -366,6 +438,7 @@ const ModifierGroupSchema = z.object({
   id: z.string().min(1),
   minimum_select: z.number().int().nonnegative(),
   maximum_select: z.number().int().nonnegative(),
+  selection_rule: z.string().min(1).optional(),
   options: z.array(ModifierOptionSchema),
   pricing_model: GroupPricingModelSchema.optional(),
   eligible_order_item_codes: z.array(z.string().min(1)).optional(),
@@ -473,8 +546,14 @@ const ModifierGroupSchema = z.object({
       });
     }
   }
+  if (group.id === "modifier_group_c1_finish_choice" && group.selection_rule !== "one_of_two_families") {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: `Modifier group ${group.id} must preserve the authoritative one_of_two_families selection rule`,
+    });
+  }
   if (group.id === "modifier_group_spice_level") {
-    if ((group as { selection_rule?: unknown }).selection_rule !== "order_level_heat_upgrade") {
+    if (group.selection_rule !== "order_level_heat_upgrade") {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         message: `Modifier group ${group.id} must preserve the authoritative order-level heat upgrade selection rule`,
