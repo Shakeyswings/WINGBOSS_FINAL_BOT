@@ -187,13 +187,13 @@ type GroupAuthority = {
 };
 
 const CATEGORY_AUTHORITY = {
-  a_wings: { code: "A", order: 1, items: ["a1_bone_in_combo", "a2_boneless_combo", "a3_flavor_box", "a4_wings", "a5_boneless_wings"] },
-  b_burgers: { code: "B", order: 2, items: ["b1_single", "b2_double", "b3_western_bbq", "b4_sauce_boss"] },
-  c_sides: { code: "C", order: 3, items: ["c1_cajun_fried_corn", "c2_cajun_fries", "c3_onion_rings", "c4_garlic_fries", "c5_sides_sampler"] },
-  s_sauces: { code: "S", order: 4, items: ["s1_fire_storm", "s2_jerk", "s3_buffalo", "s4_texas_bbq", "s5_korean", "s6_honey_teriyaki", "s7_spicy_peanut"] },
-  r_dry_rub: { code: "R", order: 5, items: ["r1_cajun", "r2_midnight_rub", "r3_buffalo_dust", "r4_kampot_pepper_hot_honey", "r5_lemon_pepper", "r6_garlic_parm"] },
-  d_drizzles: { code: "D", order: 6, items: ["d1_ranch", "d2_fireback", "d3_hot_honey", "d4_triple_drizz"] },
-  extras_panel: { code: "X", order: 7, items: ["x_a3_boneless_upgrade", "x_drink", "x_carrots", "x_gloves", "x_add_plus_one_sauce_rub", "x_add_plus_one_beef_patty", "x_add_plus_one_cheese", "x_add_plus_two_wings", "x_dip_ranch", "x_dip_fireback", "x_dip_ketchup", "x_dip_bbq", "x_spice_mild", "x_spice_hot", "x_spice_spicy", "x_spice_extreme", "x_spice_nuclear"] },
+  a_wings: { code: "A", name: "WINGS", order: 1, items: ["a1_bone_in_combo", "a2_boneless_combo", "a3_flavor_box", "a4_wings", "a5_boneless_wings"] },
+  b_burgers: { code: "B", name: "BURGERS", order: 2, items: ["b1_single", "b2_double", "b3_western_bbq", "b4_sauce_boss"] },
+  c_sides: { code: "C", name: "SIDES", order: 3, items: ["c1_cajun_fried_corn", "c2_cajun_fries", "c3_onion_rings", "c4_garlic_fries", "c5_sides_sampler"] },
+  s_sauces: { code: "S", name: "SAUCES", order: 4, items: ["s1_fire_storm", "s2_jerk", "s3_buffalo", "s4_texas_bbq", "s5_korean", "s6_honey_teriyaki", "s7_spicy_peanut"] },
+  r_dry_rub: { code: "R", name: "DRY RUB", order: 5, items: ["r1_cajun", "r2_midnight_rub", "r3_buffalo_dust", "r4_kampot_pepper_hot_honey", "r5_lemon_pepper", "r6_garlic_parm"] },
+  d_drizzles: { code: "D", name: "DRIZZLES", order: 6, items: ["d1_ranch", "d2_fireback", "d3_hot_honey", "d4_triple_drizz"] },
+  extras_panel: { code: "X", name: "EXTRAS", order: 7, items: ["x_a3_boneless_upgrade", "x_drink", "x_carrots", "x_gloves", "x_add_plus_one_sauce_rub", "x_add_plus_one_beef_patty", "x_add_plus_one_cheese", "x_add_plus_two_wings", "x_dip_ranch", "x_dip_fireback", "x_dip_ketchup", "x_dip_bbq", "x_spice_mild", "x_spice_hot", "x_spice_spicy", "x_spice_extreme", "x_spice_nuclear"] },
 } as const;
 
 const ITEM_AUTHORITY: Readonly<Record<string, ItemAuthority>> = {
@@ -373,6 +373,7 @@ function validateVariant(variant: Variant, parentItemId: string, ctx: z.Refineme
   if (variant.availability.status !== authority.availability) issue(ctx, `Variant ${variant.id} must preserve canonical availability ${authority.availability}`);
   if (variant.source !== authority.source) issue(ctx, `Variant ${variant.id} must preserve canonical provenance`);
   if (variant.modifier_groups.length !== 0) issue(ctx, `Variant ${variant.id} must not attach noncanonical modifier groups`);
+  if (variant.eligibility !== undefined) issue(ctx, `Variant ${variant.id} must not define noncanonical wing eligibility`);
 
   if (variant.id === "a4_dusted_rub") {
     if (
@@ -453,6 +454,10 @@ function validateCanonicalMenu(menu: Menu): void {
   const expectedCategoryIds = Object.keys(CATEGORY_AUTHORITY);
   const actualCategoryIds = menu.catalog.categories.map((category) => category.id);
   if (!exactArray(actualCategoryIds, expectedCategoryIds)) issue(ctx, "Canonical category membership/order must match the approved current menu");
+
+  if (menu.historical_reference_boundary.notes !== "Historical menu/flavor data does not populate active current-menu data.") {
+    issue(ctx, "Historical reference boundary notes must preserve canonical active/current-menu separation");
+  }
 
   const itemIds = new Set<string>();
   const itemCodes = new Set<string>();
