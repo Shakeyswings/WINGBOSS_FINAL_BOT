@@ -111,6 +111,31 @@ const REQUIRED_MODIFIER_GROUP_IDS = [
   "modifier_group_c1_finish_choice",
 ] as const;
 
+const AUTHORITATIVE_MODIFIER_GROUP_SELECT_BOUNDS = new Map<string, { minimum_select: number; maximum_select: number }>([
+  ["modifier_group_primary_flavor", { minimum_select: 1, maximum_select: 1 }],
+  ["modifier_group_wing_flavor_upgrade", { minimum_select: 0, maximum_select: 1 }],
+  ["modifier_group_sauce_on_the_side", { minimum_select: 0, maximum_select: 1 }],
+  ["modifier_group_dusted_rub", { minimum_select: 0, maximum_select: 1 }],
+  ["modifier_group_a3_boneless_upgrade", { minimum_select: 0, maximum_select: 1 }],
+  ["modifier_group_c1_dry_rub", { minimum_select: 1, maximum_select: 1 }],
+  ["modifier_group_c1_finish_choice", { minimum_select: 1, maximum_select: 1 }],
+  ["modifier_group_additional_dry_rub", { minimum_select: 0, maximum_select: 1 }],
+  ["modifier_group_additional_drizzle", { minimum_select: 0, maximum_select: 1 }],
+  ["modifier_group_triple_drizz", { minimum_select: 0, maximum_select: 1 }],
+  ["modifier_group_spice_level", { minimum_select: 0, maximum_select: 1 }],
+  ["modifier_group_dips", { minimum_select: 0, maximum_select: 1 }],
+]);
+
+const AUTHORITATIVE_ITEM_MODIFIER_GROUP_ATTACHMENTS = new Map<string, readonly string[]>([
+  ["A3", ["modifier_group_a3_boneless_upgrade"]],
+  ["C1", ["modifier_group_c1_dry_rub", "modifier_group_c1_finish_choice"]],
+]);
+
+const AUTHORITATIVE_C1_FINISH_CHOICE_SETS = [
+  ["d1_ranch", "d2_fireback", "d3_hot_honey"],
+  ["x_dip_ranch", "x_dip_fireback", "x_dip_ketchup", "x_dip_bbq"],
+] as const;
+
 const MoneySchema = z.object({
   currency: z.literal("USD"),
   amount_minor: z.number().int().nonnegative(),
@@ -253,6 +278,32 @@ const ModifierOptionSchema = z.object({
   price: MoneySchema.optional(),
 }).passthrough();
 
+function hasExactMembers(actual: readonly string[], expected: readonly string[]): boolean {
+  if (actual.length !== expected.length) {
+    return false;
+  }
+
+  const actualSet = new Set(actual);
+  if (actualSet.size !== expected.length) {
+    return false;
+  }
+
+  return expected.every((ref) => actualSet.has(ref));
+}
+
+function matchesCanonicalChoiceSets(choiceSets: readonly (readonly string[])[]): boolean {
+  if (choiceSets.length !== AUTHORITATIVE_C1_FINISH_CHOICE_SETS.length) {
+    return false;
+  }
+
+  return (
+    (hasExactMembers(choiceSets[0], AUTHORITATIVE_C1_FINISH_CHOICE_SETS[0])
+      && hasExactMembers(choiceSets[1], AUTHORITATIVE_C1_FINISH_CHOICE_SETS[1]))
+    || (hasExactMembers(choiceSets[0], AUTHORITATIVE_C1_FINISH_CHOICE_SETS[1])
+      && hasExactMembers(choiceSets[1], AUTHORITATIVE_C1_FINISH_CHOICE_SETS[0]))
+  );
+}
+
 function optionRefMatchesGroupFamily(groupId: string, ref: string): boolean {
   switch (groupId) {
     case "modifier_group_primary_flavor":
@@ -306,6 +357,20 @@ const ModifierGroupSchema = z.object({
     });
   }
 
+  const authoritativeSelectBounds = AUTHORITATIVE_MODIFIER_GROUP_SELECT_BOUNDS.get(group.id);
+  if (
+    authoritativeSelectBounds
+    && (
+      group.minimum_select !== authoritativeSelectBounds.minimum_select
+      || group.maximum_select !== authoritativeSelectBounds.maximum_select
+    )
+  ) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: `Modifier group ${group.id} must preserve canonical select bounds ${authoritativeSelectBounds.minimum_select}/${authoritativeSelectBounds.maximum_select}`,
+    });
+  }
+
   if (group.pricing_model && group.id !== "modifier_group_dusted_rub") {
     ctx.addIssue({
       code: z.ZodIssueCode.custom,
@@ -321,10 +386,21 @@ const ModifierGroupSchema = z.object({
     });
   }
   if (group.id === "modifier_group_dusted_rub") {
-    if (!group.pricing_model || group.pricing_model.amount_minor_per_unit !== 50) {
+    if (
+      !group.pricing_model
+      || group.pricing_model.kind !== "per_6_wings"
+      || group.pricing_model.charge_per_units !== 6
+      || group.pricing_model.amount_minor_per_unit !== 50
+    ) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: `Modifier group ${group.id} must preserve the authoritative $0.50 per 6 wings amount`,
+        message: `Modifier group ${group.id} must preserve the authoritative per-6-wings pricing model`,
+      });
+    }
+    if (group.options.some((option) => option.price)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: `Modifier group ${group.id} must not use fixed option-level prices`,
       });
     }
   }
@@ -379,15 +455,6 @@ const ModifierGroupSchema = z.object({
       });
     }
   }
-  if (group.id === "modifier_group_c1_finish_choice") {
-    if (group.minimum_select !== 1 || group.maximum_select !== 1) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: `Modifier group ${group.id} must require exactly one authoritative finish choice`,
-      });
-    }
-  }
-
   const optionRefs = new Set<string>();
   for (const option of group.options) {
     if (optionRefs.has(option.ref)) {
@@ -419,15 +486,11 @@ const ModifierGroupSchema = z.object({
     }
   }
 
-  if (group.id === "modifier_group_c1_finish_choice") {
-    for (const ref of optionRefs) {
-      if (choiceSetMembership.get(ref) !== 1) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: `Modifier group ${group.id} must assign authoritative option ${ref} to exactly one choice set`,
-        });
-      }
-    }
+  if (group.id === "modifier_group_c1_finish_choice" && (!group.choice_sets || !matchesCanonicalChoiceSets(group.choice_sets))) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: `Modifier group ${group.id} must preserve the authoritative two-family finish choice partition`,
+    });
   }
 });
 
@@ -537,22 +600,12 @@ const CurrentMenuSchema = z.object({
 
   for (const category of menu.catalog.categories) {
     for (const item of category.items) {
-      if (item.code === "A3" && !item.modifier_groups.includes("modifier_group_a3_boneless_upgrade")) {
+      const authoritativeModifierGroups = AUTHORITATIVE_ITEM_MODIFIER_GROUP_ATTACHMENTS.get(item.code) ?? [];
+      if (!hasExactMembers(item.modifier_groups, authoritativeModifierGroups)) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: "Authoritative A3 item must attach modifier_group_a3_boneless_upgrade",
+          message: `Item ${item.code} must preserve its authoritative modifier group attachments`,
         });
-      }
-
-      if (item.code === "C1") {
-        for (const requiredGroupId of ["modifier_group_c1_dry_rub", "modifier_group_c1_finish_choice"] as const) {
-          if (!item.modifier_groups.includes(requiredGroupId)) {
-            ctx.addIssue({
-              code: z.ZodIssueCode.custom,
-              message: `Authoritative C1 item must attach ${requiredGroupId}`,
-            });
-          }
-        }
       }
 
       for (const groupId of item.modifier_groups) {
@@ -573,6 +626,13 @@ const CurrentMenuSchema = z.object({
       }
 
       for (const variant of item.variants ?? []) {
+        if (variant.modifier_groups.length !== 0) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: `Variant ${variant.code} must not attach noncanonical modifier groups`,
+          });
+        }
+
         if ((variant.id === "a4_sauce_on_side" || variant.id === "a4_dusted_rub") && item.code !== "A4") {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
