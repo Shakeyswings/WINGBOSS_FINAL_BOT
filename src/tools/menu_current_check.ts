@@ -8,184 +8,6 @@ const SUPPORTED_SCHEMA_VERSION = "2026-08-12.current-menu.v1";
 const AUTHORITATIVE_SOURCE_ARTIFACT = "authoritative-sources/00_CURRENT_MENU_APPROVED_2026-08-12.jpg";
 const AUTHORITATIVE_SOURCE_DATE = "2026-08-12";
 
-const AUTHORITATIVE_SIDE_SAUCE_ELIGIBLE = [
-  "s2_jerk",
-  "s3_buffalo",
-  "s4_texas_bbq",
-  "s5_korean",
-  "s6_honey_teriyaki",
-  "s7_spicy_peanut",
-] as const;
-const AUTHORITATIVE_SIDE_SAUCE_EXCLUDED = ["s1_fire_storm"] as const;
-const AUTHORITATIVE_PRIMARY_FLAVOR_OPTIONS = [
-  "s1_fire_storm",
-  "s2_jerk",
-  "s3_buffalo",
-  "s4_texas_bbq",
-  "s5_korean",
-  "s6_honey_teriyaki",
-  "s7_spicy_peanut",
-  "r1_cajun",
-  "r2_midnight_rub",
-  "r3_buffalo_dust",
-  "r4_kampot_pepper_hot_honey",
-  "r5_lemon_pepper",
-  "r6_garlic_parm",
-] as const;
-const AUTHORITATIVE_ITEM_IDS = [
-  "a1_bone_in_combo",
-  "a2_boneless_combo",
-  "a3_flavor_box",
-  "a4_wings",
-  "a5_boneless_wings",
-  "b1_single",
-  "b2_double",
-  "b3_western_bbq",
-  "b4_sauce_boss",
-  "c1_cajun_fried_corn",
-  "c2_cajun_fries",
-  "c3_onion_rings",
-  "c4_garlic_fries",
-  "c5_sides_sampler",
-  "s1_fire_storm",
-  "s2_jerk",
-  "s3_buffalo",
-  "s4_texas_bbq",
-  "s5_korean",
-  "s6_honey_teriyaki",
-  "s7_spicy_peanut",
-  "r1_cajun",
-  "r2_midnight_rub",
-  "r3_buffalo_dust",
-  "r4_kampot_pepper_hot_honey",
-  "r5_lemon_pepper",
-  "r6_garlic_parm",
-  "d1_ranch",
-  "d2_fireback",
-  "d3_hot_honey",
-  "d4_triple_drizz",
-  "x_a3_boneless_upgrade",
-  "x_drink",
-  "x_carrots",
-  "x_gloves",
-  "x_add_plus_one_sauce_rub",
-  "x_add_plus_one_beef_patty",
-  "x_add_plus_one_cheese",
-  "x_add_plus_two_wings",
-  "x_dip_ranch",
-  "x_dip_fireback",
-  "x_dip_ketchup",
-  "x_dip_bbq",
-  "x_spice_mild",
-  "x_spice_hot",
-  "x_spice_spicy",
-  "x_spice_extreme",
-  "x_spice_nuclear",
-] as const;
-const AUTHORITATIVE_ITEM_TYPES = new Map<string, string>([
-  ["a1_bone_in_combo", "variant"],
-  ["a2_boneless_combo", "variant"],
-  ["a3_flavor_box", "bundle"],
-  ["a4_wings", "variant"],
-  ["a5_boneless_wings", "variant"],
-  ["b1_single", "product"],
-  ["b2_double", "product"],
-  ["b3_western_bbq", "product"],
-  ["b4_sauce_boss", "product"],
-  ["c1_cajun_fried_corn", "product"],
-  ["c2_cajun_fries", "product"],
-  ["c3_onion_rings", "product"],
-  ["c4_garlic_fries", "product"],
-  ["c5_sides_sampler", "bundle"],
-  ["s1_fire_storm", "modifier"],
-  ["s2_jerk", "modifier"],
-  ["s3_buffalo", "modifier"],
-  ["s4_texas_bbq", "modifier"],
-  ["s5_korean", "modifier"],
-  ["s6_honey_teriyaki", "modifier"],
-  ["s7_spicy_peanut", "modifier"],
-  ["r1_cajun", "modifier"],
-  ["r2_midnight_rub", "modifier"],
-  ["r3_buffalo_dust", "modifier"],
-  ["r4_kampot_pepper_hot_honey", "modifier"],
-  ["r5_lemon_pepper", "modifier"],
-  ["r6_garlic_parm", "modifier"],
-  ["d1_ranch", "modifier"],
-  ["d2_fireback", "modifier"],
-  ["d3_hot_honey", "modifier"],
-  ["d4_triple_drizz", "modifier"],
-  ["x_a3_boneless_upgrade", "modifier"],
-  ["x_drink", "modifier"],
-  ["x_carrots", "modifier"],
-  ["x_gloves", "modifier"],
-  ["x_add_plus_one_sauce_rub", "modifier"],
-  ["x_add_plus_one_beef_patty", "modifier"],
-  ["x_add_plus_one_cheese", "modifier"],
-  ["x_add_plus_two_wings", "modifier"],
-  ["x_dip_ranch", "modifier"],
-  ["x_dip_fireback", "modifier"],
-  ["x_dip_ketchup", "modifier"],
-  ["x_dip_bbq", "modifier"],
-  ["x_spice_mild", "modifier"],
-  ["x_spice_hot", "modifier"],
-  ["x_spice_spicy", "modifier"],
-  ["x_spice_extreme", "modifier"],
-  ["x_spice_nuclear", "modifier"],
-]);
-const AUTHORITATIVE_VARIANT_IDS = [
-  "a1_6pc",
-  "a1_10pc",
-  "a2_8pc",
-  "a2_12pc",
-  "a3_8pc",
-  "a4_6pc",
-  "a4_10pc",
-  "a4_20pc",
-  "a4_36pc",
-  "a4_50pc",
-  "a4_extra_sauce",
-  "a4_sauce_on_side",
-  "a4_dusted_rub",
-  "a5_8pc",
-  "a5_12pc",
-  "a5_24pc",
-  "a5_48pc",
-] as const;
-const REQUIRED_MODIFIER_GROUP_IDS = [
-  "modifier_group_primary_flavor",
-  "modifier_group_wing_flavor_upgrade",
-  "modifier_group_sauce_on_the_side",
-  "modifier_group_dusted_rub",
-  "modifier_group_a3_boneless_upgrade",
-  "modifier_group_c1_dry_rub",
-  "modifier_group_c1_finish_choice",
-] as const;
-
-const AUTHORITATIVE_MODIFIER_GROUP_SELECT_BOUNDS = new Map<string, { minimum_select: number; maximum_select: number }>([
-  ["modifier_group_primary_flavor", { minimum_select: 1, maximum_select: 1 }],
-  ["modifier_group_wing_flavor_upgrade", { minimum_select: 0, maximum_select: 1 }],
-  ["modifier_group_sauce_on_the_side", { minimum_select: 0, maximum_select: 1 }],
-  ["modifier_group_dusted_rub", { minimum_select: 0, maximum_select: 1 }],
-  ["modifier_group_a3_boneless_upgrade", { minimum_select: 0, maximum_select: 1 }],
-  ["modifier_group_c1_dry_rub", { minimum_select: 1, maximum_select: 1 }],
-  ["modifier_group_c1_finish_choice", { minimum_select: 1, maximum_select: 1 }],
-  ["modifier_group_additional_dry_rub", { minimum_select: 0, maximum_select: 1 }],
-  ["modifier_group_additional_drizzle", { minimum_select: 0, maximum_select: 1 }],
-  ["modifier_group_triple_drizz", { minimum_select: 0, maximum_select: 1 }],
-  ["modifier_group_spice_level", { minimum_select: 0, maximum_select: 1 }],
-  ["modifier_group_dips", { minimum_select: 0, maximum_select: 1 }],
-]);
-
-const AUTHORITATIVE_ITEM_MODIFIER_GROUP_ATTACHMENTS = new Map<string, readonly string[]>([
-  ["A3", ["modifier_group_a3_boneless_upgrade"]],
-  ["C1", ["modifier_group_c1_dry_rub", "modifier_group_c1_finish_choice"]],
-]);
-
-const AUTHORITATIVE_C1_FINISH_CHOICE_SETS = [
-  ["d1_ranch", "d2_fireback", "d3_hot_honey"],
-  ["x_dip_ranch", "x_dip_fireback", "x_dip_ketchup", "x_dip_bbq"],
-] as const;
-
 const MoneySchema = z.object({
   currency: z.literal("USD"),
   amount_minor: z.number().int().nonnegative(),
@@ -208,83 +30,23 @@ const GroupPricingModelSchema = z.object({
   amount_minor_per_unit: z.number().int().nonnegative(),
 }).passthrough();
 
-const LocationOverridesSchema = z.array(z.unknown()).max(
-  0,
-  "Location overrides must remain empty until explicit override semantics are implemented",
-);
-
 const VariantSchema = z.object({
   id: z.string().min(1),
   code: z.string().min(1),
   name: z.string().min(1),
-  price: MoneySchema.optional(),
+  price: MoneySchema,
   availability: AvailabilitySchema,
   modifier_groups: z.array(z.string().min(1)).default([]),
   pricing_model: VariantPricingModelSchema.optional(),
+  portion_ml: z.number().int().positive().optional(),
   eligible_sauces: z.array(z.string().min(1)).optional(),
   excluded_sauces: z.array(z.string().min(1)).optional(),
   source: ActiveCatalogSourceSchema.optional(),
-}).passthrough().superRefine((variant, ctx) => {
-  if (!variant.price) {
-    ctx.addIssue({
-      code: z.ZodIssueCode.custom,
-      message: `Purchasable variant ${variant.code} has no authoritative price`,
-    });
-  }
+}).passthrough();
 
-  const seenModifierGroups = new Set<string>();
-  for (const groupId of variant.modifier_groups) {
-    if (seenModifierGroups.has(groupId)) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: `Variant ${variant.code} has duplicate modifier group attachment ${groupId}`,
-      });
-    }
-    seenModifierGroups.add(groupId);
-  }
-
-  if (variant.id === "a4_sauce_on_side") {
-    if (variant.availability.status !== "by_request") {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: "Variant a4_sauce_on_side must preserve authoritative by-request availability",
-      });
-    }
-
-    const eligibleSauces = variant.eligible_sauces ?? [];
-    const excludedSauces = variant.excluded_sauces ?? [];
-    if (
-      eligibleSauces.length !== AUTHORITATIVE_SIDE_SAUCE_ELIGIBLE.length
-      || AUTHORITATIVE_SIDE_SAUCE_ELIGIBLE.some((id) => !eligibleSauces.includes(id))
-    ) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: "Variant a4_sauce_on_side must preserve the authoritative eligible sauce set",
-      });
-    }
-    if (
-      excludedSauces.length !== AUTHORITATIVE_SIDE_SAUCE_EXCLUDED.length
-      || AUTHORITATIVE_SIDE_SAUCE_EXCLUDED.some((id) => !excludedSauces.includes(id))
-    ) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: "Variant a4_sauce_on_side must preserve the authoritative Fire Storm exclusion",
-      });
-    }
-  }
-
-  if (variant.id === "a4_dusted_rub") {
-    if (
-      !variant.pricing_model
-      || variant.pricing_model.kind !== "per_6_wings"
-      || variant.pricing_model.charge_units !== "applicable_wing_quantity_divided_by_6"
-    ) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: "Variant a4_dusted_rub must preserve the authoritative per-six-wings pricing model",
-      });
-    }
-  }
+const EligibilitySchema = z.object({
+  minimum_wing_quantity: z.number().int().positive(),
+  allowed_flavor_families: z.array(z.enum(["sauce", "dry_rub"])),
 });
 
 const CatalogItemSchema = z.object({
@@ -296,75 +58,9 @@ const CatalogItemSchema = z.object({
   variants: z.array(VariantSchema).optional(),
   price: MoneySchema.optional(),
   modifier_groups: z.array(z.string().min(1)).default([]),
-  eligibility: z.object({
-    minimum_wing_quantity: z.number().int().positive(),
-    allowed_flavor_families: z.array(z.enum(["sauce", "dry_rub"])),
-  }).optional(),
+  eligibility: EligibilitySchema.optional(),
   source: ActiveCatalogSourceSchema,
-}).passthrough().superRefine((item, ctx) => {
-  const hasVariants = (item.variants?.length ?? 0) > 0;
-  if (!hasVariants && !item.price) {
-    ctx.addIssue({
-      code: z.ZodIssueCode.custom,
-      message: `Purchasable catalog item ${item.code} has no authoritative price`,
-    });
-  }
-  if (hasVariants && item.price) {
-    ctx.addIssue({
-      code: z.ZodIssueCode.custom,
-      message: `Variant-backed catalog item ${item.code} must not define an item-level base price`,
-    });
-  }
-
-  const authoritativeType = AUTHORITATIVE_ITEM_TYPES.get(item.id);
-  if (!authoritativeType || item.type !== authoritativeType) {
-    ctx.addIssue({
-      code: z.ZodIssueCode.custom,
-      message: `Catalog item ${item.id} must preserve authoritative type ${authoritativeType ?? "<missing>"}`,
-    });
-  }
-
-  const seenModifierGroups = new Set<string>();
-  for (const groupId of item.modifier_groups) {
-    if (seenModifierGroups.has(groupId)) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: `Item ${item.code} has duplicate modifier group attachment ${groupId}`,
-      });
-    }
-    seenModifierGroups.add(groupId);
-  }
-
-  const seenVariantCodes = new Set<string>();
-  for (const variant of item.variants ?? []) {
-    if (seenVariantCodes.has(variant.code)) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: `Item ${item.code} has duplicate variant code ${variant.code}`,
-      });
-    }
-    seenVariantCodes.add(variant.code);
-  }
-
-  if (item.id !== "x_add_plus_one_sauce_rub" && item.eligibility) {
-    ctx.addIssue({
-      code: z.ZodIssueCode.custom,
-      message: `Catalog item ${item.id} must not define wing-specific eligibility`,
-    });
-  }
-
-  if (item.id === "x_add_plus_one_sauce_rub") {
-    if (
-      item.eligibility?.minimum_wing_quantity !== 20
-      || !hasExactMembers(item.eligibility?.allowed_flavor_families ?? [], ["sauce", "dry_rub"])
-    ) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: "Catalog item x_add_plus_one_sauce_rub must preserve the authoritative wing quantity and flavor-family eligibility",
-      });
-    }
-  }
-});
+}).passthrough();
 
 const CategorySchema = z.object({
   id: z.string().min(1),
@@ -379,63 +75,10 @@ const ModifierOptionSchema = z.object({
   price: MoneySchema.optional(),
 }).passthrough();
 
-function hasExactMembers(actual: readonly string[], expected: readonly string[]): boolean {
-  if (actual.length !== expected.length) {
-    return false;
-  }
-
-  const actualSet = new Set(actual);
-  if (actualSet.size !== expected.length) {
-    return false;
-  }
-
-  return expected.every((ref) => actualSet.has(ref));
-}
-
-function matchesCanonicalChoiceSets(choiceSets: readonly (readonly string[])[]): boolean {
-  if (choiceSets.length !== AUTHORITATIVE_C1_FINISH_CHOICE_SETS.length) {
-    return false;
-  }
-
-  return (
-    (hasExactMembers(choiceSets[0], AUTHORITATIVE_C1_FINISH_CHOICE_SETS[0])
-      && hasExactMembers(choiceSets[1], AUTHORITATIVE_C1_FINISH_CHOICE_SETS[1]))
-    || (hasExactMembers(choiceSets[0], AUTHORITATIVE_C1_FINISH_CHOICE_SETS[1])
-      && hasExactMembers(choiceSets[1], AUTHORITATIVE_C1_FINISH_CHOICE_SETS[0]))
-  );
-}
-
-function optionRefMatchesGroupFamily(groupId: string, ref: string): boolean {
-  switch (groupId) {
-    case "modifier_group_primary_flavor":
-      return /^s[1-7]_/.test(ref) || /^r[1-6]_/.test(ref);
-    case "modifier_group_wing_flavor_upgrade":
-      return ref === "x_add_plus_one_sauce_rub";
-    case "modifier_group_sauce_on_the_side":
-      return AUTHORITATIVE_SIDE_SAUCE_ELIGIBLE.includes(ref as typeof AUTHORITATIVE_SIDE_SAUCE_ELIGIBLE[number]);
-    case "modifier_group_dusted_rub":
-    case "modifier_group_c1_dry_rub":
-    case "modifier_group_additional_dry_rub":
-      return /^r[1-6]_/.test(ref);
-    case "modifier_group_c1_finish_choice":
-      return /^d[1-3]_/.test(ref) || /^x_dip_/.test(ref);
-    case "modifier_group_additional_drizzle":
-      return /^d[1-3]_/.test(ref);
-    case "modifier_group_triple_drizz":
-      return ref === "d4_triple_drizz";
-    case "modifier_group_spice_level":
-      return /^x_spice_/.test(ref);
-    case "modifier_group_dips":
-      return /^x_dip_/.test(ref);
-    case "modifier_group_a3_boneless_upgrade":
-      return ref === "x_a3_boneless_upgrade";
-    default:
-      return true;
-  }
-}
-
 const ModifierGroupSchema = z.object({
   id: z.string().min(1),
+  code: z.string().min(1),
+  name: z.string().min(1),
   minimum_select: z.number().int().nonnegative(),
   maximum_select: z.number().int().nonnegative(),
   selection_rule: z.string().min(1).optional(),
@@ -443,172 +86,12 @@ const ModifierGroupSchema = z.object({
   pricing_model: GroupPricingModelSchema.optional(),
   eligible_order_item_codes: z.array(z.string().min(1)).optional(),
   minimum_wing_quantity: z.number().int().positive().optional(),
+  eligible_base_flavor_family: z.string().min(1).optional(),
+  excluded_option_ids: z.array(z.string().min(1)).optional(),
+  portion_ml: z.number().int().positive().optional(),
   choice_sets: z.array(z.array(z.string().min(1)).min(1)).optional(),
   source: ActiveCatalogSourceSchema,
-}).passthrough().superRefine((group, ctx) => {
-  if (group.minimum_select > group.maximum_select) {
-    ctx.addIssue({
-      code: z.ZodIssueCode.custom,
-      message: `Modifier group ${group.id} has minimum_select greater than maximum_select`,
-    });
-  }
-  if (group.maximum_select > group.options.length) {
-    ctx.addIssue({
-      code: z.ZodIssueCode.custom,
-      message: `Modifier group ${group.id} allows more selections than available options`,
-    });
-  }
-
-  const authoritativeSelectBounds = AUTHORITATIVE_MODIFIER_GROUP_SELECT_BOUNDS.get(group.id);
-  if (
-    authoritativeSelectBounds
-    && (
-      group.minimum_select !== authoritativeSelectBounds.minimum_select
-      || group.maximum_select !== authoritativeSelectBounds.maximum_select
-    )
-  ) {
-    ctx.addIssue({
-      code: z.ZodIssueCode.custom,
-      message: `Modifier group ${group.id} must preserve canonical select bounds ${authoritativeSelectBounds.minimum_select}/${authoritativeSelectBounds.maximum_select}`,
-    });
-  }
-
-  if (group.pricing_model && group.id !== "modifier_group_dusted_rub") {
-    ctx.addIssue({
-      code: z.ZodIssueCode.custom,
-      message: `Modifier group ${group.id} cannot use the Dusted Rub per-six-wings pricing model`,
-    });
-  }
-
-  const hasOptionWithoutPrice = group.options.some((option) => !option.price);
-  if (hasOptionWithoutPrice && group.id !== "modifier_group_dusted_rub") {
-    ctx.addIssue({
-      code: z.ZodIssueCode.custom,
-      message: `Modifier group ${group.id} has unpriced options outside the authoritative Dusted Rub pricing model`,
-    });
-  }
-  if (group.id === "modifier_group_dusted_rub") {
-    if (
-      !group.pricing_model
-      || group.pricing_model.kind !== "per_6_wings"
-      || group.pricing_model.charge_per_units !== 6
-      || group.pricing_model.amount_minor_per_unit !== 50
-    ) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: `Modifier group ${group.id} must preserve the authoritative per-6-wings pricing model`,
-      });
-    }
-    if (group.options.some((option) => option.price)) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: `Modifier group ${group.id} must not use fixed option-level prices`,
-      });
-    }
-  }
-
-  for (const option of group.options) {
-    if (!optionRefMatchesGroupFamily(group.id, option.ref)) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: `Modifier group ${group.id} contains option ${option.ref} outside its authoritative catalog family`,
-      });
-    }
-  }
-
-  if (group.id === "modifier_group_primary_flavor") {
-    const optionRefs = new Set(group.options.map((option) => option.ref));
-    if (
-      optionRefs.size !== AUTHORITATIVE_PRIMARY_FLAVOR_OPTIONS.length
-      || AUTHORITATIVE_PRIMARY_FLAVOR_OPTIONS.some((ref) => !optionRefs.has(ref))
-    ) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: "Modifier group modifier_group_primary_flavor must preserve the complete authoritative sauce and dry-rub option set",
-      });
-    }
-  }
-
-  if (group.id === "modifier_group_wing_flavor_upgrade") {
-    if (group.minimum_wing_quantity !== 20) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: `Modifier group ${group.id} must require the authoritative minimum wing quantity of 20`,
-      });
-    }
-    if (
-      group.eligible_order_item_codes?.length !== 1
-      || group.eligible_order_item_codes[0] !== "A4"
-    ) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: `Modifier group ${group.id} must be eligible only for authoritative order item A4`,
-      });
-    }
-  }
-  if (group.id === "modifier_group_c1_finish_choice" && group.selection_rule !== "one_of_two_families") {
-    ctx.addIssue({
-      code: z.ZodIssueCode.custom,
-      message: `Modifier group ${group.id} must preserve the authoritative one_of_two_families selection rule`,
-    });
-  }
-  if (group.id === "modifier_group_spice_level") {
-    if (group.selection_rule !== "order_level_heat_upgrade") {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: `Modifier group ${group.id} must preserve the authoritative order-level heat upgrade selection rule`,
-      });
-    }
-  }
-  if (group.id === "modifier_group_sauce_on_the_side" || group.id === "modifier_group_dusted_rub") {
-    if (
-      group.eligible_order_item_codes?.length !== 1
-      || group.eligible_order_item_codes[0] !== "A4"
-    ) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: `Modifier group ${group.id} must be eligible only for authoritative order item A4`,
-      });
-    }
-  }
-  const optionRefs = new Set<string>();
-  for (const option of group.options) {
-    if (optionRefs.has(option.ref)) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: `Modifier group ${group.id} has duplicate option ref ${option.ref}`,
-      });
-    }
-    optionRefs.add(option.ref);
-  }
-
-  const choiceSetMembership = new Map<string, number>();
-  for (const choiceSet of group.choice_sets ?? []) {
-    for (const ref of choiceSet) {
-      if (!optionRefs.has(ref)) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: `Modifier group ${group.id} choice set references option ${ref} outside the authoritative option set`,
-        });
-      }
-      const membershipCount = (choiceSetMembership.get(ref) ?? 0) + 1;
-      choiceSetMembership.set(ref, membershipCount);
-      if (membershipCount > 1) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: `Modifier group ${group.id} assigns option ${ref} to multiple choice sets`,
-        });
-      }
-    }
-  }
-
-  if (group.id === "modifier_group_c1_finish_choice" && (!group.choice_sets || !matchesCanonicalChoiceSets(group.choice_sets))) {
-    ctx.addIssue({
-      code: z.ZodIssueCode.custom,
-      message: `Modifier group ${group.id} must preserve the authoritative two-family finish choice partition`,
-    });
-  }
-});
+}).passthrough();
 
 const CurrentMenuSchema = z.object({
   schema_version: z.literal(SUPPORTED_SCHEMA_VERSION),
@@ -620,232 +103,384 @@ const CurrentMenuSchema = z.object({
     amount_minor_unit: z.literal(2),
     representation: z.literal("amount_minor"),
   }),
+  scope: z.object({
+    business_scope: z.literal("Business"),
+    location_override_policy: z.literal(
+      "Optional location overrides may disable availability; they may not silently mutate canonical base menu data.",
+    ),
+  }),
   catalog: z.object({
-    categories: z.array(CategorySchema).min(1),
+    categories: z.array(CategorySchema),
     modifier_groups: z.array(ModifierGroupSchema),
-    location_overrides: LocationOverridesSchema,
+    location_overrides: z.array(z.unknown()).max(
+      0,
+      "Location overrides must remain empty until explicit override semantics are implemented",
+    ),
   }).passthrough(),
   historical_reference_boundary: z.object({
     historical_70_flavor_system: z.literal("reference_only"),
     active_customer_menu_authority: z.literal(true),
   }).passthrough(),
-}).passthrough().superRefine((menu, ctx) => {
-  const categoryIds = new Set<string>();
+}).passthrough();
+
+type Menu = z.infer<typeof CurrentMenuSchema>;
+type Item = z.infer<typeof CatalogItemSchema>;
+type Variant = z.infer<typeof VariantSchema>;
+type ModifierGroup = z.infer<typeof ModifierGroupSchema>;
+
+type ItemAuthority = {
+  code: string;
+  type: string;
+  category: string;
+  price: number | null;
+  availability: "active" | "by_request";
+  source: "image" | "owner_decision";
+  modifierGroups: readonly string[];
+};
+
+type VariantAuthority = {
+  parent: string;
+  code: string;
+  price: number;
+  availability: "active" | "by_request";
+  source?: "owner_decision";
+};
+
+type GroupAuthority = {
+  code: string;
+  name: string;
+  min: number;
+  max: number;
+  options: Readonly<Record<string, number | null>>;
+  selectionRule?: string;
+  eligibleOrderItemCodes?: readonly string[];
+  minimumWingQuantity?: number;
+  eligibleBaseFlavorFamily?: string;
+  excludedOptionIds?: readonly string[];
+  portionMl?: number;
+  choiceSets?: readonly (readonly string[])[];
+  pricingModel?: { kind: "per_6_wings"; charge_per_units: 6; amount_minor_per_unit: 50 };
+};
+
+const CATEGORY_AUTHORITY = {
+  a_wings: { code: "A", order: 1, items: ["a1_bone_in_combo", "a2_boneless_combo", "a3_flavor_box", "a4_wings", "a5_boneless_wings"] },
+  b_burgers: { code: "B", order: 2, items: ["b1_single", "b2_double", "b3_western_bbq", "b4_sauce_boss"] },
+  c_sides: { code: "C", order: 3, items: ["c1_cajun_fried_corn", "c2_cajun_fries", "c3_onion_rings", "c4_garlic_fries", "c5_sides_sampler"] },
+  s_sauces: { code: "S", order: 4, items: ["s1_fire_storm", "s2_jerk", "s3_buffalo", "s4_texas_bbq", "s5_korean", "s6_honey_teriyaki", "s7_spicy_peanut"] },
+  r_dry_rub: { code: "R", order: 5, items: ["r1_cajun", "r2_midnight_rub", "r3_buffalo_dust", "r4_kampot_pepper_hot_honey", "r5_lemon_pepper", "r6_garlic_parm"] },
+  d_drizzles: { code: "D", order: 6, items: ["d1_ranch", "d2_fireback", "d3_hot_honey", "d4_triple_drizz"] },
+  extras_panel: { code: "X", order: 7, items: ["x_a3_boneless_upgrade", "x_drink", "x_carrots", "x_gloves", "x_add_plus_one_sauce_rub", "x_add_plus_one_beef_patty", "x_add_plus_one_cheese", "x_add_plus_two_wings", "x_dip_ranch", "x_dip_fireback", "x_dip_ketchup", "x_dip_bbq", "x_spice_mild", "x_spice_hot", "x_spice_spicy", "x_spice_extreme", "x_spice_nuclear"] },
+} as const;
+
+const ITEM_AUTHORITY: Readonly<Record<string, ItemAuthority>> = {
+  a1_bone_in_combo: { code: "A1", type: "variant", category: "a_wings", price: null, availability: "active", source: "image", modifierGroups: [] },
+  a2_boneless_combo: { code: "A2", type: "variant", category: "a_wings", price: null, availability: "active", source: "image", modifierGroups: [] },
+  a3_flavor_box: { code: "A3", type: "bundle", category: "a_wings", price: null, availability: "active", source: "owner_decision", modifierGroups: ["modifier_group_a3_boneless_upgrade"] },
+  a4_wings: { code: "A4", type: "variant", category: "a_wings", price: null, availability: "active", source: "image", modifierGroups: [] },
+  a5_boneless_wings: { code: "A5", type: "variant", category: "a_wings", price: null, availability: "active", source: "image", modifierGroups: [] },
+  b1_single: { code: "B1", type: "product", category: "b_burgers", price: 400, availability: "active", source: "image", modifierGroups: [] },
+  b2_double: { code: "B2", type: "product", category: "b_burgers", price: 700, availability: "active", source: "image", modifierGroups: [] },
+  b3_western_bbq: { code: "B3", type: "product", category: "b_burgers", price: 900, availability: "active", source: "image", modifierGroups: [] },
+  b4_sauce_boss: { code: "B4", type: "product", category: "b_burgers", price: 900, availability: "active", source: "image", modifierGroups: [] },
+  c1_cajun_fried_corn: { code: "C1", type: "product", category: "c_sides", price: 400, availability: "active", source: "owner_decision", modifierGroups: ["modifier_group_c1_dry_rub", "modifier_group_c1_finish_choice"] },
+  c2_cajun_fries: { code: "C2", type: "product", category: "c_sides", price: 400, availability: "active", source: "image", modifierGroups: [] },
+  c3_onion_rings: { code: "C3", type: "product", category: "c_sides", price: 500, availability: "active", source: "image", modifierGroups: [] },
+  c4_garlic_fries: { code: "C4", type: "product", category: "c_sides", price: 500, availability: "active", source: "image", modifierGroups: [] },
+  c5_sides_sampler: { code: "C5", type: "bundle", category: "c_sides", price: 1300, availability: "active", source: "image", modifierGroups: [] },
+  s1_fire_storm: { code: "S1", type: "modifier", category: "s_sauces", price: 0, availability: "active", source: "owner_decision", modifierGroups: [] },
+  s2_jerk: { code: "S2", type: "modifier", category: "s_sauces", price: 0, availability: "active", source: "owner_decision", modifierGroups: [] },
+  s3_buffalo: { code: "S3", type: "modifier", category: "s_sauces", price: 0, availability: "active", source: "owner_decision", modifierGroups: [] },
+  s4_texas_bbq: { code: "S4", type: "modifier", category: "s_sauces", price: 0, availability: "active", source: "owner_decision", modifierGroups: [] },
+  s5_korean: { code: "S5", type: "modifier", category: "s_sauces", price: 0, availability: "active", source: "owner_decision", modifierGroups: [] },
+  s6_honey_teriyaki: { code: "S6", type: "modifier", category: "s_sauces", price: 0, availability: "active", source: "owner_decision", modifierGroups: [] },
+  s7_spicy_peanut: { code: "S7", type: "modifier", category: "s_sauces", price: 0, availability: "active", source: "owner_decision", modifierGroups: [] },
+  r1_cajun: { code: "R1", type: "modifier", category: "r_dry_rub", price: 0, availability: "active", source: "owner_decision", modifierGroups: [] },
+  r2_midnight_rub: { code: "R2", type: "modifier", category: "r_dry_rub", price: 0, availability: "active", source: "owner_decision", modifierGroups: [] },
+  r3_buffalo_dust: { code: "R3", type: "modifier", category: "r_dry_rub", price: 0, availability: "active", source: "owner_decision", modifierGroups: [] },
+  r4_kampot_pepper_hot_honey: { code: "R4", type: "modifier", category: "r_dry_rub", price: 0, availability: "active", source: "owner_decision", modifierGroups: [] },
+  r5_lemon_pepper: { code: "R5", type: "modifier", category: "r_dry_rub", price: 0, availability: "active", source: "owner_decision", modifierGroups: [] },
+  r6_garlic_parm: { code: "R6", type: "modifier", category: "r_dry_rub", price: 0, availability: "active", source: "owner_decision", modifierGroups: [] },
+  d1_ranch: { code: "D1", type: "modifier", category: "d_drizzles", price: 50, availability: "active", source: "owner_decision", modifierGroups: [] },
+  d2_fireback: { code: "D2", type: "modifier", category: "d_drizzles", price: 50, availability: "active", source: "owner_decision", modifierGroups: [] },
+  d3_hot_honey: { code: "D3", type: "modifier", category: "d_drizzles", price: 50, availability: "active", source: "owner_decision", modifierGroups: [] },
+  d4_triple_drizz: { code: "D4", type: "modifier", category: "d_drizzles", price: 100, availability: "active", source: "owner_decision", modifierGroups: [] },
+  x_a3_boneless_upgrade: { code: "A3_BONeless", type: "modifier", category: "extras_panel", price: 150, availability: "active", source: "owner_decision", modifierGroups: [] },
+  x_drink: { code: "DRINK", type: "modifier", category: "extras_panel", price: 125, availability: "active", source: "owner_decision", modifierGroups: [] },
+  x_carrots: { code: "CARROTS", type: "modifier", category: "extras_panel", price: 75, availability: "active", source: "owner_decision", modifierGroups: [] },
+  x_gloves: { code: "GLOVES", type: "modifier", category: "extras_panel", price: 50, availability: "active", source: "owner_decision", modifierGroups: [] },
+  x_add_plus_one_sauce_rub: { code: "+1_SAUCE_RUB", type: "modifier", category: "extras_panel", price: 100, availability: "active", source: "owner_decision", modifierGroups: [] },
+  x_add_plus_one_beef_patty: { code: "+1_BEEF_PATTY", type: "modifier", category: "extras_panel", price: 225, availability: "active", source: "owner_decision", modifierGroups: [] },
+  x_add_plus_one_cheese: { code: "+1_CHEESE", type: "modifier", category: "extras_panel", price: 75, availability: "active", source: "owner_decision", modifierGroups: [] },
+  x_add_plus_two_wings: { code: "+2_WINGS", type: "modifier", category: "extras_panel", price: 250, availability: "active", source: "owner_decision", modifierGroups: [] },
+  x_dip_ranch: { code: "DIP_RANCH", type: "modifier", category: "extras_panel", price: 75, availability: "active", source: "owner_decision", modifierGroups: [] },
+  x_dip_fireback: { code: "DIP_FIREBACK", type: "modifier", category: "extras_panel", price: 75, availability: "active", source: "owner_decision", modifierGroups: [] },
+  x_dip_ketchup: { code: "DIP_KETCHUP", type: "modifier", category: "extras_panel", price: 75, availability: "active", source: "owner_decision", modifierGroups: [] },
+  x_dip_bbq: { code: "DIP_BBQ", type: "modifier", category: "extras_panel", price: 75, availability: "active", source: "owner_decision", modifierGroups: [] },
+  x_spice_mild: { code: "MILD", type: "modifier", category: "extras_panel", price: 0, availability: "active", source: "owner_decision", modifierGroups: [] },
+  x_spice_hot: { code: "HOT", type: "modifier", category: "extras_panel", price: 25, availability: "active", source: "owner_decision", modifierGroups: [] },
+  x_spice_spicy: { code: "SPICY", type: "modifier", category: "extras_panel", price: 50, availability: "active", source: "owner_decision", modifierGroups: [] },
+  x_spice_extreme: { code: "EXTREME", type: "modifier", category: "extras_panel", price: 75, availability: "active", source: "owner_decision", modifierGroups: [] },
+  x_spice_nuclear: { code: "NUCLEAR", type: "modifier", category: "extras_panel", price: 100, availability: "active", source: "owner_decision", modifierGroups: [] },
+};
+
+const VARIANT_AUTHORITY: Readonly<Record<string, VariantAuthority>> = {
+  a1_6pc: { parent: "a1_bone_in_combo", code: "6pc", price: 1095, availability: "active" },
+  a1_10pc: { parent: "a1_bone_in_combo", code: "10pc", price: 1495, availability: "active" },
+  a2_8pc: { parent: "a2_boneless_combo", code: "8pc", price: 1395, availability: "active" },
+  a2_12pc: { parent: "a2_boneless_combo", code: "12pc", price: 1795, availability: "active" },
+  a3_8pc: { parent: "a3_flavor_box", code: "8pc", price: 1495, availability: "active" },
+  a4_6pc: { parent: "a4_wings", code: "6pc", price: 675, availability: "active" },
+  a4_10pc: { parent: "a4_wings", code: "10pc", price: 1295, availability: "active" },
+  a4_20pc: { parent: "a4_wings", code: "20pc", price: 2075, availability: "active" },
+  a4_36pc: { parent: "a4_wings", code: "36pc", price: 3595, availability: "active" },
+  a4_50pc: { parent: "a4_wings", code: "50pc", price: 4995, availability: "active" },
+  a4_extra_sauce: { parent: "a4_wings", code: "extra_sauce", price: 100, availability: "active" },
+  a4_sauce_on_side: { parent: "a4_wings", code: "sauce_on_side", price: 100, availability: "by_request", source: "owner_decision" },
+  a4_dusted_rub: { parent: "a4_wings", code: "dusted_rub", price: 50, availability: "active", source: "owner_decision" },
+  a5_8pc: { parent: "a5_boneless_wings", code: "8pc", price: 950, availability: "active" },
+  a5_12pc: { parent: "a5_boneless_wings", code: "12pc", price: 1395, availability: "active" },
+  a5_24pc: { parent: "a5_boneless_wings", code: "24pc", price: 2650, availability: "active" },
+  a5_48pc: { parent: "a5_boneless_wings", code: "48pc", price: 5195, availability: "active" },
+};
+
+const GROUP_AUTHORITY: Readonly<Record<string, GroupAuthority>> = {
+  modifier_group_primary_flavor: {
+    code: "PRIMARY_FLAVOR", name: "Primary Flavor", min: 1, max: 1, selectionRule: "sauce_or_dry_rub",
+    options: { s1_fire_storm: 0, s2_jerk: 0, s3_buffalo: 0, s4_texas_bbq: 0, s5_korean: 0, s6_honey_teriyaki: 0, s7_spicy_peanut: 0, r1_cajun: 0, r2_midnight_rub: 0, r3_buffalo_dust: 0, r4_kampot_pepper_hot_honey: 0, r5_lemon_pepper: 0, r6_garlic_parm: 0 },
+  },
+  modifier_group_wing_flavor_upgrade: {
+    code: "WING_FLAVOR_UPGRADE", name: "Wing Flavor Upgrade", min: 0, max: 1,
+    eligibleOrderItemCodes: ["A4"], minimumWingQuantity: 20,
+    options: { x_add_plus_one_sauce_rub: 100 },
+  },
+  modifier_group_sauce_on_the_side: {
+    code: "SIDE_SAUCE", name: "Sauce On The Side", min: 0, max: 1,
+    eligibleOrderItemCodes: ["A4"], excludedOptionIds: ["s1_fire_storm"], portionMl: 30,
+    options: { s2_jerk: 100, s3_buffalo: 100, s4_texas_bbq: 100, s5_korean: 100, s6_honey_teriyaki: 100, s7_spicy_peanut: 100 },
+  },
+  modifier_group_dusted_rub: {
+    code: "DUSTED_RUB", name: "Dusted Rub", min: 0, max: 1,
+    eligibleOrderItemCodes: ["A4"], eligibleBaseFlavorFamily: "dry_rub",
+    pricingModel: { kind: "per_6_wings", charge_per_units: 6, amount_minor_per_unit: 50 },
+    options: { r1_cajun: null, r2_midnight_rub: null, r3_buffalo_dust: null, r4_kampot_pepper_hot_honey: null, r5_lemon_pepper: null, r6_garlic_parm: null },
+  },
+  modifier_group_a3_boneless_upgrade: { code: "A3_BONUS", name: "A3 Boneless Upgrade", min: 0, max: 1, options: { x_a3_boneless_upgrade: 150 } },
+  modifier_group_c1_dry_rub: { code: "C1_DRY_RUB", name: "C1 Dry Rub", min: 1, max: 1, options: { r1_cajun: 0, r2_midnight_rub: 0, r3_buffalo_dust: 0, r4_kampot_pepper_hot_honey: 0, r5_lemon_pepper: 0, r6_garlic_parm: 0 } },
+  modifier_group_c1_finish_choice: {
+    code: "C1_FINISH", name: "C1 Finish Choice", min: 1, max: 1, selectionRule: "one_of_two_families",
+    choiceSets: [["d1_ranch", "d2_fireback", "d3_hot_honey"], ["x_dip_ranch", "x_dip_fireback", "x_dip_ketchup", "x_dip_bbq"]],
+    options: { d1_ranch: 0, d2_fireback: 0, d3_hot_honey: 0, x_dip_ranch: 0, x_dip_fireback: 0, x_dip_ketchup: 0, x_dip_bbq: 0 },
+  },
+  modifier_group_additional_dry_rub: { code: "ADD_DRY_RUB", name: "Additional Dry Rub", min: 0, max: 1, options: { r1_cajun: 50, r2_midnight_rub: 50, r3_buffalo_dust: 50, r4_kampot_pepper_hot_honey: 50, r5_lemon_pepper: 50, r6_garlic_parm: 50 } },
+  modifier_group_additional_drizzle: { code: "ADD_DRIZZLE", name: "Additional Drizzle", min: 0, max: 1, options: { d1_ranch: 50, d2_fireback: 50, d3_hot_honey: 50 } },
+  modifier_group_triple_drizz: { code: "TRIPLE_DRIZZ", name: "Triple Drizz", min: 0, max: 1, options: { d4_triple_drizz: 100 } },
+  modifier_group_spice_level: { code: "SPICE_LEVEL", name: "Spice Level", min: 0, max: 1, selectionRule: "order_level_heat_upgrade", options: { x_spice_mild: 0, x_spice_hot: 25, x_spice_spicy: 50, x_spice_extreme: 75, x_spice_nuclear: 100 } },
+  modifier_group_dips: { code: "DIPS", name: "Dips", min: 0, max: 1, options: { x_dip_ranch: 75, x_dip_fireback: 75, x_dip_ketchup: 75, x_dip_bbq: 75 } },
+};
+
+const SIDE_SAUCE_ELIGIBLE = ["s2_jerk", "s3_buffalo", "s4_texas_bbq", "s5_korean", "s6_honey_teriyaki", "s7_spicy_peanut"] as const;
+const SIDE_SAUCE_EXCLUDED = ["s1_fire_storm"] as const;
+
+function exactArray(actual: readonly string[] | undefined, expected: readonly string[] | undefined): boolean {
+  if (!actual && !expected) return true;
+  if (!actual || !expected || actual.length !== expected.length) return false;
+  return actual.every((value, index) => value === expected[index]);
+}
+
+function exactChoiceSets(actual: readonly (readonly string[])[] | undefined, expected: readonly (readonly string[])[] | undefined): boolean {
+  if (!actual && !expected) return true;
+  if (!actual || !expected || actual.length !== expected.length) return false;
+  return actual.every((set, index) => exactArray(set, expected[index]));
+}
+
+function issue(ctx: z.RefinementCtx, message: string): void {
+  ctx.addIssue({ code: z.ZodIssueCode.custom, message });
+}
+
+function validateItem(item: Item, categoryId: string, ctx: z.RefinementCtx): void {
+  const authority = ITEM_AUTHORITY[item.id];
+  if (!authority) {
+    issue(ctx, `Unexpected canonical catalog item ${item.id}`);
+    return;
+  }
+  if (authority.category !== categoryId) issue(ctx, `Item ${item.id} must remain under canonical category ${authority.category}`);
+  if (item.code !== authority.code) issue(ctx, `Item ${item.id} must preserve canonical code ${authority.code}`);
+  if (item.type !== authority.type) issue(ctx, `Item ${item.id} must preserve canonical type ${authority.type}`);
+  if (item.availability.status !== authority.availability) issue(ctx, `Item ${item.id} must preserve canonical availability ${authority.availability}`);
+  if (item.source !== authority.source) issue(ctx, `Item ${item.id} must preserve canonical source ${authority.source}`);
+  if (!exactArray(item.modifier_groups, authority.modifierGroups)) issue(ctx, `Item ${item.id} must preserve canonical modifier-group attachments`);
+
+  if (authority.price === null) {
+    if (item.price) issue(ctx, `Variant-backed item ${item.id} must not define a base price`);
+  } else if (item.price?.amount_minor !== authority.price) {
+    issue(ctx, `Item ${item.id} must preserve canonical price ${authority.price}`);
+  }
+
+  if (item.id === "x_add_plus_one_sauce_rub") {
+    if (
+      item.eligibility?.minimum_wing_quantity !== 20
+      || !exactArray(item.eligibility.allowed_flavor_families, ["sauce", "dry_rub"])
+    ) {
+      issue(ctx, "x_add_plus_one_sauce_rub must preserve canonical 20-wing sauce/dry-rub eligibility");
+    }
+  } else if (item.eligibility) {
+    issue(ctx, `Item ${item.id} must not define noncanonical wing eligibility`);
+  }
+}
+
+function validateVariant(variant: Variant, parentItemId: string, ctx: z.RefinementCtx): void {
+  const authority = VARIANT_AUTHORITY[variant.id];
+  if (!authority) {
+    issue(ctx, `Unexpected canonical variant ${variant.id}`);
+    return;
+  }
+  if (authority.parent !== parentItemId) issue(ctx, `Variant ${variant.id} must remain under canonical parent ${authority.parent}`);
+  if (variant.code !== authority.code) issue(ctx, `Variant ${variant.id} must preserve canonical code ${authority.code}`);
+  if (variant.price.amount_minor !== authority.price) issue(ctx, `Variant ${variant.id} must preserve canonical price ${authority.price}`);
+  if (variant.availability.status !== authority.availability) issue(ctx, `Variant ${variant.id} must preserve canonical availability ${authority.availability}`);
+  if (variant.source !== authority.source) issue(ctx, `Variant ${variant.id} must preserve canonical provenance`);
+  if (variant.modifier_groups.length !== 0) issue(ctx, `Variant ${variant.id} must not attach noncanonical modifier groups`);
+
+  if (variant.id === "a4_dusted_rub") {
+    if (
+      variant.pricing_model?.kind !== "per_6_wings"
+      || variant.pricing_model.charge_units !== "applicable_wing_quantity_divided_by_6"
+    ) {
+      issue(ctx, "a4_dusted_rub must preserve canonical per-six-wings pricing semantics");
+    }
+  } else if (variant.pricing_model) {
+    issue(ctx, `Variant ${variant.id} must not define noncanonical quantity-scaled pricing`);
+  }
+
+  if (variant.id === "a4_sauce_on_side") {
+    if (variant.portion_ml !== 30) issue(ctx, "a4_sauce_on_side must preserve canonical 30 ml portion");
+    if (!exactArray(variant.eligible_sauces, SIDE_SAUCE_ELIGIBLE)) issue(ctx, "a4_sauce_on_side must preserve canonical eligible sauce set");
+    if (!exactArray(variant.excluded_sauces, SIDE_SAUCE_EXCLUDED)) issue(ctx, "a4_sauce_on_side must preserve canonical Fire Storm exclusion");
+  } else if (variant.portion_ml !== undefined || variant.eligible_sauces || variant.excluded_sauces) {
+    issue(ctx, `Variant ${variant.id} must not define side-sauce-only metadata`);
+  }
+}
+
+function validateModifierGroup(group: ModifierGroup, ctx: z.RefinementCtx): void {
+  const authority = GROUP_AUTHORITY[group.id];
+  if (!authority) {
+    issue(ctx, `Unexpected canonical modifier group ${group.id}`);
+    return;
+  }
+  if (group.code !== authority.code) issue(ctx, `Modifier group ${group.id} must preserve canonical code ${authority.code}`);
+  if (group.name !== authority.name) issue(ctx, `Modifier group ${group.id} must preserve canonical name ${authority.name}`);
+  if (group.minimum_select !== authority.min || group.maximum_select !== authority.max) issue(ctx, `Modifier group ${group.id} must preserve canonical selection bounds ${authority.min}/${authority.max}`);
+  if (group.selection_rule !== authority.selectionRule) issue(ctx, `Modifier group ${group.id} must preserve canonical selection rule`);
+  if (!exactArray(group.eligible_order_item_codes, authority.eligibleOrderItemCodes)) issue(ctx, `Modifier group ${group.id} must preserve canonical order-item eligibility`);
+  if (group.minimum_wing_quantity !== authority.minimumWingQuantity) issue(ctx, `Modifier group ${group.id} must preserve canonical minimum-wing eligibility`);
+  if (group.eligible_base_flavor_family !== authority.eligibleBaseFlavorFamily) issue(ctx, `Modifier group ${group.id} must preserve canonical base-flavor eligibility`);
+  if (!exactArray(group.excluded_option_ids, authority.excludedOptionIds)) issue(ctx, `Modifier group ${group.id} must preserve canonical excluded options`);
+  if (group.portion_ml !== authority.portionMl) issue(ctx, `Modifier group ${group.id} must preserve canonical portion metadata`);
+  if (!exactChoiceSets(group.choice_sets, authority.choiceSets)) issue(ctx, `Modifier group ${group.id} must preserve canonical choice-set partition`);
+
+  if (authority.pricingModel) {
+    if (
+      group.pricing_model?.kind !== authority.pricingModel.kind
+      || group.pricing_model.charge_per_units !== authority.pricingModel.charge_per_units
+      || group.pricing_model.amount_minor_per_unit !== authority.pricingModel.amount_minor_per_unit
+    ) {
+      issue(ctx, `Modifier group ${group.id} must preserve canonical per-six-wings pricing model`);
+    }
+  } else if (group.pricing_model) {
+    issue(ctx, `Modifier group ${group.id} must not define noncanonical group pricing`);
+  }
+
+  const expectedRefs = Object.keys(authority.options);
+  const actualRefs = group.options.map((option) => option.ref);
+  if (!exactArray(actualRefs, expectedRefs)) issue(ctx, `Modifier group ${group.id} must preserve canonical option membership and order`);
+
+  const seenRefs = new Set<string>();
+  for (const option of group.options) {
+    if (seenRefs.has(option.ref)) issue(ctx, `Modifier group ${group.id} has duplicate option ref ${option.ref}`);
+    seenRefs.add(option.ref);
+    if (!(option.ref in authority.options)) continue;
+    const expectedPrice = authority.options[option.ref];
+    if (expectedPrice === null) {
+      if (option.price) issue(ctx, `Modifier group ${group.id} option ${option.ref} must remain unpriced under group pricing`);
+    } else if (option.price?.amount_minor !== expectedPrice) {
+      issue(ctx, `Modifier group ${group.id} option ${option.ref} must preserve canonical price ${expectedPrice}`);
+    }
+  }
+
+  if (group.source !== "owner_decision") issue(ctx, `Modifier group ${group.id} must preserve owner_decision provenance`);
+}
+
+function validateCanonicalMenu(menu: Menu): void {
+  const issues: z.ZodIssue[] = [];
+  const ctx: z.RefinementCtx = {
+    addIssue: (entry) => issues.push(entry as z.ZodIssue),
+    path: [],
+  };
+
+  const expectedCategoryIds = Object.keys(CATEGORY_AUTHORITY);
+  const actualCategoryIds = menu.catalog.categories.map((category) => category.id);
+  if (!exactArray(actualCategoryIds, expectedCategoryIds)) issue(ctx, "Canonical category membership/order must match the approved current menu");
+
   const itemIds = new Set<string>();
   const itemCodes = new Set<string>();
   const variantIds = new Set<string>();
-  const groupIds = new Set<string>();
-  const groupsById = new Map(menu.catalog.modifier_groups.map((group) => [group.id, group] as const));
-
-  for (const group of menu.catalog.modifier_groups) {
-    if (groupIds.has(group.id)) {
-      ctx.addIssue({ code: z.ZodIssueCode.custom, message: `Duplicate modifier group id: ${group.id}` });
-    }
-    groupIds.add(group.id);
-  }
-  for (const requiredGroupId of REQUIRED_MODIFIER_GROUP_IDS) {
-    if (!groupIds.has(requiredGroupId)) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: `Missing required authoritative modifier group: ${requiredGroupId}`,
-      });
-    }
-  }
 
   for (const category of menu.catalog.categories) {
-    if (categoryIds.has(category.id)) {
-      ctx.addIssue({ code: z.ZodIssueCode.custom, message: `Duplicate category id: ${category.id}` });
+    const categoryAuthority = CATEGORY_AUTHORITY[category.id as keyof typeof CATEGORY_AUTHORITY];
+    if (!categoryAuthority) {
+      issue(ctx, `Unexpected canonical category ${category.id}`);
+      continue;
     }
-    categoryIds.add(category.id);
+    if (category.code !== categoryAuthority.code || category.display_order !== categoryAuthority.order) issue(ctx, `Category ${category.id} must preserve canonical code/display order`);
+    if (!exactArray(category.items.map((item) => item.id), categoryAuthority.items)) issue(ctx, `Category ${category.id} must preserve canonical item membership/order`);
 
     for (const item of category.items) {
-      if (itemIds.has(item.id)) {
-        ctx.addIssue({ code: z.ZodIssueCode.custom, message: `Duplicate item id: ${item.id}` });
-      }
+      if (itemIds.has(item.id)) issue(ctx, `Duplicate item id ${item.id}`);
       itemIds.add(item.id);
-
-      if (itemCodes.has(item.code)) {
-        ctx.addIssue({ code: z.ZodIssueCode.custom, message: `Duplicate item code: ${item.code}` });
-      }
+      if (itemCodes.has(item.code)) issue(ctx, `Duplicate item code ${item.code}`);
       itemCodes.add(item.code);
+      validateItem(item, category.id, ctx);
 
       for (const variant of item.variants ?? []) {
-        if (variantIds.has(variant.id)) {
-          ctx.addIssue({ code: z.ZodIssueCode.custom, message: `Duplicate variant id: ${variant.id}` });
-        }
-        if (itemIds.has(variant.id)) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            message: `Catalog id ${variant.id} is shared by an item and variant`,
-          });
-        }
+        if (variantIds.has(variant.id)) issue(ctx, `Duplicate variant id ${variant.id}`);
+        if (itemIds.has(variant.id)) issue(ctx, `Catalog id ${variant.id} is shared by an item and variant`);
         variantIds.add(variant.id);
+        validateVariant(variant, item.id, ctx);
       }
     }
   }
 
-  for (const itemId of itemIds) {
-    if (variantIds.has(itemId)) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: `Catalog id ${itemId} is shared by an item and variant`,
-      });
-    }
-  }
+  for (const itemId of itemIds) if (variantIds.has(itemId)) issue(ctx, `Catalog id ${itemId} is shared by an item and variant`);
+  if (!exactArray([...itemIds], Object.keys(ITEM_AUTHORITY))) issue(ctx, "Canonical item membership must exactly match approved current menu");
+  if (!exactArray([...variantIds], Object.keys(VARIANT_AUTHORITY))) issue(ctx, "Canonical variant membership must exactly match approved current menu");
 
-  if (
-    itemIds.size !== AUTHORITATIVE_ITEM_IDS.length
-    || AUTHORITATIVE_ITEM_IDS.some((id) => !itemIds.has(id))
-  ) {
-    ctx.addIssue({
-      code: z.ZodIssueCode.custom,
-      message: "Canonical catalog items must preserve the complete authoritative item membership",
-    });
+  const groupIds = new Set<string>();
+  for (const group of menu.catalog.modifier_groups) {
+    if (groupIds.has(group.id)) issue(ctx, `Duplicate modifier group id ${group.id}`);
+    groupIds.add(group.id);
+    validateModifierGroup(group, ctx);
   }
-  if (
-    variantIds.size !== AUTHORITATIVE_VARIANT_IDS.length
-    || AUTHORITATIVE_VARIANT_IDS.some((id) => !variantIds.has(id))
-  ) {
-    ctx.addIssue({
-      code: z.ZodIssueCode.custom,
-      message: "Canonical catalog variants must preserve the complete authoritative variant membership",
-    });
-  }
+  if (!exactArray([...groupIds], Object.keys(GROUP_AUTHORITY))) issue(ctx, "Canonical modifier-group membership must exactly match approved current menu");
 
   const catalogEntryIds = new Set([...itemIds, ...variantIds]);
-
-  for (const category of menu.catalog.categories) {
-    for (const item of category.items) {
-      const authoritativeModifierGroups = AUTHORITATIVE_ITEM_MODIFIER_GROUP_ATTACHMENTS.get(item.code) ?? [];
-      if (!hasExactMembers(item.modifier_groups, authoritativeModifierGroups)) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: `Item ${item.code} must preserve its authoritative modifier group attachments`,
-        });
-      }
-
-      for (const groupId of item.modifier_groups) {
-        const group = groupsById.get(groupId);
-        if (!group) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            message: `Item ${item.code} references missing modifier group ${groupId}`,
-          });
-          continue;
-        }
-        if (group.eligible_order_item_codes && !group.eligible_order_item_codes.includes(item.code)) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            message: `Item ${item.code} attaches modifier group ${groupId} but is outside its eligibility scope`,
-          });
-        }
-      }
-
-      for (const variant of item.variants ?? []) {
-        if (variant.modifier_groups.length !== 0) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            message: `Variant ${variant.code} must not attach noncanonical modifier groups`,
-          });
-        }
-
-        if ((variant.id === "a4_sauce_on_side" || variant.id === "a4_dusted_rub") && item.code !== "A4") {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            message: `Authoritative contextual variant ${variant.id} must remain under item A4`,
-          });
-        }
-
-        if (variant.id === "a4_sauce_on_side") {
-          const eligibleSauces = variant.eligible_sauces ?? [];
-          const excludedSauces = new Set(variant.excluded_sauces ?? []);
-
-          for (const sauceId of eligibleSauces) {
-            if (!catalogEntryIds.has(sauceId)) {
-              ctx.addIssue({
-                code: z.ZodIssueCode.custom,
-                message: `Variant ${variant.id} references missing eligible sauce ${sauceId}`,
-              });
-            }
-            if (excludedSauces.has(sauceId)) {
-              ctx.addIssue({
-                code: z.ZodIssueCode.custom,
-                message: `Variant ${variant.id} lists sauce ${sauceId} as both eligible and excluded`,
-              });
-            }
-          }
-
-          for (const sauceId of excludedSauces) {
-            if (!catalogEntryIds.has(sauceId)) {
-              ctx.addIssue({
-                code: z.ZodIssueCode.custom,
-                message: `Variant ${variant.id} references missing excluded sauce ${sauceId}`,
-              });
-            }
-          }
-        }
-
-        if (variant.id === "a4_dusted_rub") {
-          const dustedRubGroup = groupsById.get("modifier_group_dusted_rub");
-          if (
-            variant.price?.amount_minor !== 50
-            || dustedRubGroup?.pricing_model?.amount_minor_per_unit !== variant.price.amount_minor
-          ) {
-            ctx.addIssue({
-              code: z.ZodIssueCode.custom,
-              message: "A4 Dusted Rub variant and modifier group must agree on the authoritative $0.50 per-six-wings amount",
-            });
-          }
-        }
-
-        for (const groupId of variant.modifier_groups) {
-          const group = groupsById.get(groupId);
-          if (!group) {
-            ctx.addIssue({
-              code: z.ZodIssueCode.custom,
-              message: `Variant ${variant.code} references missing modifier group ${groupId}`,
-            });
-            continue;
-          }
-          if (group.eligible_order_item_codes && !group.eligible_order_item_codes.includes(item.code)) {
-            ctx.addIssue({
-              code: z.ZodIssueCode.custom,
-              message: `Variant ${variant.code} of item ${item.code} attaches modifier group ${groupId} but the item is outside its eligibility scope`,
-            });
-          }
-        }
-      }
-    }
-  }
-
   for (const group of menu.catalog.modifier_groups) {
-    for (const option of group.options) {
-      if (!catalogEntryIds.has(option.ref)) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: `Modifier group ${group.id} references missing catalog entry ${option.ref}`,
-        });
-      }
-    }
-
-    for (const itemCode of group.eligible_order_item_codes ?? []) {
-      if (!itemCodes.has(itemCode)) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: `Modifier group ${group.id} references missing eligible order item code ${itemCode}`,
-        });
-      }
-    }
+    for (const option of group.options) if (!catalogEntryIds.has(option.ref)) issue(ctx, `Modifier group ${group.id} references missing catalog entry ${option.ref}`);
+    for (const itemCode of group.eligible_order_item_codes ?? []) if (!itemCodes.has(itemCode)) issue(ctx, `Modifier group ${group.id} references missing eligible item code ${itemCode}`);
   }
-});
+
+  if (issues.length > 0) {
+    throw new z.ZodError(issues);
+  }
+}
 
 async function main() {
   const raw = await readFile(CANONICAL_MENU_PATH, "utf8");
   const parsed = CurrentMenuSchema.parse(JSON.parse(raw));
+  validateCanonicalMenu(parsed);
 
   const itemCount = parsed.catalog.categories.reduce((count, category) => count + category.items.length, 0);
   const variantCount = parsed.catalog.categories.reduce(
-    (count, category) => count + category.items.reduce((itemCount, item) => itemCount + (item.variants?.length ?? 0), 0),
+    (count, category) => count + category.items.reduce((total, item) => total + (item.variants?.length ?? 0), 0),
     0,
   );
 
