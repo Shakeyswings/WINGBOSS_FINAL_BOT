@@ -222,7 +222,8 @@
           { "id": "x_spice_hot", "code": "HOT", "name": "HOT", "display_name": "Hot", "price": { "currency": "USD", "amount_minor": 25 }, "availability": { "status": "active" }, "type": "modifier", "pricing_context": "heat_upgrade", "modifier_groups": [], "source": "owner_decision" },
           { "id": "x_spice_spicy", "code": "SPICY", "name": "SPICY", "display_name": "Spicy", "price": { "currency": "USD", "amount_minor": 50 }, "availability": { "status": "active" }, "type": "modifier", "pricing_context": "heat_upgrade", "modifier_groups": [], "source": "owner_decision" },
           { "id": "x_spice_extreme", "code": "EXTREME", "name": "EXTREME", "display_name": "Extreme", "price": { "currency": "USD", "amount_minor": 75 }, "availability": { "status": "active" }, "type": "modifier", "pricing_context": "heat_upgrade", "modifier_groups": [], "source": "owner_decision" },
-          { "id": "x_spice_nuclear", "code": "NUCLEAR", "name": "NUCLEAR", "display_name": "Nuclear", "price": { "currency": "USD", "amount_minor": 100 }, "availability": { "status": "active" }, "type": "modifier", "pricing_context": "heat_upgrade", "modifier_groups": [], "source": "owner_decision" }
+          { "id": "x_spice_revenge", "code": "REVENGE", "name": "REVENGE", "display_name": "Revenge", "price": { "currency": "USD", "amount_minor": 100 }, "availability": { "status": "active" }, "type": "modifier", "pricing_context": "heat_upgrade", "modifier_groups": [], "source": "owner_decision" },
+          { "id": "x_spice_nuclear", "code": "NUCLEAR", "name": "NUCLEAR", "display_name": "Nuclear", "price": { "currency": "USD", "amount_minor": 125 }, "availability": { "status": "active" }, "type": "modifier", "pricing_context": "heat_upgrade", "modifier_groups": [], "source": "owner_decision" }
         ]
       }
     ],
@@ -403,7 +404,8 @@
           { "ref": "x_spice_hot", "price": { "currency": "USD", "amount_minor": 25 } },
           { "ref": "x_spice_spicy", "price": { "currency": "USD", "amount_minor": 50 } },
           { "ref": "x_spice_extreme", "price": { "currency": "USD", "amount_minor": 75 } },
-          { "ref": "x_spice_nuclear", "price": { "currency": "USD", "amount_minor": 100 } }
+          { "ref": "x_spice_revenge", "price": { "currency": "USD", "amount_minor": 100 } },
+          { "ref": "x_spice_nuclear", "price": { "currency": "USD", "amount_minor": 125 } }
         ],
         "source": "owner_decision"
       },

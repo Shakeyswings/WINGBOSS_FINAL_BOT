@@ -2,6 +2,7 @@
 
 ## Summary
 - Added a shared `src/domain/wingboss.ts` module for Boss Mode stage order, heat mapping, D4 validation, curated build fixtures, and kitchen validation helpers.
+- Approved heat ladder is `mild`, `hot`, `spicy`, `extreme`, `revenge`, `nuclear` with `nuclear` priced at 125 minor units.
 - Added a browseable `BOSS MODE` preview path in `src/flows/architecture.flow.ts`.
 - Wired `⚡ Boss Mode` into the main browse menu.
 

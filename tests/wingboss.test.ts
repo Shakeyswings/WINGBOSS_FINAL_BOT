@@ -230,8 +230,10 @@ describe("WingBoss approved architecture", () => {
   it("keeps heat charge and recipe application separate", () => {
     expect(BOSS_HEAT_RECORDS.every((record) => record.applicationStage === "HEAT_APPLICATION")).toBe(true);
     expect(BOSS_HEAT_RECORDS.every((record) => record.quantityScalingRule === "order_level_fixed")).toBe(true);
+    expect(BOSS_HEAT_RECORDS.map((record) => record.heatLevel)).toEqual(["mild", "hot", "spicy", "extreme", "revenge", "nuclear"]);
     expect(BOSS_HEAT_CHARGE_MINOR.hot).toBe(25);
-    expect(BOSS_HEAT_CHARGE_MINOR.nuclear).toBe(100);
+    expect(BOSS_HEAT_CHARGE_MINOR.revenge).toBe(100);
+    expect(BOSS_HEAT_CHARGE_MINOR.nuclear).toBe(125);
     expect(getBossHeatChargeMinor("hot")).toBe(25);
   });
 

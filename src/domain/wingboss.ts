@@ -33,7 +33,7 @@ export type BossRecipeStage = (typeof BOSS_RECIPE_STAGES)[number];
 
 export type BossFlavorRole = "PRIMARY_FLAVOR" | "BOSS_FINISH_FLAVOR" | "FINISHER";
 
-export type BossHeatLevel = "mild" | "hot" | "spicy" | "extreme" | "nuclear";
+export type BossHeatLevel = "mild" | "hot" | "spicy" | "extreme" | "revenge" | "nuclear";
 
 export type BossSelection = {
   primaryFlavorId: string;
