@@ -3,7 +3,7 @@ import type { WBContext } from "../bot.ts";
 import {
   BOSS_FINISHERS,
   BOSS_FINISH_FLAVORS,
-  BOSS_HEAT_CHARGE_MINOR,
+  BOSS_HEAT_RECORDS,
   BOSS_MODE_PRICE_MINOR,
   BOSS_MODE_PRICE_STATUS,
   BOSS_PRIMARY_FLAVORS,
@@ -21,6 +21,7 @@ import {
   type BossSelection,
   type BossHeatLevel
 } from "../domain/wingboss.ts";
+import { canAccessArchitecturePreview } from "./preview.ts";
 
 type BossPreviewState = {
   primaryFlavorId?: string;
@@ -86,14 +87,22 @@ export async function architectureFlow(ctx: WBContext) {
   const value = parts[3] ?? "";
 
   if (section === "boss") {
+    if (!canAccessArchitecturePreview(ctx, "boss")) {
+      return ctx.editMessageText(
+        ctx.t("preview_unavailable"),
+        kb([[Markup.button.callback("⬅️ Home", "home:back")]])
+      );
+    }
+
     const state = bossState(ctx);
 
     if (!step) {
       const visibleCurated = getVisibleCuratedBossBuilds();
       return ctx.editMessageText(
         [
-          "BOSS MODE",
-          "Flavor. Fry Again. Finish.",
+          ctx.t("boss_mode"),
+          ctx.t("boss_mode_tagline"),
+          ctx.t("pick_any_3"),
           "",
           `Price: ${BOSS_MODE_PRICE_MINOR === null ? "null" : `$${(BOSS_MODE_PRICE_MINOR / 100).toFixed(2)}`} / ${BOSS_MODE_PRICE_STATUS}`,
           `State machine: ${BOSS_RECIPE_STAGES.join(" -> ")}`,
@@ -152,10 +161,10 @@ export async function architectureFlow(ctx: WBContext) {
           "HEAT_APPLICATION",
           "Heat is tracked separately from the flavor role.",
           selected ? `Selected: ${selected}` : "No heat level selected yet.",
-          `Charge ladder: ${Object.entries(BOSS_HEAT_CHARGE_MINOR).map(([level, amount]) => `${level}:${amount === 0 ? "free" : `$${(amount / 100).toFixed(2)}`}`).join(" | ")}`
+          `Charge ladder: ${BOSS_HEAT_RECORDS.map((record) => `${record.label}:${record.heatChargeMinor === 0 ? "free" : `$${(record.heatChargeMinor / 100).toFixed(2)}`}`).join(" | ")}`
         ].join("\n"),
         kb([
-          ...buttonGrid(Object.keys(BOSS_HEAT_CHARGE_MINOR).map((level) => ({ label: level, data: `arch:boss:heat:${level}` })), 2),
+          ...buttonGrid(BOSS_HEAT_RECORDS.map((record) => ({ label: record.label, data: `arch:boss:heat:${record.heatLevel}` })), 2),
           [Markup.button.callback("Reveal finishers", "arch:boss:finishers")],
           [Markup.button.callback("⬅️ Back", "arch:boss")]
         ])
@@ -177,6 +186,7 @@ export async function architectureFlow(ctx: WBContext) {
           "Optional final toppings stay separate from the boss finish flavor.",
           `Approved finishers: ${BOSS_FINISHERS.map((f) => f.label).join(", ")}`,
           selectedFinishers.length ? `Selected: ${selectedFinishers.join(" / ")}` : "None selected yet.",
+          ctx.t("pick_any_3"),
           "",
           bossSummaryText(ctx)
         ].join("\n"),
@@ -207,12 +217,19 @@ export async function architectureFlow(ctx: WBContext) {
   }
 
   if (section === "sweet") {
+    if (!canAccessArchitecturePreview(ctx, "sweet")) {
+      return ctx.editMessageText(
+        ctx.t("preview_unavailable"),
+        kb([[Markup.button.callback("⬅️ Home", "home:back")]])
+      );
+    }
+
     if (!step) {
       const fryerCheck = validateSweetFryerIsolation(SWEET_LAB_FRYERS.savory.id, SWEET_LAB_FRYERS.sweet.id);
       return ctx.editMessageText(
         [
-          "SWEET LAB",
-          "Dedicated dessert fryer only.",
+          ctx.t("sweet_lab"),
+          ctx.t("sweet_lab_tagline"),
           `Fryer isolation: ${fryerCheck.valid ? "PASS" : "FAIL"}`,
           `Base flow: ${SWEET_LAB_STAGES.join(" -> ")}`,
           `Sweet finishers priced: ${validateSweetFinishersHaveNoPrice().valid ? "NO" : "YES"}`

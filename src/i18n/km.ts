@@ -14,6 +14,15 @@ export const km = {
   btn_currency: "💲 Currency",
   btn_help: "ℹ️ Help / Contact",
 
+  btn_boss_preview: "⚡ Boss Mode",
+  btn_sweet_preview: "🍰 Sweet Lab",
+  boss_mode: "BOSS MODE",
+  boss_mode_tagline: "Flavor. Fry Again. Finish.",
+  pick_any_3: "PICK ANY 3",
+  sweet_lab: "SWEET LAB",
+  sweet_lab_tagline: "Dessert fryer preview only.",
+  preview_unavailable: "Preview unavailable.",
+
   educator_note: "មិនអីទេ 👍 ខ្ញុំនឹងជួយអ្នកមួយជំហានម្តង។\nបើមិនប្រាកដ សូមចាប់ផ្តើមពី Combo មុនគេ។",
   help_contact: "ទំនាក់ទំនង: @callwingboss",
   currency_note: "តម្លៃបង្ហាញជា USD។ KHR គ្រាន់តែជាការប៉ាន់ស្មានតាមអត្រាបច្ចុប្បន្ន។"

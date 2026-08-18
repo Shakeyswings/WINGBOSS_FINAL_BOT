@@ -19,6 +19,8 @@ const EnvSchema = z.object({
 
   CLOSED_MODE: z.coerce.number().int().min(0).max(1).default(0).transform((v) => v === 1),
   BUSY_MODE: z.coerce.number().int().min(0).max(1).default(0).transform((v) => v === 1),
+  BOSS_MODE_PREVIEW_ENABLED: z.coerce.number().int().min(0).max(1).default(0).transform((v) => v === 1),
+  SWEET_LAB_PREVIEW_ENABLED: z.coerce.number().int().min(0).max(1).default(0).transform((v) => v === 1),
 
   PAYMENT_PROOF_REQUIRED: z.coerce.number().int().min(0).max(1).default(1).transform((v) => v === 1),
 

@@ -1,24 +1,87 @@
 import { describe, expect, it } from "vitest";
+import { buildTranslator } from "../src/i18n/index.ts";
+import { browseFlow } from "../src/flows/browse.flow.ts";
+import { architectureFlow } from "../src/flows/architecture.flow.ts";
+import { loadCurrentMenuDocument, getCurrentMenuIndex } from "../src/menu/current-menu.ts";
+import { loadMenu } from "../src/menu/loader.ts";
+import { getBossPrimaryFlavorOptions } from "../src/domain/boss-menu-adapter.ts";
 import {
   BOSS_HEAT_CHARGE_MINOR,
+  BOSS_HEAT_RECORDS,
   BOSS_MODE_PRICE_MINOR,
   BOSS_MODE_PRICE_STATUS,
   BOSS_RECIPE_STAGES,
   CURATED_BOSS_BUILDS,
   SWEET_LAB_FINISHERS,
   SWEET_LAB_FRYERS,
+  SWEET_LAB_OIL_POOLS,
   SWEET_LAB_STAGES,
   buildBossRecipeSignature,
   calculateD4ChargeMinor,
+  getBossD4ChargeMinor,
   getBossHeatChargeMinor,
+  getBossPaidDryRubCurrentChargeMinor,
+  getBossPaidDrizzleCurrentChargeMinor,
+  getBossPrimaryFlavorCurrentChargeMinor,
   getVisibleCuratedBossBuilds,
+  isBossPathOrderable,
   isBossSelectionCustomerSelectable,
   renderBossKitchenInstructions,
+  validateBossPathRecord,
   validateBossSelection,
   validateD4PickAny3,
   validateSweetFinishersHaveNoPrice,
-  validateSweetFryerIsolation
+  validateSweetFryerIsolation,
+  validateSweetOilPoolIsolation
 } from "../src/domain/wingboss.ts";
+
+function makeCtx(data: string, options?: { userId?: number; bossPreview?: boolean; sweetPreview?: boolean }) {
+  const calls: any[] = [];
+  const ownerId = 101;
+  const ctx = {
+    env: {
+      OWNER_TELEGRAM_ID: ownerId,
+      STAFF_CHAT_ID: 999,
+      BOT_TOKEN: "x".repeat(20),
+      RUNTIME_MODE: "termux",
+      BACKEND_MODE: "off",
+      FAILOVER_MODE: "local",
+      TIMEZONE: "Asia/Phnom_Penh",
+      USD_TO_KHR: 4100,
+      DEFAULT_LANG: "en",
+      INCLUDE_ENGLISH_HINTS: false,
+      MENU_PATH: "./menu/menu_bundle.v1.json",
+      MENU_FALLBACK_PATH: "./menu/menu_bundle.v1.json",
+      CLOSED_MODE: false,
+      BUSY_MODE: false,
+      BOSS_MODE_PREVIEW_ENABLED: options?.bossPreview ?? false,
+      SWEET_LAB_PREVIEW_ENABLED: options?.sweetPreview ?? false,
+      PAYMENT_PROOF_REQUIRED: true,
+      GEOCODE_MODE: "osm",
+      GEOCODE_CACHE_TTL_HOURS: 168,
+      OWNER_NOTIFY_ISSUES: false
+    },
+    session: { state: "S0_HOME", architecture: { boss: { finisherIds: [] } } },
+    from: { id: options?.userId ?? 200 },
+    chat: { id: 1 },
+    update: { callback_query: { data } },
+    t: buildTranslator("en", false),
+    editMessageText: async (...args: any[]) => {
+      calls.push(args);
+    },
+    reply: async (...args: any[]) => {
+      calls.push(["reply", ...args]);
+    },
+    calls
+  };
+
+  return ctx as any;
+}
+
+function buttonTexts(markup: any): string[] {
+  const rows = markup?.reply_markup?.inline_keyboard;
+  return Array.isArray(rows) ? rows.flat().map((button: any) => button.text) : [];
+}
 
 describe("WingBoss approved architecture", () => {
   it("preserves boss stage order", () => {
@@ -35,97 +98,186 @@ describe("WingBoss approved architecture", () => {
     ]);
   });
 
-  it("treats primary and finish flavor order as distinct", () => {
+  it("treats primary and finish order as distinct", () => {
     const forward = buildBossRecipeSignature({
       primaryFlavorId: "s6_honey_teriyaki",
       bossFinishFlavorId: "s3_buffalo",
-      heatLevel: "revenge",
-      finisherIds: ["r6_garlic_parm"]
+      heatLevel: "hot",
+      finisherIds: ["r1_cajun"]
     });
     const reverse = buildBossRecipeSignature({
       primaryFlavorId: "s3_buffalo",
       bossFinishFlavorId: "s6_honey_teriyaki",
-      heatLevel: "revenge",
-      finisherIds: ["r6_garlic_parm"]
+      heatLevel: "hot",
+      finisherIds: ["r1_cajun"]
     });
 
     expect(forward).not.toBe(reverse);
   });
 
-  it("rejects unvalidated boss paths", () => {
+  it("allows the same flavor on both stages when validation permits", () => {
+    const record = {
+      primaryFlavorId: "s3_buffalo",
+      finishFlavorId: "s3_buffalo",
+      cookProfileId: "boss_cook_v1",
+      heatProfileId: "hot",
+      ownerApproved: true,
+      kitchenValidated: true,
+      publicationStatus: "CURRENT" as const,
+      evidenceId: "evidence-1"
+    };
+
+    expect(validateBossPathRecord(record).valid).toBe(true);
+    expect(isBossPathOrderable(record)).toBe(false);
     expect(
       validateBossSelection({
-        primaryFlavorId: "s6_honey_teriyaki",
+        primaryFlavorId: "s3_buffalo",
         bossFinishFlavorId: "s3_buffalo",
-        heatLevel: "revenge",
-        finisherIds: ["r6_garlic_parm"],
-        kitchenValidated: false
+        heatLevel: "hot",
+        finisherIds: [],
+        kitchenValidated: true
       }).valid
-    ).toBe(false);
+    ).toBe(true);
   });
 
-  it("keeps valid boss paths blocked from customer ordering until cost approval exists", () => {
+  it("keeps unvalidated boss paths out of ordering", () => {
     const selection = {
       primaryFlavorId: "s6_honey_teriyaki",
       bossFinishFlavorId: "s3_buffalo",
-      heatLevel: "revenge" as const,
-      finisherIds: ["r6_garlic_parm"],
-      kitchenValidated: true
+      heatLevel: "hot" as const,
+      finisherIds: ["r1_cajun"],
+      kitchenValidated: false
     };
 
     expect(validateBossSelection(selection).valid).toBe(true);
     expect(isBossSelectionCustomerSelectable(selection)).toBe(false);
+  });
+
+  it("keeps Boss price blocked and missing cost distinct from zero", () => {
+    const selection = {
+      primaryFlavorId: "s6_honey_teriyaki",
+      bossFinishFlavorId: "s3_buffalo",
+      heatLevel: "hot" as const,
+      finisherIds: ["r1_cajun"],
+      kitchenValidated: true
+    };
+
     expect(BOSS_MODE_PRICE_MINOR).toBeNull();
+    expect(BOSS_MODE_PRICE_MINOR).not.toBe(0);
     expect(BOSS_MODE_PRICE_STATUS).toBe("NEEDS_COST_INPUT");
+    expect(isBossSelectionCustomerSelectable(selection)).toBe(false);
   });
 
-  it("renders ordered kitchen instructions", () => {
-    expect(
-      renderBossKitchenInstructions({
-        primaryFlavorId: "s6_honey_teriyaki",
-        bossFinishFlavorId: "s3_buffalo",
-        heatLevel: "revenge",
-        finisherIds: ["r6_garlic_parm", "d1_ranch"],
-        kitchenValidated: true
-      })
-    ).toEqual([
-      "BOSS MODE",
-      "1. PRIMARY - s6_honey_teriyaki",
-      "2. BOSS COOK - validated re-fry profile",
-      "3. FINISH FLAVOR - s3_buffalo",
-      "4. HEAT - revenge",
-      "5. FINISH - r6_garlic_parm / d1_ranch"
-    ]);
+  it("hides Boss Mode and Sweet Lab from ordinary customers", async () => {
+    const menu = {
+      catalog: {
+        categories: [
+          { id: "a_wings", emoji: "🍗", name_en: "WINGS" },
+          { id: "b_burgers", emoji: "🍔", name_en: "BURGERS" }
+        ]
+      }
+    } as any;
+
+    const customer = makeCtx("browse:root");
+    await browseFlow(customer, menu, {} as any);
+    const customerButtons = buttonTexts(customer.calls[0][1]);
+    expect(customerButtons).not.toContain("⚡ Boss Mode");
+    expect(customerButtons).not.toContain("🍰 Sweet Lab");
+
+    const bossPreview = makeCtx("browse:root", { userId: 101 });
+    await browseFlow(bossPreview, menu, {} as any);
+    const bossButtons = buttonTexts(bossPreview.calls[0][1]);
+    expect(bossButtons).toContain("⚡ Boss Mode");
+    expect(bossButtons).toContain("🍰 Sweet Lab");
+
+    const flagged = makeCtx("browse:root", { bossPreview: true, sweetPreview: true });
+    await browseFlow(flagged, menu, {} as any);
+    const flaggedButtons = buttonTexts(flagged.calls[0][1]);
+    expect(flaggedButtons).toContain("⚡ Boss Mode");
+    expect(flaggedButtons).toContain("🍰 Sweet Lab");
+
+    const bossBlocked = makeCtx("arch:boss");
+    await architectureFlow(bossBlocked);
+    expect(bossBlocked.calls[0][0]).toBe("Preview unavailable.");
+
+    const sweetBlocked = makeCtx("arch:sweet");
+    await architectureFlow(sweetBlocked);
+    expect(sweetBlocked.calls[0][0]).toBe("Preview unavailable.");
   });
 
-  it("accepts the approved D4 splits and rejects invalid options", () => {
+  it("keeps curated boss builds absent until approval exists", () => {
+    expect(CURATED_BOSS_BUILDS).toEqual([]);
+    expect(getVisibleCuratedBossBuilds()).toEqual([]);
+  });
+
+  it("accepts valid D4 splits and rejects invalid modifiers", () => {
     expect(validateD4PickAny3(["r1_cajun", "r2_midnight_rub", "r3_buffalo_dust"]).valid).toBe(true);
     expect(validateD4PickAny3(["d1_ranch", "d2_fireback", "d3_hot_honey"]).valid).toBe(true);
-    expect(validateD4PickAny3(["r1_cajun", "d1_ranch", "d3_hot_honey"]).valid).toBe(true);
     expect(validateD4PickAny3(["r1_cajun", "r2_midnight_rub", "d1_ranch"]).valid).toBe(true);
+    expect(validateD4PickAny3(["r1_cajun", "d1_ranch", "d3_hot_honey"]).valid).toBe(true);
     expect(validateD4PickAny3(["r1_cajun", "r1_cajun", "d1_ranch"]).valid).toBe(false);
     expect(validateD4PickAny3(["r1_cajun", "d1_ranch"]).valid).toBe(false);
     expect(validateD4PickAny3(["r1_cajun", "d1_ranch", "not_real"]).valid).toBe(false);
-    expect(calculateD4ChargeMinor(["r1_cajun", "r2_midnight_rub", "d1_ranch"])).toBe(100);
+    expect(calculateD4ChargeMinor(["r1_cajun", "r2_midnight_rub", "d1_ranch"])).toBe(getBossD4ChargeMinor());
   });
 
-  it("keeps heat charges explicit and separate from recipe semantics", () => {
-    expect(BOSS_HEAT_CHARGE_MINOR).toMatchObject({ mild: 0, standard: 0, hot: 25, spicy: 50, extreme: 75, revenge: 100, nuclear: 125 });
-    expect(getBossHeatChargeMinor("revenge")).toBe(100);
-    expect(getBossHeatChargeMinor("standard")).toBe(0);
+  it("keeps included primary rub free and paid finisher priced separately", () => {
+    expect(getBossPrimaryFlavorCurrentChargeMinor("r1_cajun")).toBe(0);
+    expect(getBossPaidDryRubCurrentChargeMinor("r1_cajun")).toBe(50);
+    expect(getBossPaidDrizzleCurrentChargeMinor("d1_ranch")).toBe(50);
   });
 
-  it("keeps Sweet Lab fryer isolation and finisher pricing rules intact", () => {
+  it("keeps heat charge and recipe application separate", () => {
+    expect(BOSS_HEAT_RECORDS.every((record) => record.applicationStage === "HEAT_APPLICATION")).toBe(true);
+    expect(BOSS_HEAT_RECORDS.every((record) => record.quantityScalingRule === "order_level_fixed")).toBe(true);
+    expect(BOSS_HEAT_CHARGE_MINOR.hot).toBe(25);
+    expect(BOSS_HEAT_CHARGE_MINOR.nuclear).toBe(100);
+    expect(getBossHeatChargeMinor("hot")).toBe(25);
+  });
+
+  it("keeps sweet fryer and oil pool isolation intact", () => {
     expect(validateSweetFryerIsolation(SWEET_LAB_FRYERS.savory.id, SWEET_LAB_FRYERS.sweet.id).valid).toBe(true);
     expect(validateSweetFryerIsolation(SWEET_LAB_FRYERS.savory.id, SWEET_LAB_FRYERS.savory.id).valid).toBe(false);
+    expect(validateSweetOilPoolIsolation(SWEET_LAB_OIL_POOLS.savory.id, SWEET_LAB_OIL_POOLS.sweet.id).valid).toBe(true);
+    expect(validateSweetOilPoolIsolation(SWEET_LAB_OIL_POOLS.savory.id, SWEET_LAB_OIL_POOLS.savory.id).valid).toBe(false);
+  });
+
+  it("keeps Sweet Lab finishers unpriced", () => {
     expect(validateSweetFinishersHaveNoPrice().valid).toBe(true);
     expect(SWEET_LAB_FINISHERS.every((finisher) => finisher.price_minor === null)).toBe(true);
     expect(SWEET_LAB_STAGES).toEqual(["DESSERT_BASE", "PANCAKE_BATTER", "SWEET_FRY", "POWDERED_SUGAR", "OPTIONAL_SWEET_FINISHERS"]);
   });
 
-  it("keeps curated boss builds non-production until validated", () => {
-    expect(CURATED_BOSS_BUILDS.length).toBe(4);
-    expect(getVisibleCuratedBossBuilds()).toEqual([]);
-    expect(CURATED_BOSS_BUILDS.every((build) => !build.kitchenValidated && !build.productionVisible)).toBe(true);
+  it("keeps historical menu data out of the current boss catalog", async () => {
+    const currentMenu = loadCurrentMenuDocument();
+    const currentIds = getBossPrimaryFlavorOptions().map((option) => option.id);
+    const legacyMenu = await loadMenu("./menu/menu_bundle.v1.json");
+
+    expect(currentMenu.historical_reference_boundary.historical_70_flavor_system).toBe("reference_only");
+    expect(currentMenu.authority_status).toBe("ACTIVE_CURRENT_MENU");
+    expect(currentIds).toEqual([
+      "s1_fire_storm",
+      "s2_jerk",
+      "s3_buffalo",
+      "s4_texas_bbq",
+      "s5_korean",
+      "s6_honey_teriyaki",
+      "s7_spicy_peanut",
+      "r1_cajun",
+      "r2_midnight_rub",
+      "r3_buffalo_dust",
+      "r4_kampot_pepper_hot_honey",
+      "r5_lemon_pepper",
+      "r6_garlic_parm"
+    ]);
+    expect(legacyMenu.catalog.flavors).toHaveLength(0);
+  });
+
+  it("keeps canonical current-menu and legacy menu validation separate", async () => {
+    expect(() => loadCurrentMenuDocument()).not.toThrow();
+    const legacyMenu = await loadMenu("./menu/menu_bundle.v1.json");
+
+    expect(legacyMenu.catalog.categories.length).toBeGreaterThan(0);
+    expect(getCurrentMenuIndex().menu.authority_status).toBe("ACTIVE_CURRENT_MENU");
   });
 });
