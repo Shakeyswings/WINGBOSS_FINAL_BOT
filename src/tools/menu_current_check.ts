@@ -155,7 +155,9 @@ type ItemAuthority = {
   price: number | null;
   availability: "active" | "by_request";
   source: "image" | "owner_decision";
-  modifierGroups: readonly string[];
+  modifierGroups?: readonly string[];
+  requiredModifierGroups?: readonly string[];
+  compositionItemIds?: readonly string[];
 };
 
 type VariantAuthority = {
@@ -186,6 +188,9 @@ type GroupAuthority = {
   pricingModel?: { kind: "per_6_wings"; charge_per_units: 6; amount_minor_per_unit: 50 };
 };
 
+const WING_PRIMARY_FLAVOR_GROUP_ID = "modifier_group_primary_flavor" as const;
+const TRIPLE_DRIZZ_COMPONENT_IDS = ["d1_ranch", "d2_fireback", "d3_hot_honey"] as const;
+
 const CATEGORY_AUTHORITY = {
   a_wings: { code: "A", name: "WINGS", order: 1, items: ["a1_bone_in_combo", "a2_boneless_combo", "a3_flavor_box", "a4_wings", "a5_boneless_wings"] },
   b_burgers: { code: "B", name: "BURGERS", order: 2, items: ["b1_single", "b2_double", "b3_western_bbq", "b4_sauce_boss"] },
@@ -197,11 +202,11 @@ const CATEGORY_AUTHORITY = {
 } as const;
 
 const ITEM_AUTHORITY: Readonly<Record<string, ItemAuthority>> = {
-  a1_bone_in_combo: { code: "A1", name: "BONE-IN COMBO", displayName: "Bone-In Combo", description: "Wings • Fries • Dip", type: "variant", category: "a_wings", price: null, availability: "active", source: "image", modifierGroups: [] },
-  a2_boneless_combo: { code: "A2", name: "BONELESS COMBO", displayName: "Boneless Combo", description: "Boneless Wings • Fries • Dip", type: "variant", category: "a_wings", price: null, availability: "active", source: "image", modifierGroups: [] },
+  a1_bone_in_combo: { code: "A1", name: "BONE-IN COMBO", displayName: "Bone-In Combo", description: "Wings • Fries • Dip", type: "variant", category: "a_wings", price: null, availability: "active", source: "image", requiredModifierGroups: [WING_PRIMARY_FLAVOR_GROUP_ID] },
+  a2_boneless_combo: { code: "A2", name: "BONELESS COMBO", displayName: "Boneless Combo", description: "Boneless Wings • Fries • Dip", type: "variant", category: "a_wings", price: null, availability: "active", source: "image", requiredModifierGroups: [WING_PRIMARY_FLAVOR_GROUP_ID] },
   a3_flavor_box: { code: "A3", name: "FLAVOR BOX", displayName: "Flavor Box", description: "Wings + XXL Fries + Dry Rub + Drizzle + Dip", type: "bundle", category: "a_wings", price: null, availability: "active", source: "owner_decision", modifierGroups: ["modifier_group_a3_boneless_upgrade"] },
-  a4_wings: { code: "A4", name: "WINGS", displayName: "Wings", description: "Wing flavor allocation varies by size", type: "variant", category: "a_wings", price: null, availability: "active", source: "image", modifierGroups: [] },
-  a5_boneless_wings: { code: "A5", name: "BONELESS WINGS", displayName: "Boneless Wings", description: "12 Wings = 2 Flavors", type: "variant", category: "a_wings", price: null, availability: "active", source: "image", modifierGroups: [] },
+  a4_wings: { code: "A4", name: "WINGS", displayName: "Wings", description: "Wing flavor allocation varies by size", type: "variant", category: "a_wings", price: null, availability: "active", source: "image", requiredModifierGroups: [WING_PRIMARY_FLAVOR_GROUP_ID] },
+  a5_boneless_wings: { code: "A5", name: "BONELESS WINGS", displayName: "Boneless Wings", description: "12 Wings = 2 Flavors", type: "variant", category: "a_wings", price: null, availability: "active", source: "image", requiredModifierGroups: [WING_PRIMARY_FLAVOR_GROUP_ID] },
   b1_single: { code: "B1", name: "SINGLE", displayName: "Single", type: "product", category: "b_burgers", price: 400, availability: "active", source: "image", modifierGroups: [] },
   b2_double: { code: "B2", name: "DOUBLE", displayName: "Double", type: "product", category: "b_burgers", price: 700, availability: "active", source: "image", modifierGroups: [] },
   b3_western_bbq: { code: "B3", name: "WESTERN BBQ", displayName: "Western BBQ", type: "product", category: "b_burgers", price: 900, availability: "active", source: "image", modifierGroups: [] },
@@ -227,7 +232,7 @@ const ITEM_AUTHORITY: Readonly<Record<string, ItemAuthority>> = {
   d1_ranch: { code: "D1", name: "RANCH", displayName: "Ranch", pricingContext: "paid_drizzle", type: "modifier", category: "d_drizzles", price: 50, availability: "active", source: "owner_decision", modifierGroups: [] },
   d2_fireback: { code: "D2", name: "FIREBACK", displayName: "Fireback", pricingContext: "paid_drizzle", type: "modifier", category: "d_drizzles", price: 50, availability: "active", source: "owner_decision", modifierGroups: [] },
   d3_hot_honey: { code: "D3", name: "HOT HONEY", displayName: "Hot Honey", pricingContext: "paid_drizzle", type: "modifier", category: "d_drizzles", price: 50, availability: "active", source: "owner_decision", modifierGroups: [] },
-  d4_triple_drizz: { code: "D4", name: "TRIPLE DRIZZ", displayName: "Triple Drizz", aliases: ["ALL 3"], pricingContext: "triple_drizz", type: "modifier", category: "d_drizzles", price: 100, availability: "active", source: "owner_decision", modifierGroups: [] },
+  d4_triple_drizz: { code: "D4", name: "TRIPLE DRIZZ", displayName: "Triple Drizz", aliases: ["ALL 3"], pricingContext: "triple_drizz", type: "modifier", category: "d_drizzles", price: 100, availability: "active", source: "owner_decision", compositionItemIds: TRIPLE_DRIZZ_COMPONENT_IDS },
   x_a3_boneless_upgrade: { code: "A3_BONeless", name: "BONELESS UPGRADE", displayName: "Boneless", pricingContext: "upgrade_modifier", type: "modifier", category: "extras_panel", price: 150, availability: "active", source: "owner_decision", modifierGroups: [] },
   x_drink: { code: "DRINK", name: "DRINK", displayName: "Drink", type: "modifier", category: "extras_panel", price: 125, availability: "active", source: "owner_decision", modifierGroups: [] },
   x_carrots: { code: "CARROTS", name: "CARROTS", displayName: "Carrots", type: "modifier", category: "extras_panel", price: 75, availability: "active", source: "owner_decision", modifierGroups: [] },
@@ -321,7 +326,7 @@ function issue(ctx: z.RefinementCtx, message: string): void {
   ctx.addIssue({ code: z.ZodIssueCode.custom, message });
 }
 
-function validateItem(item: Item, categoryId: string, ctx: z.RefinementCtx): void {
+function validateItem(item: Item, categoryId: string, modifierGroupsById: ReadonlyMap<string, ModifierGroup>, ctx: z.RefinementCtx): void {
   const authority = ITEM_AUTHORITY[item.id];
   if (!authority) {
     issue(ctx, `Unexpected canonical catalog item ${item.id}`);
@@ -337,7 +342,20 @@ function validateItem(item: Item, categoryId: string, ctx: z.RefinementCtx): voi
   if (item.type !== authority.type) issue(ctx, `Item ${item.id} must preserve canonical type ${authority.type}`);
   if (item.availability.status !== authority.availability) issue(ctx, `Item ${item.id} must preserve canonical availability ${authority.availability}`);
   if (item.source !== authority.source) issue(ctx, `Item ${item.id} must preserve canonical source ${authority.source}`);
-  if (!exactArray(item.modifier_groups, authority.modifierGroups)) issue(ctx, `Item ${item.id} must preserve canonical modifier-group attachments`);
+  if (authority.modifierGroups && !exactArray(item.modifier_groups, authority.modifierGroups)) issue(ctx, `Item ${item.id} must preserve canonical modifier-group attachments`);
+
+  if (authority.requiredModifierGroups) {
+    for (const groupId of authority.requiredModifierGroups) {
+      if (!modifierGroupsById.has(groupId)) issue(ctx, `Item ${item.id} must preserve canonical required modifier group ${groupId}`);
+    }
+  }
+
+  if (authority.compositionItemIds) {
+    const tripleDrizzGroup = modifierGroupsById.get("modifier_group_additional_drizzle");
+    if (!tripleDrizzGroup || !exactArray(tripleDrizzGroup.options.map((option) => option.ref), authority.compositionItemIds)) {
+      issue(ctx, `Item ${item.id} must preserve canonical Ranch, Fireback, and Hot Honey composition`);
+    }
+  }
 
   if (authority.price === null) {
     if (item.price) issue(ctx, `Variant-backed item ${item.id} must not define a base price`);
@@ -459,6 +477,8 @@ function validateCanonicalMenu(menu: Menu): void {
     issue(ctx, "Historical reference boundary notes must preserve canonical active/current-menu separation");
   }
 
+  const modifierGroupsById = new Map(menu.catalog.modifier_groups.map((group) => [group.id, group] as const));
+
   const itemIds = new Set<string>();
   const itemCodes = new Set<string>();
   const variantIds = new Set<string>();
@@ -477,7 +497,7 @@ function validateCanonicalMenu(menu: Menu): void {
       itemIds.add(item.id);
       if (itemCodes.has(item.code)) issue(ctx, `Duplicate item code ${item.code}`);
       itemCodes.add(item.code);
-      validateItem(item, category.id, ctx);
+      validateItem(item, category.id, modifierGroupsById, ctx);
 
       for (const variant of item.variants ?? []) {
         if (variantIds.has(variant.id)) issue(ctx, `Duplicate variant id ${variant.id}`);
