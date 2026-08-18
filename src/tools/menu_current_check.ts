@@ -34,6 +34,9 @@ const VariantSchema = z.object({
   id: z.string().min(1),
   code: z.string().min(1),
   name: z.string().min(1),
+  display_name: z.string().min(1).optional(),
+  type: z.string().min(1).optional(),
+  pricing_context: z.string().min(1).optional(),
   price: MoneySchema,
   availability: AvailabilitySchema,
   modifier_groups: z.array(z.string().min(1)).default([]),
@@ -53,6 +56,10 @@ const CatalogItemSchema = z.object({
   id: z.string().min(1),
   code: z.string().min(1),
   name: z.string().min(1),
+  display_name: z.string().min(1).optional(),
+  description: z.string().min(1).optional(),
+  aliases: z.array(z.string().min(1)).optional(),
+  pricing_context: z.string().min(1).optional(),
   type: z.string().min(1),
   availability: AvailabilitySchema,
   variants: z.array(VariantSchema).optional(),
@@ -117,6 +124,14 @@ const CurrentMenuSchema = z.object({
       "Location overrides must remain empty until explicit override semantics are implemented",
     ),
   }).passthrough(),
+  owner_confirmation_required: z.tuple([
+    z.object({
+      field: z.literal("Most Popular block text"),
+      item: z.literal("bottom-right promotional block"),
+      what_is_unclear: z.literal("The exact transcription of one small promotional text fragment is not sufficiently clear in the source image."),
+      what_was_not_guessed: z.literal("No active purchasable data was derived from the unclear fragment."),
+    }),
+  ]),
   historical_reference_boundary: z.object({
     historical_70_flavor_system: z.literal("reference_only"),
     active_customer_menu_authority: z.literal(true),
@@ -130,6 +145,11 @@ type ModifierGroup = z.infer<typeof ModifierGroupSchema>;
 
 type ItemAuthority = {
   code: string;
+  name: string;
+  displayName: string;
+  description?: string;
+  aliases?: readonly string[];
+  pricingContext?: string;
   type: string;
   category: string;
   price: number | null;
@@ -141,6 +161,10 @@ type ItemAuthority = {
 type VariantAuthority = {
   parent: string;
   code: string;
+  name: string;
+  displayName?: string;
+  type?: string;
+  pricingContext?: string;
   price: number;
   availability: "active" | "by_request";
   source?: "owner_decision";
@@ -173,74 +197,74 @@ const CATEGORY_AUTHORITY = {
 } as const;
 
 const ITEM_AUTHORITY: Readonly<Record<string, ItemAuthority>> = {
-  a1_bone_in_combo: { code: "A1", type: "variant", category: "a_wings", price: null, availability: "active", source: "image", modifierGroups: [] },
-  a2_boneless_combo: { code: "A2", type: "variant", category: "a_wings", price: null, availability: "active", source: "image", modifierGroups: [] },
-  a3_flavor_box: { code: "A3", type: "bundle", category: "a_wings", price: null, availability: "active", source: "owner_decision", modifierGroups: ["modifier_group_a3_boneless_upgrade"] },
-  a4_wings: { code: "A4", type: "variant", category: "a_wings", price: null, availability: "active", source: "image", modifierGroups: [] },
-  a5_boneless_wings: { code: "A5", type: "variant", category: "a_wings", price: null, availability: "active", source: "image", modifierGroups: [] },
-  b1_single: { code: "B1", type: "product", category: "b_burgers", price: 400, availability: "active", source: "image", modifierGroups: [] },
-  b2_double: { code: "B2", type: "product", category: "b_burgers", price: 700, availability: "active", source: "image", modifierGroups: [] },
-  b3_western_bbq: { code: "B3", type: "product", category: "b_burgers", price: 900, availability: "active", source: "image", modifierGroups: [] },
-  b4_sauce_boss: { code: "B4", type: "product", category: "b_burgers", price: 900, availability: "active", source: "image", modifierGroups: [] },
-  c1_cajun_fried_corn: { code: "C1", type: "product", category: "c_sides", price: 400, availability: "active", source: "owner_decision", modifierGroups: ["modifier_group_c1_dry_rub", "modifier_group_c1_finish_choice"] },
-  c2_cajun_fries: { code: "C2", type: "product", category: "c_sides", price: 400, availability: "active", source: "image", modifierGroups: [] },
-  c3_onion_rings: { code: "C3", type: "product", category: "c_sides", price: 500, availability: "active", source: "image", modifierGroups: [] },
-  c4_garlic_fries: { code: "C4", type: "product", category: "c_sides", price: 500, availability: "active", source: "image", modifierGroups: [] },
-  c5_sides_sampler: { code: "C5", type: "bundle", category: "c_sides", price: 1300, availability: "active", source: "image", modifierGroups: [] },
-  s1_fire_storm: { code: "S1", type: "modifier", category: "s_sauces", price: 0, availability: "active", source: "owner_decision", modifierGroups: [] },
-  s2_jerk: { code: "S2", type: "modifier", category: "s_sauces", price: 0, availability: "active", source: "owner_decision", modifierGroups: [] },
-  s3_buffalo: { code: "S3", type: "modifier", category: "s_sauces", price: 0, availability: "active", source: "owner_decision", modifierGroups: [] },
-  s4_texas_bbq: { code: "S4", type: "modifier", category: "s_sauces", price: 0, availability: "active", source: "owner_decision", modifierGroups: [] },
-  s5_korean: { code: "S5", type: "modifier", category: "s_sauces", price: 0, availability: "active", source: "owner_decision", modifierGroups: [] },
-  s6_honey_teriyaki: { code: "S6", type: "modifier", category: "s_sauces", price: 0, availability: "active", source: "owner_decision", modifierGroups: [] },
-  s7_spicy_peanut: { code: "S7", type: "modifier", category: "s_sauces", price: 0, availability: "active", source: "owner_decision", modifierGroups: [] },
-  r1_cajun: { code: "R1", type: "modifier", category: "r_dry_rub", price: 0, availability: "active", source: "owner_decision", modifierGroups: [] },
-  r2_midnight_rub: { code: "R2", type: "modifier", category: "r_dry_rub", price: 0, availability: "active", source: "owner_decision", modifierGroups: [] },
-  r3_buffalo_dust: { code: "R3", type: "modifier", category: "r_dry_rub", price: 0, availability: "active", source: "owner_decision", modifierGroups: [] },
-  r4_kampot_pepper_hot_honey: { code: "R4", type: "modifier", category: "r_dry_rub", price: 0, availability: "active", source: "owner_decision", modifierGroups: [] },
-  r5_lemon_pepper: { code: "R5", type: "modifier", category: "r_dry_rub", price: 0, availability: "active", source: "owner_decision", modifierGroups: [] },
-  r6_garlic_parm: { code: "R6", type: "modifier", category: "r_dry_rub", price: 0, availability: "active", source: "owner_decision", modifierGroups: [] },
-  d1_ranch: { code: "D1", type: "modifier", category: "d_drizzles", price: 50, availability: "active", source: "owner_decision", modifierGroups: [] },
-  d2_fireback: { code: "D2", type: "modifier", category: "d_drizzles", price: 50, availability: "active", source: "owner_decision", modifierGroups: [] },
-  d3_hot_honey: { code: "D3", type: "modifier", category: "d_drizzles", price: 50, availability: "active", source: "owner_decision", modifierGroups: [] },
-  d4_triple_drizz: { code: "D4", type: "modifier", category: "d_drizzles", price: 100, availability: "active", source: "owner_decision", modifierGroups: [] },
-  x_a3_boneless_upgrade: { code: "A3_BONeless", type: "modifier", category: "extras_panel", price: 150, availability: "active", source: "owner_decision", modifierGroups: [] },
-  x_drink: { code: "DRINK", type: "modifier", category: "extras_panel", price: 125, availability: "active", source: "owner_decision", modifierGroups: [] },
-  x_carrots: { code: "CARROTS", type: "modifier", category: "extras_panel", price: 75, availability: "active", source: "owner_decision", modifierGroups: [] },
-  x_gloves: { code: "GLOVES", type: "modifier", category: "extras_panel", price: 50, availability: "active", source: "owner_decision", modifierGroups: [] },
-  x_add_plus_one_sauce_rub: { code: "+1_SAUCE_RUB", type: "modifier", category: "extras_panel", price: 100, availability: "active", source: "owner_decision", modifierGroups: [] },
-  x_add_plus_one_beef_patty: { code: "+1_BEEF_PATTY", type: "modifier", category: "extras_panel", price: 225, availability: "active", source: "owner_decision", modifierGroups: [] },
-  x_add_plus_one_cheese: { code: "+1_CHEESE", type: "modifier", category: "extras_panel", price: 75, availability: "active", source: "owner_decision", modifierGroups: [] },
-  x_add_plus_two_wings: { code: "+2_WINGS", type: "modifier", category: "extras_panel", price: 250, availability: "active", source: "owner_decision", modifierGroups: [] },
-  x_dip_ranch: { code: "DIP_RANCH", type: "modifier", category: "extras_panel", price: 75, availability: "active", source: "owner_decision", modifierGroups: [] },
-  x_dip_fireback: { code: "DIP_FIREBACK", type: "modifier", category: "extras_panel", price: 75, availability: "active", source: "owner_decision", modifierGroups: [] },
-  x_dip_ketchup: { code: "DIP_KETCHUP", type: "modifier", category: "extras_panel", price: 75, availability: "active", source: "owner_decision", modifierGroups: [] },
-  x_dip_bbq: { code: "DIP_BBQ", type: "modifier", category: "extras_panel", price: 75, availability: "active", source: "owner_decision", modifierGroups: [] },
-  x_spice_mild: { code: "MILD", type: "modifier", category: "extras_panel", price: 0, availability: "active", source: "owner_decision", modifierGroups: [] },
-  x_spice_hot: { code: "HOT", type: "modifier", category: "extras_panel", price: 25, availability: "active", source: "owner_decision", modifierGroups: [] },
-  x_spice_spicy: { code: "SPICY", type: "modifier", category: "extras_panel", price: 50, availability: "active", source: "owner_decision", modifierGroups: [] },
-  x_spice_extreme: { code: "EXTREME", type: "modifier", category: "extras_panel", price: 75, availability: "active", source: "owner_decision", modifierGroups: [] },
-  x_spice_nuclear: { code: "NUCLEAR", type: "modifier", category: "extras_panel", price: 100, availability: "active", source: "owner_decision", modifierGroups: [] },
+  a1_bone_in_combo: { code: "A1", name: "BONE-IN COMBO", displayName: "Bone-In Combo", description: "Wings • Fries • Dip", type: "variant", category: "a_wings", price: null, availability: "active", source: "image", modifierGroups: [] },
+  a2_boneless_combo: { code: "A2", name: "BONELESS COMBO", displayName: "Boneless Combo", description: "Boneless Wings • Fries • Dip", type: "variant", category: "a_wings", price: null, availability: "active", source: "image", modifierGroups: [] },
+  a3_flavor_box: { code: "A3", name: "FLAVOR BOX", displayName: "Flavor Box", description: "Wings + XXL Fries + Dry Rub + Drizzle + Dip", type: "bundle", category: "a_wings", price: null, availability: "active", source: "owner_decision", modifierGroups: ["modifier_group_a3_boneless_upgrade"] },
+  a4_wings: { code: "A4", name: "WINGS", displayName: "Wings", description: "Wing flavor allocation varies by size", type: "variant", category: "a_wings", price: null, availability: "active", source: "image", modifierGroups: [] },
+  a5_boneless_wings: { code: "A5", name: "BONELESS WINGS", displayName: "Boneless Wings", description: "12 Wings = 2 Flavors", type: "variant", category: "a_wings", price: null, availability: "active", source: "image", modifierGroups: [] },
+  b1_single: { code: "B1", name: "SINGLE", displayName: "Single", type: "product", category: "b_burgers", price: 400, availability: "active", source: "image", modifierGroups: [] },
+  b2_double: { code: "B2", name: "DOUBLE", displayName: "Double", type: "product", category: "b_burgers", price: 700, availability: "active", source: "image", modifierGroups: [] },
+  b3_western_bbq: { code: "B3", name: "WESTERN BBQ", displayName: "Western BBQ", type: "product", category: "b_burgers", price: 900, availability: "active", source: "image", modifierGroups: [] },
+  b4_sauce_boss: { code: "B4", name: "SAUCE BOSS", displayName: "Sauce Boss", type: "product", category: "b_burgers", price: 900, availability: "active", source: "image", modifierGroups: [] },
+  c1_cajun_fried_corn: { code: "C1", name: "CAJUN FRIED CORN", displayName: "Cajun Fried Corn", description: "Deep-fried battered corn on the cob.", aliases: ["FRIED CORN", "DEEP FRIED CORN"], type: "product", category: "c_sides", price: 400, availability: "active", source: "owner_decision", modifierGroups: ["modifier_group_c1_dry_rub", "modifier_group_c1_finish_choice"] },
+  c2_cajun_fries: { code: "C2", name: "CAJUN FRIES", displayName: "Cajun Fries", type: "product", category: "c_sides", price: 400, availability: "active", source: "image", modifierGroups: [] },
+  c3_onion_rings: { code: "C3", name: "ONION RINGS", displayName: "Onion Rings", type: "product", category: "c_sides", price: 500, availability: "active", source: "image", modifierGroups: [] },
+  c4_garlic_fries: { code: "C4", name: "GARLIC FRIES", displayName: "Garlic Fries", type: "product", category: "c_sides", price: 500, availability: "active", source: "image", modifierGroups: [] },
+  c5_sides_sampler: { code: "C5", name: "SIDES SAMPLER", displayName: "Sides Sampler", description: "All 4 Sides + Dip", type: "bundle", category: "c_sides", price: 1300, availability: "active", source: "image", modifierGroups: [] },
+  s1_fire_storm: { code: "S1", name: "FIRE STORM", displayName: "Fire Storm", pricingContext: "included_primary_flavor", type: "modifier", category: "s_sauces", price: 0, availability: "active", source: "owner_decision", modifierGroups: [] },
+  s2_jerk: { code: "S2", name: "JERK", displayName: "Jerk", pricingContext: "included_primary_flavor", type: "modifier", category: "s_sauces", price: 0, availability: "active", source: "owner_decision", modifierGroups: [] },
+  s3_buffalo: { code: "S3", name: "BUFFALO", displayName: "Buffalo", pricingContext: "included_primary_flavor", type: "modifier", category: "s_sauces", price: 0, availability: "active", source: "owner_decision", modifierGroups: [] },
+  s4_texas_bbq: { code: "S4", name: "TEXAS BBQ", displayName: "Texas BBQ", pricingContext: "included_primary_flavor", type: "modifier", category: "s_sauces", price: 0, availability: "active", source: "owner_decision", modifierGroups: [] },
+  s5_korean: { code: "S5", name: "KOREAN", displayName: "Korean", pricingContext: "included_primary_flavor", type: "modifier", category: "s_sauces", price: 0, availability: "active", source: "owner_decision", modifierGroups: [] },
+  s6_honey_teriyaki: { code: "S6", name: "HONEY TERIYAKI", displayName: "Honey Teriyaki", pricingContext: "included_primary_flavor", type: "modifier", category: "s_sauces", price: 0, availability: "active", source: "owner_decision", modifierGroups: [] },
+  s7_spicy_peanut: { code: "S7", name: "SPICY PEANUT", displayName: "Spicy Peanut", pricingContext: "included_primary_flavor", type: "modifier", category: "s_sauces", price: 0, availability: "active", source: "owner_decision", modifierGroups: [] },
+  r1_cajun: { code: "R1", name: "CAJUN", displayName: "Cajun", pricingContext: "included_primary_flavor", type: "modifier", category: "r_dry_rub", price: 0, availability: "active", source: "owner_decision", modifierGroups: [] },
+  r2_midnight_rub: { code: "R2", name: "MIDNIGHT RUB", displayName: "Midnight Rub", pricingContext: "included_primary_flavor", type: "modifier", category: "r_dry_rub", price: 0, availability: "active", source: "owner_decision", modifierGroups: [] },
+  r3_buffalo_dust: { code: "R3", name: "BUFFALO DUST", displayName: "Buffalo Dust", pricingContext: "included_primary_flavor", type: "modifier", category: "r_dry_rub", price: 0, availability: "active", source: "owner_decision", modifierGroups: [] },
+  r4_kampot_pepper_hot_honey: { code: "R4", name: "KAMPOT PEPPER HOT HONEY", displayName: "Kampot Pepper Hot Honey", pricingContext: "included_primary_flavor", type: "modifier", category: "r_dry_rub", price: 0, availability: "active", source: "owner_decision", modifierGroups: [] },
+  r5_lemon_pepper: { code: "R5", name: "LEMON PEPPER", displayName: "Lemon Pepper", pricingContext: "included_primary_flavor", type: "modifier", category: "r_dry_rub", price: 0, availability: "active", source: "owner_decision", modifierGroups: [] },
+  r6_garlic_parm: { code: "R6", name: "GARLIC PARM", displayName: "Garlic Parm", pricingContext: "included_primary_flavor", type: "modifier", category: "r_dry_rub", price: 0, availability: "active", source: "owner_decision", modifierGroups: [] },
+  d1_ranch: { code: "D1", name: "RANCH", displayName: "Ranch", pricingContext: "paid_drizzle", type: "modifier", category: "d_drizzles", price: 50, availability: "active", source: "owner_decision", modifierGroups: [] },
+  d2_fireback: { code: "D2", name: "FIREBACK", displayName: "Fireback", pricingContext: "paid_drizzle", type: "modifier", category: "d_drizzles", price: 50, availability: "active", source: "owner_decision", modifierGroups: [] },
+  d3_hot_honey: { code: "D3", name: "HOT HONEY", displayName: "Hot Honey", pricingContext: "paid_drizzle", type: "modifier", category: "d_drizzles", price: 50, availability: "active", source: "owner_decision", modifierGroups: [] },
+  d4_triple_drizz: { code: "D4", name: "TRIPLE DRIZZ", displayName: "Triple Drizz", aliases: ["ALL 3"], pricingContext: "triple_drizz", type: "modifier", category: "d_drizzles", price: 100, availability: "active", source: "owner_decision", modifierGroups: [] },
+  x_a3_boneless_upgrade: { code: "A3_BONeless", name: "BONELESS UPGRADE", displayName: "Boneless", pricingContext: "upgrade_modifier", type: "modifier", category: "extras_panel", price: 150, availability: "active", source: "owner_decision", modifierGroups: [] },
+  x_drink: { code: "DRINK", name: "DRINK", displayName: "Drink", type: "modifier", category: "extras_panel", price: 125, availability: "active", source: "owner_decision", modifierGroups: [] },
+  x_carrots: { code: "CARROTS", name: "CARROTS", displayName: "Carrots", type: "modifier", category: "extras_panel", price: 75, availability: "active", source: "owner_decision", modifierGroups: [] },
+  x_gloves: { code: "GLOVES", name: "GLOVES", displayName: "Gloves", type: "modifier", category: "extras_panel", price: 50, availability: "active", source: "owner_decision", modifierGroups: [] },
+  x_add_plus_one_sauce_rub: { code: "+1_SAUCE_RUB", name: "ADD +1 WING FLAVOR", displayName: "Add +1 Wing Flavor", pricingContext: "additional_wing_flavor", type: "modifier", category: "extras_panel", price: 100, availability: "active", source: "owner_decision", modifierGroups: [] },
+  x_add_plus_one_beef_patty: { code: "+1_BEEF_PATTY", name: "ADD +1 BEEF PATTY", displayName: "Add +1 Beef Patty", type: "modifier", category: "extras_panel", price: 225, availability: "active", source: "owner_decision", modifierGroups: [] },
+  x_add_plus_one_cheese: { code: "+1_CHEESE", name: "ADD +1 CHEESE", displayName: "Add +1 Cheese", type: "modifier", category: "extras_panel", price: 75, availability: "active", source: "owner_decision", modifierGroups: [] },
+  x_add_plus_two_wings: { code: "+2_WINGS", name: "ADD +2 WINGS", displayName: "Add +2 Wings", type: "modifier", category: "extras_panel", price: 250, availability: "active", source: "owner_decision", modifierGroups: [] },
+  x_dip_ranch: { code: "DIP_RANCH", name: "DIP RANCH", displayName: "Ranch Dip", type: "modifier", category: "extras_panel", price: 75, availability: "active", source: "owner_decision", modifierGroups: [] },
+  x_dip_fireback: { code: "DIP_FIREBACK", name: "DIP FIREBACK", displayName: "Fireback Dip", type: "modifier", category: "extras_panel", price: 75, availability: "active", source: "owner_decision", modifierGroups: [] },
+  x_dip_ketchup: { code: "DIP_KETCHUP", name: "DIP KETCHUP", displayName: "Ketchup Dip", type: "modifier", category: "extras_panel", price: 75, availability: "active", source: "owner_decision", modifierGroups: [] },
+  x_dip_bbq: { code: "DIP_BBQ", name: "DIP BBQ", displayName: "BBQ Dip", type: "modifier", category: "extras_panel", price: 75, availability: "active", source: "owner_decision", modifierGroups: [] },
+  x_spice_mild: { code: "MILD", name: "MILD", displayName: "Mild", pricingContext: "heat_upgrade", type: "modifier", category: "extras_panel", price: 0, availability: "active", source: "owner_decision", modifierGroups: [] },
+  x_spice_hot: { code: "HOT", name: "HOT", displayName: "Hot", pricingContext: "heat_upgrade", type: "modifier", category: "extras_panel", price: 25, availability: "active", source: "owner_decision", modifierGroups: [] },
+  x_spice_spicy: { code: "SPICY", name: "SPICY", displayName: "Spicy", pricingContext: "heat_upgrade", type: "modifier", category: "extras_panel", price: 50, availability: "active", source: "owner_decision", modifierGroups: [] },
+  x_spice_extreme: { code: "EXTREME", name: "EXTREME", displayName: "Extreme", pricingContext: "heat_upgrade", type: "modifier", category: "extras_panel", price: 75, availability: "active", source: "owner_decision", modifierGroups: [] },
+  x_spice_nuclear: { code: "NUCLEAR", name: "NUCLEAR", displayName: "Nuclear", pricingContext: "heat_upgrade", type: "modifier", category: "extras_panel", price: 100, availability: "active", source: "owner_decision", modifierGroups: [] },
 };
 
 const VARIANT_AUTHORITY: Readonly<Record<string, VariantAuthority>> = {
-  a1_6pc: { parent: "a1_bone_in_combo", code: "6pc", price: 1095, availability: "active" },
-  a1_10pc: { parent: "a1_bone_in_combo", code: "10pc", price: 1495, availability: "active" },
-  a2_8pc: { parent: "a2_boneless_combo", code: "8pc", price: 1395, availability: "active" },
-  a2_12pc: { parent: "a2_boneless_combo", code: "12pc", price: 1795, availability: "active" },
-  a3_8pc: { parent: "a3_flavor_box", code: "8pc", price: 1495, availability: "active" },
-  a4_6pc: { parent: "a4_wings", code: "6pc", price: 675, availability: "active" },
-  a4_10pc: { parent: "a4_wings", code: "10pc", price: 1295, availability: "active" },
-  a4_20pc: { parent: "a4_wings", code: "20pc", price: 2075, availability: "active" },
-  a4_36pc: { parent: "a4_wings", code: "36pc", price: 3595, availability: "active" },
-  a4_50pc: { parent: "a4_wings", code: "50pc", price: 4995, availability: "active" },
-  a4_extra_sauce: { parent: "a4_wings", code: "extra_sauce", price: 100, availability: "active" },
-  a4_sauce_on_side: { parent: "a4_wings", code: "sauce_on_side", price: 100, availability: "by_request", source: "owner_decision" },
-  a4_dusted_rub: { parent: "a4_wings", code: "dusted_rub", price: 50, availability: "active", source: "owner_decision" },
-  a5_8pc: { parent: "a5_boneless_wings", code: "8pc", price: 950, availability: "active" },
-  a5_12pc: { parent: "a5_boneless_wings", code: "12pc", price: 1395, availability: "active" },
-  a5_24pc: { parent: "a5_boneless_wings", code: "24pc", price: 2650, availability: "active" },
-  a5_48pc: { parent: "a5_boneless_wings", code: "48pc", price: 5195, availability: "active" },
+  a1_6pc: { parent: "a1_bone_in_combo", code: "6pc", name: "6pc", price: 1095, availability: "active" },
+  a1_10pc: { parent: "a1_bone_in_combo", code: "10pc", name: "10pc", price: 1495, availability: "active" },
+  a2_8pc: { parent: "a2_boneless_combo", code: "8pc", name: "8pc", price: 1395, availability: "active" },
+  a2_12pc: { parent: "a2_boneless_combo", code: "12pc", name: "12pc", price: 1795, availability: "active" },
+  a3_8pc: { parent: "a3_flavor_box", code: "8pc", name: "8pc", price: 1495, availability: "active" },
+  a4_6pc: { parent: "a4_wings", code: "6pc", name: "6pc", price: 675, availability: "active" },
+  a4_10pc: { parent: "a4_wings", code: "10pc", name: "10pc", price: 1295, availability: "active" },
+  a4_20pc: { parent: "a4_wings", code: "20pc", name: "20pc", price: 2075, availability: "active" },
+  a4_36pc: { parent: "a4_wings", code: "36pc", name: "36pc", price: 3595, availability: "active" },
+  a4_50pc: { parent: "a4_wings", code: "50pc", name: "50pc", price: 4995, availability: "active" },
+  a4_extra_sauce: { parent: "a4_wings", code: "extra_sauce", name: "Extra Sauce", price: 100, availability: "active" },
+  a4_sauce_on_side: { parent: "a4_wings", code: "sauce_on_side", name: "Sauce On The Side", displayName: "Sauce on the Side", type: "side_sauce", pricingContext: "side_sauce", price: 100, availability: "by_request", source: "owner_decision" },
+  a4_dusted_rub: { parent: "a4_wings", code: "dusted_rub", name: "DUSTED RUB", displayName: "Dusted Rub", type: "quantity_scaled_modifier", price: 50, availability: "active", source: "owner_decision" },
+  a5_8pc: { parent: "a5_boneless_wings", code: "8pc", name: "8pc", price: 950, availability: "active" },
+  a5_12pc: { parent: "a5_boneless_wings", code: "12pc", name: "12pc", price: 1395, availability: "active" },
+  a5_24pc: { parent: "a5_boneless_wings", code: "24pc", name: "24pc", price: 2650, availability: "active" },
+  a5_48pc: { parent: "a5_boneless_wings", code: "48pc", name: "48pc", price: 5195, availability: "active" },
 };
 
 const GROUP_AUTHORITY: Readonly<Record<string, GroupAuthority>> = {
@@ -305,6 +329,11 @@ function validateItem(item: Item, categoryId: string, ctx: z.RefinementCtx): voi
   }
   if (authority.category !== categoryId) issue(ctx, `Item ${item.id} must remain under canonical category ${authority.category}`);
   if (item.code !== authority.code) issue(ctx, `Item ${item.id} must preserve canonical code ${authority.code}`);
+  if (item.name !== authority.name) issue(ctx, `Item ${item.id} must preserve canonical name`);
+  if (item.display_name !== authority.displayName) issue(ctx, `Item ${item.id} must preserve canonical display name`);
+  if (item.description !== authority.description) issue(ctx, `Item ${item.id} must preserve canonical description`);
+  if (!exactArray(item.aliases, authority.aliases)) issue(ctx, `Item ${item.id} must preserve canonical aliases`);
+  if (item.pricing_context !== authority.pricingContext) issue(ctx, `Item ${item.id} must preserve canonical pricing context`);
   if (item.type !== authority.type) issue(ctx, `Item ${item.id} must preserve canonical type ${authority.type}`);
   if (item.availability.status !== authority.availability) issue(ctx, `Item ${item.id} must preserve canonical availability ${authority.availability}`);
   if (item.source !== authority.source) issue(ctx, `Item ${item.id} must preserve canonical source ${authority.source}`);
@@ -336,6 +365,10 @@ function validateVariant(variant: Variant, parentItemId: string, ctx: z.Refineme
   }
   if (authority.parent !== parentItemId) issue(ctx, `Variant ${variant.id} must remain under canonical parent ${authority.parent}`);
   if (variant.code !== authority.code) issue(ctx, `Variant ${variant.id} must preserve canonical code ${authority.code}`);
+  if (variant.name !== authority.name) issue(ctx, `Variant ${variant.id} must preserve canonical name`);
+  if (variant.display_name !== authority.displayName) issue(ctx, `Variant ${variant.id} must preserve canonical display name`);
+  if (variant.type !== authority.type) issue(ctx, `Variant ${variant.id} must preserve canonical type`);
+  if (variant.pricing_context !== authority.pricingContext) issue(ctx, `Variant ${variant.id} must preserve canonical pricing context`);
   if (variant.price.amount_minor !== authority.price) issue(ctx, `Variant ${variant.id} must preserve canonical price ${authority.price}`);
   if (variant.availability.status !== authority.availability) issue(ctx, `Variant ${variant.id} must preserve canonical availability ${authority.availability}`);
   if (variant.source !== authority.source) issue(ctx, `Variant ${variant.id} must preserve canonical provenance`);
