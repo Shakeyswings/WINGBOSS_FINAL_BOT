@@ -6,6 +6,7 @@ const EnvSchema = z.object({
   STAFF_CHAT_ID: z.coerce.number().int(),
 
   RUNTIME_MODE: z.enum(["termux", "server"]).default("termux"),
+  DEPLOYMENT_ENV: z.enum(["production", "development", "test"]).default("production"),
   BACKEND_MODE: z.enum(["off", "db"]).default("off"),
   FAILOVER_MODE: z.enum(["local", "hard_fail"]).default("local"),
 
