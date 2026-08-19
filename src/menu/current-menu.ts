@@ -85,6 +85,14 @@ export type CurrentMenuItemEntry = {
   categoryCode: string;
 };
 
+export type CurrentMenuVariantEntry = {
+  id: string;
+  label: string;
+  price_minor: number | null;
+  itemId: string;
+  categoryCode: string;
+};
+
 export type CurrentMenuOptionEntry = {
   id: string;
   label: string;
@@ -95,6 +103,7 @@ export type CurrentMenuOptionEntry = {
 export type CurrentMenuIndex = {
   menu: CurrentMenuDocument;
   itemsById: Map<string, CurrentMenuItemEntry>;
+  variantsById: Map<string, CurrentMenuVariantEntry>;
   optionsById: Map<string, CurrentMenuOptionEntry>;
   groupsById: Map<string, ModifierGroupSchemaType>;
 };
@@ -117,6 +126,7 @@ function priceMinorForPrice(price?: z.infer<typeof MoneySchema>): number | null 
 
 export function buildCurrentMenuIndex(menu: CurrentMenuDocument): CurrentMenuIndex {
   const itemsById = new Map<string, CurrentMenuItemEntry>();
+  const variantsById = new Map<string, CurrentMenuVariantEntry>();
   const optionsById = new Map<string, CurrentMenuOptionEntry>();
   const groupsById = new Map<string, ModifierGroupSchemaType>();
 
@@ -128,6 +138,16 @@ export function buildCurrentMenuIndex(menu: CurrentMenuDocument): CurrentMenuInd
         price_minor: priceMinorForPrice(item.price),
         categoryCode: category.code
       });
+
+      for (const variant of item.variants ?? []) {
+        variantsById.set(variant.id, {
+          id: variant.id,
+          label: String(variant.name ?? variant.code ?? variant.id),
+          price_minor: priceMinorForPrice(variant.price),
+          itemId: item.id,
+          categoryCode: category.code
+        });
+      }
     }
   }
 
@@ -144,7 +164,7 @@ export function buildCurrentMenuIndex(menu: CurrentMenuDocument): CurrentMenuInd
     }
   }
 
-  return { menu, itemsById, optionsById, groupsById };
+  return { menu, itemsById, variantsById, optionsById, groupsById };
 }
 
 export function loadCurrentMenuDocument(filePath = CURRENT_MENU_PATH): CurrentMenuDocument {
@@ -167,6 +187,10 @@ export function getCurrentMenuIndex(filePath = CURRENT_MENU_PATH): CurrentMenuIn
 
 export function getCurrentMenuItemEntry(ref: string, filePath = CURRENT_MENU_PATH): CurrentMenuItemEntry | null {
   return getCurrentMenuIndex(filePath).itemsById.get(ref) ?? null;
+}
+
+export function getCurrentMenuVariantEntry(ref: string, filePath = CURRENT_MENU_PATH): CurrentMenuVariantEntry | null {
+  return getCurrentMenuIndex(filePath).variantsById.get(ref) ?? null;
 }
 
 export function getCurrentMenuOptionEntry(ref: string, filePath = CURRENT_MENU_PATH): CurrentMenuOptionEntry | null {

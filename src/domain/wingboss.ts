@@ -308,3 +308,5 @@ export function validateSweetFinishersHaveNoPrice(): ValidationResult {
   const reasons = SWEET_LAB_FINISHERS.filter((finisher) => finisher.price_minor !== null).map((finisher) => `${finisher.id} has a price`);
   return { valid: reasons.length === 0, reasons };
 }
+
+export * from "./boss-mode-approved.ts";
