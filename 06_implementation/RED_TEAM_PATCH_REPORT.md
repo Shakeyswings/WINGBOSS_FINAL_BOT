@@ -32,8 +32,8 @@ See commit history for the full set; key files are listed in Sources Inspected.
 ## Validation Results
 Pass.
 
-## NEEDS_COST_INPUT
-Boss pricing remains `null` until measured cost data is supplied.
+## COST INPUTS REMAIN REQUIRED
+Measured cost data is still required for contribution and profitability analysis.
 
 ## NEEDS_KITCHEN_VALIDATION
 Kitchen validation templates added in `05_costing/`; no live kitchen signoff recorded here.
