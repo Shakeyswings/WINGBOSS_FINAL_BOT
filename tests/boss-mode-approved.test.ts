@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   APPROVED_BOSS_BUILD_SPECS,
   APPROVED_POPULAR_BOSS_BUILDS,
+  FIRE_STORM_BOSS_FINISH_CHARGE_MINOR_BY_WING_COUNT,
   BOSS_MODE_SURCHARGE_MINOR,
   FIRE_STORM_BOSS_FINISH_CHARGE_PER_6_MINOR,
   FIRE_STORM_FLAVOR_ID,
@@ -73,13 +74,18 @@ describe("approved Boss Mode pricing", () => {
     expect(getFireStormBossFinishChargeMinor(6)).toBe(125);
     expect(getFireStormBossFinishChargeMinor(12)).toBe(250);
     expect(getFireStormBossFinishChargeMinor(18)).toBe(375);
-    expect(getFireStormBossFinishChargeMinor(20)).toBeNull();
+    expect(getFireStormBossFinishChargeMinor(20)).toBe(415);
+    expect(getFireStormBossFinishChargeMinor(24)).toBe(500);
+    expect(getFireStormBossFinishChargeMinor(30)).toBe(625);
+    expect(getFireStormBossFinishChargeMinor(36)).toBe(750);
+    expect(FIRE_STORM_BOSS_FINISH_CHARGE_MINOR_BY_WING_COUNT).toEqual({ 6: 125, 12: 250, 18: 375, 20: 415, 24: 500, 30: 625, 36: 750 });
+    expect(getFireStormBossFinishChargeMinor(7)).toBeNull();
   });
 
   it("keeps the special Fire Storm add-on separate from the base Boss surcharge", () => {
     expect(getBossModeAdditionalChargeMinor(12, FIRE_STORM_FLAVOR_ID)).toBe(645);
     expect(getBossModeAdditionalChargeMinor(12, "s3_buffalo")).toBe(395);
-    expect(getBossModeAdditionalChargeMinor(20, FIRE_STORM_FLAVOR_ID)).toBeNull();
+    expect(getBossModeAdditionalChargeMinor(20, FIRE_STORM_FLAVOR_ID)).toBe(1010);
   });
 
   it("adds heat, D4, and paid finisher charges without double charging included components", () => {
@@ -105,6 +111,12 @@ describe("approved Boss Mode pricing", () => {
     expect(getBossModeOrderTotalMinor(6, "s3_buffalo")).toBe(900);
   });
 
+  it("calculates Crazy Horse 20-wing total correctly", () => {
+    expect(getBossModeOrderTotalMinor(20, FIRE_STORM_FLAVOR_ID)).toBe(3085);
+    expect(getBossModeAdditionalChargeMinor(20, FIRE_STORM_FLAVOR_ID)).toBe(1010);
+    expect(getApprovedBossBuildOrderTotalMinor("boss_build_crazy_horse", 20)).toBe(3085);
+  });
+
   it("keeps named approved builds aligned with the approved totals", () => {
     expect(APPROVED_BOSS_BUILD_SPECS.boss_build_buffalo_boss.label).toBe("Buffalo Boss");
     expect(APPROVED_BOSS_BUILD_SPECS.boss_build_kingpin.label).toBe("Kingpin");
@@ -119,9 +131,5 @@ describe("approved Boss Mode pricing", () => {
     expect(getBoneInWingBasePriceMinor(12)).not.toBe(0);
     expect(getBossModeQuantitySurchargeMinor(7)).toBeNull();
     expect(getBossModeOrderTotalMinor(12, "s3_buffalo")).toBeNull();
-  });
-
-  it("keeps 20-wing Fire Storm totals unresolved until an explicit owner rule exists", () => {
-    expect(getBossModeOrderTotalMinor(20, FIRE_STORM_FLAVOR_ID)).toBeNull();
   });
 });

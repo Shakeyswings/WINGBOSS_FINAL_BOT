@@ -10,6 +10,15 @@ import { getCurrentMenuVariantEntry } from "../menu/current-menu.ts";
 
 export const FIRE_STORM_FLAVOR_ID = "s1_fire_storm";
 export const FIRE_STORM_BOSS_FINISH_CHARGE_PER_6_MINOR = 125 as const;
+export const FIRE_STORM_BOSS_FINISH_CHARGE_MINOR_BY_WING_COUNT: Readonly<Record<number, number>> = {
+  6: 125,
+  12: 250,
+  18: 375,
+  20: 415,
+  24: 500,
+  30: 625,
+  36: 750
+};
 
 export type BossModeWingQuantity = 6 | 12 | 20 | 36;
 export type BossModeProtein = "bone_in" | "boneless";
@@ -118,12 +127,18 @@ export function getBoneInWingBasePriceMinor(wingQuantity: number): number | null
 }
 
 /**
- * Fire Storm is a special Boss-finish charge of USD 1.25 per complete 6-wing unit.
- * Quantities that are not exact multiples of 6 are intentionally unresolved here;
- * this function never invents a rounding rule.
+ * Fire Storm is a special Boss-finish charge.
+ * Exact 6-wing multiples derive from the approved $1.25-per-6 rule.
+ * 20 wings has an explicit owner-approved rounded charge of $4.15.
+ * Unsupported quantities remain null.
  */
 export function getFireStormBossFinishChargeMinor(wingQuantity: number): number | null {
-  if (!Number.isInteger(wingQuantity) || wingQuantity <= 0 || wingQuantity % 6 !== 0) return null;
+  if (!Number.isInteger(wingQuantity) || wingQuantity <= 0) return null;
+
+  const approvedCharge = FIRE_STORM_BOSS_FINISH_CHARGE_MINOR_BY_WING_COUNT[wingQuantity];
+  if (approvedCharge !== undefined) return approvedCharge;
+
+  if (wingQuantity % 6 !== 0) return null;
   return (wingQuantity / 6) * FIRE_STORM_BOSS_FINISH_CHARGE_PER_6_MINOR;
 }
 
