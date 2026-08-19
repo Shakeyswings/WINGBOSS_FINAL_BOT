@@ -84,6 +84,10 @@ function renderSweetToppingCharges() {
     .join(" | ");
 }
 
+function formatMoneyMinor(minor: number | null): string {
+  return minor === null ? "?" : `$${(minor / 100).toFixed(2)}`;
+}
+
 function bossSummaryText(ctx: WBContext): string {
   const selection = bossSelectionFromState(ctx);
   if (!selection) return "No preview path selected yet.";
@@ -180,7 +184,7 @@ export async function architectureFlow(ctx: WBContext) {
           "HEAT_APPLICATION",
           "Heat is tracked separately from the flavor role.",
           selected ? `Selected: ${selected}` : "No heat level selected yet.",
-          `Charge ladder: ${BOSS_HEAT_RECORDS.map((record) => `${record.label}:${record.heatChargeMinor === 0 ? "free" : `$${(record.heatChargeMinor / 100).toFixed(2)}`}`).join(" | ")}`
+          `Charge ladder: ${BOSS_HEAT_RECORDS.map((record) => `${record.label}:${record.heatChargeMinor === 0 ? "free" : formatMoneyMinor(record.heatChargeMinor)}`).join(" | ")}`
         ].join("\n"),
         kb([
           ...buttonGrid(BOSS_HEAT_RECORDS.map((record) => ({ label: record.label, data: `arch:boss:heat:${record.heatLevel}` })), 2),
@@ -249,7 +253,7 @@ export async function architectureFlow(ctx: WBContext) {
         [
           ctx.t("sweet_lab"),
           ctx.t("sweet_lab_tagline"),
-          `Approved products: ${SWEET_LAB_PRODUCTS.map((product) => `${product.label} $${(product.price_minor! / 100).toFixed(2)}`).join(" | ")}`,
+          `Approved products: ${SWEET_LAB_PRODUCTS.map((product) => `${product.label} ${formatMoneyMinor(product.price_minor)}`).join(" | ")}`,
           `Included toppings: 2`,
           `Extra toppings after two: ${renderSweetToppingCharges()}`,
           `Approved topping pool: ${SWEET_LAB_FINISHERS.map((finisher) => finisher.label).join(", ")}`,

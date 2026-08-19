@@ -9,19 +9,19 @@ import {
 export type BossFlavorOption = {
   id: string;
   label: string;
-  price_minor: number;
+  price_minor: number | null;
 };
 
 export type BossFinisherOption = {
   id: string;
   label: string;
-  price_minor: number;
+  price_minor: number | null;
   kind: "dry_rub" | "drizzle";
 };
 
 export type BossHeatChargeRecord = {
   heatLevel: string;
-  heatChargeMinor: number;
+  heatChargeMinor: number | null;
   heatChargeRecordId: string;
   applicationStage: "HEAT_APPLICATION";
   applicationMethod: string;
@@ -33,7 +33,7 @@ function toFlavorOption(option: CurrentMenuOptionEntry): BossFlavorOption {
   return {
     id: option.id,
     label: option.label,
-    price_minor: option.price_minor ?? 0
+    price_minor: option.price_minor ?? null
   };
 }
 
@@ -41,7 +41,7 @@ function toFinisherOption(option: CurrentMenuOptionEntry, kind: BossFinisherOpti
   return {
     id: option.id,
     label: option.label,
-    price_minor: option.price_minor ?? 0,
+    price_minor: option.price_minor ?? null,
     kind
   };
 }
@@ -75,7 +75,7 @@ export function getBossHeatChargeRecords(): BossHeatChargeRecord[] {
     const heatLevel = option.id.replace(/^x_spice_/, "");
     return {
       heatLevel,
-      heatChargeMinor: option.price_minor ?? 0,
+      heatChargeMinor: option.price_minor ?? null,
       heatChargeRecordId: option.id,
       applicationStage: "HEAT_APPLICATION",
       applicationMethod: "current-menu-spice-level",
@@ -129,7 +129,7 @@ export function getBossKnownHeatLevels(): string[] {
   return getBossHeatChargeRecords().map((record) => record.heatLevel);
 }
 
-export function getBossKnownHeatChargeMap(): Record<string, number> {
+export function getBossKnownHeatChargeMap(): Record<string, number | null> {
   return Object.fromEntries(getBossHeatChargeRecords().map((record) => [record.heatLevel, record.heatChargeMinor]));
 }
 

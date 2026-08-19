@@ -82,7 +82,7 @@ export const BOSS_FINISHERS: BossFinisherOption[] = getBossFinisherOptions();
 export const BOSS_D4_POOL: BossFinisherOption[] = getBossD4PoolOptions();
 export const BOSS_HEAT_RECORDS: BossHeatChargeRecord[] = getBossHeatChargeRecords();
 export const BOSS_HEAT_LEVELS: BossHeatLevel[] = BOSS_HEAT_RECORDS.map((record) => record.heatLevel as BossHeatLevel);
-export const BOSS_HEAT_CHARGE_MINOR = Object.fromEntries(BOSS_HEAT_RECORDS.map((record) => [record.heatLevel, record.heatChargeMinor])) as Record<BossHeatLevel, number>;
+export const BOSS_HEAT_CHARGE_MINOR = Object.fromEntries(BOSS_HEAT_RECORDS.map((record) => [record.heatLevel, record.heatChargeMinor])) as Record<BossHeatLevel, number | null>;
 
 export const BOSS_PATH_VALIDATION_REGISTRY: BossPathValidationRecord[] = [];
 export const BOSS_BUILD_CANDIDATES: BossBuildCandidate[] = [];
@@ -221,7 +221,7 @@ export function isBossSelectionCustomerSelectable(selection: BossSelection): boo
   return Boolean(record && isBossPathOrderable(record));
 }
 
-export function getBossHeatChargeMinor(level: BossHeatLevel): number {
+export function getBossHeatChargeMinor(level: BossHeatLevel): number | null {
   return BOSS_HEAT_CHARGE_MINOR[level];
 }
 
