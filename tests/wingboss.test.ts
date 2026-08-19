@@ -35,7 +35,7 @@ import {
   validateSweetOilPoolIsolation
 } from "../src/domain/wingboss.ts";
 
-function makeCtx(data: string, options?: { userId?: number; bossPreview?: boolean; sweetPreview?: boolean }) {
+function makeCtx(data: string, options?: { userId?: number; bossPreview?: boolean; sweetPreview?: boolean; deploymentEnv?: "production" | "development" | "test" }) {
   const calls: any[] = [];
   const ownerId = 101;
   const ctx = {
@@ -44,6 +44,7 @@ function makeCtx(data: string, options?: { userId?: number; bossPreview?: boolea
       STAFF_CHAT_ID: 999,
       BOT_TOKEN: "x".repeat(20),
       RUNTIME_MODE: "termux",
+      DEPLOYMENT_ENV: options?.deploymentEnv ?? "production",
       BACKEND_MODE: "off",
       FAILOVER_MODE: "local",
       TIMEZONE: "Asia/Phnom_Penh",
@@ -190,7 +191,17 @@ describe("WingBoss approved architecture", () => {
     expect(bossButtons).toContain("⚡ Boss Mode");
     expect(bossButtons).toContain("🍰 Sweet Lab");
 
-    const flagged = makeCtx("browse:root", { bossPreview: true, sweetPreview: true });
+    const productionFlagged = makeCtx("browse:root", { bossPreview: true, sweetPreview: true });
+    await browseFlow(productionFlagged, menu, {} as any);
+    const productionFlaggedButtons = buttonTexts(productionFlagged.calls[0][1]);
+    expect(productionFlaggedButtons).not.toContain("⚡ Boss Mode");
+    expect(productionFlaggedButtons).not.toContain("🍰 Sweet Lab");
+
+    const flagged = makeCtx("browse:root", {
+      bossPreview: true,
+      sweetPreview: true,
+      deploymentEnv: "development"
+    });
     await browseFlow(flagged, menu, {} as any);
     const flaggedButtons = buttonTexts(flagged.calls[0][1]);
     expect(flaggedButtons).toContain("⚡ Boss Mode");
