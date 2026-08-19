@@ -9,6 +9,7 @@ import {
   getApprovedBossBuildOrderTotalMinor,
   getBoneInWingBasePriceMinor,
   getBossModeAdditionalChargeMinor,
+  getBossModeAdditionalFinisherChargeMinor,
   getBossModeOrderTotalMinor,
   getBossModeQuantitySurchargeMinor,
   getBossModeSurchargeMinor,
@@ -79,6 +80,24 @@ describe("approved Boss Mode pricing", () => {
     expect(getBossModeAdditionalChargeMinor(12, FIRE_STORM_FLAVOR_ID)).toBe(645);
     expect(getBossModeAdditionalChargeMinor(12, "s3_buffalo")).toBe(395);
     expect(getBossModeAdditionalChargeMinor(20, FIRE_STORM_FLAVOR_ID)).toBeNull();
+  });
+
+  it("adds heat, D4, and paid finisher charges without double charging included components", () => {
+    expect(getBossModeAdditionalFinisherChargeMinor(["r1_cajun", "d1_ranch"])).toBe(100);
+    expect(
+      getBossModeOrderTotalMinor(6, FIRE_STORM_FLAVOR_ID, {
+        heatLevel: "hot",
+        d4SelectionIds: ["r1_cajun", "r2_midnight_rub", "d1_ranch"],
+        additionalFinisherIds: ["r3_buffalo_dust"]
+      })
+    ).toBe(1200);
+    expect(
+      getBossModeOrderTotalMinor(6, FIRE_STORM_FLAVOR_ID, {
+        heatLevel: "hot",
+        d4SelectionIds: ["r1_cajun", "r2_midnight_rub", "d1_ranch"],
+        additionalFinisherIds: ["r1_cajun"]
+      })
+    ).toBeNull();
   });
 
   it("calculates Crazy Horse 6-wing total correctly", () => {

@@ -8,21 +8,24 @@ import { getBossPrimaryFlavorOptions } from "../src/domain/boss-menu-adapter.ts"
 import {
   BOSS_HEAT_CHARGE_MINOR,
   BOSS_HEAT_RECORDS,
-  BOSS_MODE_PRICE_MINOR,
-  BOSS_MODE_PRICE_STATUS,
+  BOSS_PATH_VALIDATION_REGISTRY,
   BOSS_RECIPE_STAGES,
   CURATED_BOSS_BUILDS,
   SWEET_LAB_FINISHERS,
   SWEET_LAB_FRYERS,
   SWEET_LAB_OIL_POOLS,
+  SWEET_LAB_PRODUCTS,
   SWEET_LAB_STAGES,
   buildBossRecipeSignature,
   calculateD4ChargeMinor,
   getBossD4ChargeMinor,
   getBossHeatChargeMinor,
+  getBossModeOrderTotalMinor,
   getBossPaidDryRubCurrentChargeMinor,
   getBossPaidDrizzleCurrentChargeMinor,
   getBossPrimaryFlavorCurrentChargeMinor,
+  getSweetLabAdditionalToppingChargeMinor,
+  getSweetLabProductPriceMinor,
   getVisibleCuratedBossBuilds,
   isBossPathOrderable,
   isBossSelectionCustomerSelectable,
@@ -129,7 +132,7 @@ describe("WingBoss approved architecture", () => {
     };
 
     expect(validateBossPathRecord(record).valid).toBe(true);
-    expect(isBossPathOrderable(record)).toBe(false);
+    expect(isBossPathOrderable(record)).toBe(true);
     expect(
       validateBossSelection({
         primaryFlavorId: "s3_buffalo",
@@ -154,7 +157,7 @@ describe("WingBoss approved architecture", () => {
     expect(isBossSelectionCustomerSelectable(selection)).toBe(false);
   });
 
-  it("keeps Boss price blocked and missing cost distinct from zero", () => {
+  it("keeps Boss quantity pricing approved while cost inputs remain separate", () => {
     const selection = {
       primaryFlavorId: "s6_honey_teriyaki",
       bossFinishFlavorId: "s3_buffalo",
@@ -162,11 +165,27 @@ describe("WingBoss approved architecture", () => {
       finisherIds: ["r1_cajun"],
       kitchenValidated: true
     };
+    const record = {
+      primaryFlavorId: "s6_honey_teriyaki",
+      finishFlavorId: "s3_buffalo",
+      cookProfileId: "boss_cook_v1",
+      heatProfileId: "hot",
+      ownerApproved: true,
+      kitchenValidated: true,
+      publicationStatus: "CURRENT" as const,
+      evidenceId: "evidence-1"
+    };
 
-    expect(BOSS_MODE_PRICE_MINOR).toBeNull();
-    expect(BOSS_MODE_PRICE_MINOR).not.toBe(0);
-    expect(BOSS_MODE_PRICE_STATUS).toBe("NEEDS_COST_INPUT");
-    expect(isBossSelectionCustomerSelectable(selection)).toBe(false);
+    const originalLength = BOSS_PATH_VALIDATION_REGISTRY.length;
+    BOSS_PATH_VALIDATION_REGISTRY.push(record);
+
+    try {
+      expect(isBossPathOrderable(record)).toBe(true);
+      expect(isBossSelectionCustomerSelectable(selection)).toBe(true);
+      expect(getBossModeOrderTotalMinor(6, "s3_buffalo", { heatLevel: "hot" })).toBe(925);
+    } finally {
+      BOSS_PATH_VALIDATION_REGISTRY.length = originalLength;
+    }
   });
 
   it("hides Boss Mode and Sweet Lab from ordinary customers", async () => {
@@ -255,8 +274,21 @@ describe("WingBoss approved architecture", () => {
     expect(validateSweetOilPoolIsolation(SWEET_LAB_OIL_POOLS.savory.id, SWEET_LAB_OIL_POOLS.savory.id).valid).toBe(false);
   });
 
-  it("keeps Sweet Lab finishers unpriced", () => {
+  it("keeps Sweet Lab products and toppings approved", () => {
+    expect(SWEET_LAB_PRODUCTS.map((product) => product.label)).toEqual(["Deep Fried Snickers", "Deep Fried Oreos", "Deep Fried Blasto"]);
+    expect(SWEET_LAB_PRODUCTS.every((product) => product.price_minor === 595)).toBe(true);
+    expect(SWEET_LAB_PRODUCTS.every((product) => product.includedToppingCount === 2)).toBe(true);
+    expect(getSweetLabProductPriceMinor("y1_deep_fried_snickers")).toBe(595);
+    expect(getSweetLabProductPriceMinor("y2_deep_fried_oreos")).toBe(595);
+    expect(getSweetLabProductPriceMinor("y3_deep_fried_blasto")).toBe(595);
+    expect(getSweetLabAdditionalToppingChargeMinor(0)).toBe(0);
+    expect(getSweetLabAdditionalToppingChargeMinor(1)).toBe(0);
+    expect(getSweetLabAdditionalToppingChargeMinor(2)).toBe(0);
+    expect(getSweetLabAdditionalToppingChargeMinor(3)).toBe(75);
+    expect(getSweetLabAdditionalToppingChargeMinor(4)).toBe(150);
+    expect(getSweetLabAdditionalToppingChargeMinor(5)).toBe(225);
     expect(validateSweetFinishersHaveNoPrice().valid).toBe(true);
+    expect(SWEET_LAB_FINISHERS.map((finisher) => finisher.label)).toEqual(["Caramel", "Chocolate", "Powdered Sugar", "Honey", "Hot Honey"]);
     expect(SWEET_LAB_FINISHERS.every((finisher) => finisher.price_minor === null)).toBe(true);
     expect(SWEET_LAB_STAGES).toEqual(["DESSERT_BASE", "PANCAKE_BATTER", "SWEET_FRY", "POWDERED_SUGAR", "OPTIONAL_SWEET_FINISHERS"]);
   });
