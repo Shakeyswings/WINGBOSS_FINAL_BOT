@@ -20,7 +20,7 @@ export const km = {
   boss_mode_tagline: "Flavor. Fry Again. Finish.",
   pick_any_3: "PICK ANY 3",
   sweet_lab: "SWEET LAB",
-  sweet_lab_tagline: "Dessert fryer preview only.",
+  sweet_lab_tagline: "Approved dessert line preview.",
   preview_unavailable: "Preview unavailable.",
 
   educator_note: "មិនអីទេ 👍 ខ្ញុំនឹងជួយអ្នកមួយជំហានម្តង។\nបើមិនប្រាកដ សូមចាប់ផ្តើមពី Combo មុនគេ។",

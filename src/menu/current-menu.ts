@@ -42,6 +42,7 @@ const CategorySchema = z.object({
 
 const ModifierOptionSchema = z.object({
   ref: z.string().min(1),
+  label: z.string().min(1).optional(),
   price: MoneySchema.optional()
 }).passthrough();
 
@@ -197,6 +198,10 @@ export function getCurrentMenuOptionEntry(ref: string, filePath = CURRENT_MENU_P
   return getCurrentMenuIndex(filePath).optionsById.get(ref) ?? null;
 }
 
+export function getCurrentMenuGroup(groupId: string, filePath = CURRENT_MENU_PATH): ModifierGroupSchemaType | null {
+  return getCurrentMenuIndex(filePath).groupsById.get(groupId) ?? null;
+}
+
 export function getCurrentMenuGroupOptions(groupId: string, filePath = CURRENT_MENU_PATH): CurrentMenuOptionEntry[] {
   const index = getCurrentMenuIndex(filePath);
   const group = index.groupsById.get(groupId);
@@ -205,7 +210,7 @@ export function getCurrentMenuGroupOptions(groupId: string, filePath = CURRENT_M
     const item = index.itemsById.get(option.ref);
     return {
       id: option.ref,
-      label: item?.label ?? option.ref,
+      label: option.label ?? item?.label ?? option.ref,
       price_minor: option.price?.amount_minor ?? item?.price_minor ?? null,
       groupId: group.id
     };

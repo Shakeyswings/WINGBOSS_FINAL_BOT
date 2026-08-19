@@ -20,7 +20,7 @@ export const en = {
   boss_mode_tagline: "Flavor. Fry Again. Finish.",
   pick_any_3: "PICK ANY 3",
   sweet_lab: "SWEET LAB",
-  sweet_lab_tagline: "Dessert fryer preview only.",
+  sweet_lab_tagline: "Approved dessert line preview.",
   preview_unavailable: "Preview unavailable.",
 
   educator_note: "No worries — I’ll guide you step by step. If unsure, start with a Combo.",

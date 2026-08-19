@@ -1,4 +1,11 @@
-import { getBossKnownFlavorIds } from "./boss-menu-adapter.ts";
+import {
+  getBossD4ChargeMinor,
+  getBossD4PoolOptions,
+  getBossHeatChargeMinor,
+  getBossKnownFlavorIds,
+  getBossPaidDryRubChargeMinor,
+  getBossPaidDrizzleChargeMinor
+} from "./boss-menu-adapter.ts";
 import { getCurrentMenuVariantEntry } from "../menu/current-menu.ts";
 
 export const FIRE_STORM_FLAVOR_ID = "s1_fire_storm";
@@ -132,17 +139,60 @@ export function getBossModeAdditionalChargeMinor(wingQuantity: number, bossFinis
   return bossCharge + fireStormCharge;
 }
 
-export function getBossModeOrderTotalMinor(wingQuantity: number, bossFinishFlavorId: string): number | null {
+export function getBossModeAdditionalFinisherChargeMinor(finisherIds: string[]): number | null {
+  if (new Set(finisherIds).size !== finisherIds.length) return null;
+
+  let total = 0;
+  for (const finisherId of finisherIds) {
+    const chargeMinor = getBossPaidDryRubChargeMinor(finisherId) ?? getBossPaidDrizzleChargeMinor(finisherId);
+    if (chargeMinor === null) return null;
+    total += chargeMinor;
+  }
+
+  return total;
+}
+
+export type BossModeOrderChargeExtras = {
+  heatLevel?: string | null;
+  d4SelectionIds?: string[];
+  additionalFinisherIds?: string[];
+};
+
+export function getBossModeOrderTotalMinor(wingQuantity: number, bossFinishFlavorId: string, extras: BossModeOrderChargeExtras = {}): number | null {
   if (!isKnownBossFinishFlavorId(bossFinishFlavorId)) return null;
 
   const basePriceMinor = getBoneInWingBasePriceMinor(wingQuantity);
   const bossSurchargeMinor = getBossModeQuantitySurchargeMinor(wingQuantity);
   if (basePriceMinor === null || bossSurchargeMinor === null) return null;
 
+  const selectedIds = [...(extras.d4SelectionIds ?? []), ...(extras.additionalFinisherIds ?? [])];
+  if (new Set(selectedIds).size !== selectedIds.length) return null;
+
   const specialChargeMinor = bossFinishFlavorId === FIRE_STORM_FLAVOR_ID ? getFireStormBossFinishChargeMinor(wingQuantity) : 0;
   if (specialChargeMinor === null) return null;
 
-  return basePriceMinor + bossSurchargeMinor + specialChargeMinor;
+  const heatChargeMinor = extras.heatLevel ? getBossHeatChargeMinor(extras.heatLevel) : 0;
+  if (heatChargeMinor === null) return null;
+
+  const d4ChargeMinor = extras.d4SelectionIds ? getBossD4ChargeMinorForSelection(extras.d4SelectionIds) : 0;
+  if (d4ChargeMinor === null) return null;
+
+  const extraFinisherChargeMinor = extras.additionalFinisherIds ? getBossModeAdditionalFinisherChargeMinor(extras.additionalFinisherIds) : 0;
+  if (extraFinisherChargeMinor === null) return null;
+
+  return basePriceMinor + bossSurchargeMinor + specialChargeMinor + heatChargeMinor + d4ChargeMinor + extraFinisherChargeMinor;
+}
+
+function getBossD4ChargeMinorForSelection(selectionIds: string[]): number | null {
+  if (selectionIds.length !== 3) return null;
+  if (new Set(selectionIds).size !== selectionIds.length) return null;
+
+  const pool = new Set(getBossD4PoolOptions().map((option) => option.id));
+  for (const id of selectionIds) {
+    if (!pool.has(id)) return null;
+  }
+
+  return getBossD4ChargeMinor();
 }
 
 export function getApprovedBossBuildById(buildId: string): ApprovedBossBuild | null {

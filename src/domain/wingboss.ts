@@ -16,6 +16,7 @@ import {
   type BossFlavorOption,
   type BossHeatChargeRecord
 } from "./boss-menu-adapter.ts";
+import { getCurrentMenuGroup, getCurrentMenuGroupOptions, getCurrentMenuItemsByCategoryCode } from "../menu/current-menu.ts";
 
 export const BOSS_RECIPE_STAGES = [
   "BASE_CHICKEN",
@@ -83,9 +84,6 @@ export const BOSS_HEAT_RECORDS: BossHeatChargeRecord[] = getBossHeatChargeRecord
 export const BOSS_HEAT_LEVELS: BossHeatLevel[] = BOSS_HEAT_RECORDS.map((record) => record.heatLevel as BossHeatLevel);
 export const BOSS_HEAT_CHARGE_MINOR = Object.fromEntries(BOSS_HEAT_RECORDS.map((record) => [record.heatLevel, record.heatChargeMinor])) as Record<BossHeatLevel, number>;
 
-export const BOSS_MODE_PRICE_MINOR: number | null = null;
-export const BOSS_MODE_PRICE_STATUS = "NEEDS_COST_INPUT" as const;
-
 export const BOSS_PATH_VALIDATION_REGISTRY: BossPathValidationRecord[] = [];
 export const BOSS_BUILD_CANDIDATES: BossBuildCandidate[] = [];
 export const CURATED_BOSS_BUILDS: CuratedBossBuild[] = BOSS_BUILD_CANDIDATES;
@@ -110,14 +108,25 @@ export const SWEET_LAB_OIL_POOLS = {
   sweet: { id: "sweet_lab_dessert_oil_pool", kind: "dessert" as const }
 };
 
-export const SWEET_LAB_FINISHERS = [
-  { id: "chocolate_drizzle", label: "Chocolate drizzle", price_minor: null },
-  { id: "caramel_drizzle", label: "Caramel drizzle", price_minor: null },
-  { id: "regular_honey", label: "Regular honey", price_minor: null },
-  { id: "hot_honey", label: "Hot honey", price_minor: null },
-  { id: "whipped_cream", label: "Whipped cream", price_minor: null },
-  { id: "fruit_drizzle", label: "Fruit-flavored drizzle", price_minor: null }
-] as const;
+export type SweetLabProduct = {
+  id: string;
+  label: string;
+  price_minor: number | null;
+  includedToppingCount: number;
+};
+
+export const SWEET_LAB_PRODUCTS: SweetLabProduct[] = getCurrentMenuItemsByCategoryCode("Y").map((item) => ({
+  id: item.id,
+  label: item.label,
+  price_minor: item.price_minor,
+  includedToppingCount: 2
+}));
+
+export const SWEET_LAB_FINISHERS = getCurrentMenuGroupOptions("modifier_group_sweet_lab_toppings").map((option) => ({
+  id: option.id,
+  label: option.label,
+  price_minor: null
+}));
 
 function isKnownBossFlavorId(id: string): boolean {
   return getBossKnownFlavorIds().includes(id);
@@ -129,6 +138,10 @@ function isKnownBossFinisherId(id: string): boolean {
 
 function isKnownBossHeatLevel(level: string): level is BossHeatLevel {
   return getBossKnownHeatLevels().includes(level);
+}
+
+function getSweetLabToppingGroup() {
+  return getCurrentMenuGroup("modifier_group_sweet_lab_toppings");
 }
 
 export function buildBossRecipeSignature(selection: Pick<BossSelection, "primaryFlavorId" | "bossFinishFlavorId" | "heatLevel" | "finisherIds">): string {
@@ -184,9 +197,7 @@ export function isBossPathOrderable(record: BossPathValidationRecord): boolean {
     record.evidenceId !== undefined &&
     record.heatProfileId !== null &&
     record.heatProfileId !== undefined &&
-    record.cookProfileId !== null &&
-    BOSS_MODE_PRICE_MINOR !== null &&
-    BOSS_MODE_PRICE_STATUS !== "NEEDS_COST_INPUT"
+    record.cookProfileId !== null
   );
 }
 
@@ -205,7 +216,6 @@ export function isBossSelectionCustomerSelectable(selection: BossSelection): boo
   const validation = validateBossSelection(selection);
   if (!validation.valid) return false;
   if (!selection.kitchenValidated) return false;
-  if (BOSS_MODE_PRICE_MINOR === null || BOSS_MODE_PRICE_STATUS === "NEEDS_COST_INPUT") return false;
 
   const record = findBossPathValidationRecord(selection.primaryFlavorId, selection.bossFinishFlavorId, selection.heatLevel);
   return Boolean(record && isBossPathOrderable(record));
@@ -307,6 +317,29 @@ export function validateSweetOilPoolIsolation(savoryOilPoolId: string, dessertOi
 export function validateSweetFinishersHaveNoPrice(): ValidationResult {
   const reasons = SWEET_LAB_FINISHERS.filter((finisher) => finisher.price_minor !== null).map((finisher) => `${finisher.id} has a price`);
   return { valid: reasons.length === 0, reasons };
+}
+
+export function getSweetLabAdditionalToppingChargeMinor(toppingCount: number): number | null {
+  const group = getSweetLabToppingGroup();
+  if (!group) return null;
+  if (!Number.isInteger(toppingCount) || toppingCount < 0) return null;
+
+  const pricingModel = (group as { pricing_model?: { included_count?: number; additional_price_minor?: number } }).pricing_model;
+  const includedCount = pricingModel?.included_count;
+  const additionalPriceMinor = pricingModel?.additional_price_minor;
+  if (typeof includedCount !== "number" || typeof additionalPriceMinor !== "number") return null;
+  if (!Number.isInteger(includedCount) || !Number.isInteger(additionalPriceMinor)) return null;
+
+  if (toppingCount <= includedCount) return 0;
+  return (toppingCount - includedCount) * additionalPriceMinor;
+}
+
+export function getSweetLabProductPriceMinor(productId: string): number | null {
+  return SWEET_LAB_PRODUCTS.find((product) => product.id === productId)?.price_minor ?? null;
+}
+
+export function getSweetLabProductById(productId: string): SweetLabProduct | null {
+  return SWEET_LAB_PRODUCTS.find((product) => product.id === productId) ?? null;
 }
 
 export * from "./boss-mode-approved.ts";

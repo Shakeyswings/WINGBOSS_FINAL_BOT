@@ -4,15 +4,16 @@ import {
   BOSS_FINISHERS,
   BOSS_FINISH_FLAVORS,
   BOSS_HEAT_RECORDS,
-  BOSS_MODE_PRICE_MINOR,
-  BOSS_MODE_PRICE_STATUS,
+  BOSS_MODE_SURCHARGE_MINOR,
   BOSS_PRIMARY_FLAVORS,
   BOSS_RECIPE_STAGES,
   CURATED_BOSS_BUILDS,
   SWEET_LAB_FINISHERS,
+  SWEET_LAB_PRODUCTS,
   SWEET_LAB_FRYERS,
   SWEET_LAB_STAGES,
   getVisibleCuratedBossBuilds,
+  getSweetLabAdditionalToppingChargeMinor,
   isBossSelectionCustomerSelectable,
   renderBossKitchenInstructions,
   validateBossSelection,
@@ -65,6 +66,24 @@ function findLabel(id: string, entries: readonly { id: string; label: string }[]
   return entries.find((entry) => entry.id === id)?.label ?? id;
 }
 
+function renderBossSurchargeTiers() {
+  return [6, 12, 20, 36]
+    .map((quantity) => {
+      const surchargeMinor = BOSS_MODE_SURCHARGE_MINOR[quantity as 6 | 12 | 20 | 36];
+      return `${quantity}=${surchargeMinor === undefined ? "?" : `$${(surchargeMinor / 100).toFixed(2)}`}`;
+    })
+    .join(" | ");
+}
+
+function renderSweetToppingCharges() {
+  return [0, 1, 2, 3, 4, 5]
+    .map((count) => {
+      const chargeMinor = getSweetLabAdditionalToppingChargeMinor(count);
+      return `${count}=${chargeMinor === null ? "?" : `$${(chargeMinor / 100).toFixed(2)}`}`;
+    })
+    .join(" | ");
+}
+
 function bossSummaryText(ctx: WBContext): string {
   const selection = bossSelectionFromState(ctx);
   if (!selection) return "No preview path selected yet.";
@@ -75,7 +94,7 @@ function bossSummaryText(ctx: WBContext): string {
     "",
     `Validation: ${validation.valid ? "PASS" : validation.reasons.join("; ")}`,
     `Customer selectable: ${isBossSelectionCustomerSelectable(selection) ? "YES" : "NO"}`,
-    `Price: ${BOSS_MODE_PRICE_MINOR === null ? "null" : `$${(BOSS_MODE_PRICE_MINOR / 100).toFixed(2)}`} / ${BOSS_MODE_PRICE_STATUS}`
+    `Approved surcharge tiers: ${renderBossSurchargeTiers()}`
   ].join("\n");
 }
 
@@ -104,7 +123,7 @@ export async function architectureFlow(ctx: WBContext) {
           ctx.t("boss_mode_tagline"),
           ctx.t("pick_any_3"),
           "",
-          `Price: ${BOSS_MODE_PRICE_MINOR === null ? "null" : `$${(BOSS_MODE_PRICE_MINOR / 100).toFixed(2)}`} / ${BOSS_MODE_PRICE_STATUS}`,
+          `Approved surcharge tiers: ${renderBossSurchargeTiers()}`,
           `State machine: ${BOSS_RECIPE_STAGES.join(" -> ")}`,
           `Curated build fixtures: ${CURATED_BOSS_BUILDS.length}`,
           `Visible now: ${visibleCurated.length}`,
@@ -209,7 +228,7 @@ export async function architectureFlow(ctx: WBContext) {
           `Curated build fixtures available: ${CURATED_BOSS_BUILDS.length}`,
           `Kitchen validation: ${selection.valid ? "STRUCTURE OK" : selection.reasons.join("; ")}`,
           "",
-          "Preview only until cost approval exists."
+          "Cost inputs stay tracked separately for profitability analysis."
         ].join("\n"),
         kb([[Markup.button.callback("⬅️ Back", "arch:boss")], [Markup.button.callback("⬅️ Home", "home:back")]])
       );
@@ -230,6 +249,10 @@ export async function architectureFlow(ctx: WBContext) {
         [
           ctx.t("sweet_lab"),
           ctx.t("sweet_lab_tagline"),
+          `Approved products: ${SWEET_LAB_PRODUCTS.map((product) => `${product.label} $${(product.price_minor! / 100).toFixed(2)}`).join(" | ")}`,
+          `Included toppings: 2`,
+          `Extra toppings after two: ${renderSweetToppingCharges()}`,
+          `Approved topping pool: ${SWEET_LAB_FINISHERS.map((finisher) => finisher.label).join(", ")}`,
           `Fryer isolation: ${fryerCheck.valid ? "PASS" : "FAIL"}`,
           `Base flow: ${SWEET_LAB_STAGES.join(" -> ")}`,
           `Sweet finishers priced: ${validateSweetFinishersHaveNoPrice().valid ? "NO" : "YES"}`
@@ -252,9 +275,10 @@ export async function architectureFlow(ctx: WBContext) {
           `4. ${SWEET_LAB_STAGES[3]}`,
           `5. ${SWEET_LAB_STAGES[4]}`,
           "",
+          `Approved products: ${SWEET_LAB_PRODUCTS.map((product) => product.label).join(", ")}`,
           `Approved testing finishers: ${SWEET_LAB_FINISHERS.map((finisher) => finisher.label).join(", ")}`,
           "",
-          "No dessert price is invented here."
+          "Dessert pricing comes from governed current-menu data."
         ].join("\n"),
         kb([[Markup.button.callback("⬅️ Back", "arch:sweet")], [Markup.button.callback("⬅️ Home", "home:back")]])
       );
