@@ -6,6 +6,7 @@ import { loadCurrentMenuDocument, getCurrentMenuIndex } from "../src/menu/curren
 import { loadMenu } from "../src/menu/loader.ts";
 import { getBossPrimaryFlavorOptions } from "../src/domain/boss-menu-adapter.ts";
 import {
+  BOSS_D4_POOL,
   BOSS_HEAT_CHARGE_MINOR,
   BOSS_HEAT_RECORDS,
   BOSS_PATH_VALIDATION_REGISTRY,
@@ -265,6 +266,20 @@ describe("WingBoss approved architecture", () => {
     expect(BOSS_HEAT_CHARGE_MINOR.revenge).toBe(100);
     expect(BOSS_HEAT_CHARGE_MINOR.nuclear).toBe(125);
     expect(getBossHeatChargeMinor("hot")).toBe(25);
+  });
+
+  it("renders the approved preview heat ladder and D4 finisher pool", async () => {
+    const heatPreview = makeCtx("arch:boss:heat", { userId: 101 });
+    await architectureFlow(heatPreview);
+    expect(heatPreview.calls[0][0]).toContain("NUCLEAR:$1.00");
+    expect(heatPreview.calls[0][0]).not.toContain("NUCLEAR:$1.25");
+
+    const finisherPreview = makeCtx("arch:boss:finishers", { userId: 101 });
+    await architectureFlow(finisherPreview);
+    const finisherButtons = buttonTexts(finisherPreview.calls[0][1]);
+    for (const option of BOSS_D4_POOL) {
+      expect(finisherButtons).toContain(option.label);
+    }
   });
 
   it("keeps sweet fryer and oil pool isolation intact", () => {
