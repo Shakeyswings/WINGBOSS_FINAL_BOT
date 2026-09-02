@@ -271,8 +271,8 @@ describe("WingBoss approved architecture", () => {
   it("renders the approved preview heat ladder and D4 finisher pool", async () => {
     const heatPreview = makeCtx("arch:boss:heat", { userId: 101 });
     await architectureFlow(heatPreview);
-    expect(heatPreview.calls[0][0]).toContain("NUCLEAR:$1.00");
-    expect(heatPreview.calls[0][0]).not.toContain("NUCLEAR:$1.25");
+    expect(heatPreview.calls[0][0]).toContain("Nuclear:$1.00");
+    expect(heatPreview.calls[0][0]).not.toContain("Nuclear:$1.25");
 
     const finisherPreview = makeCtx("arch:boss:finishers", { userId: 101 });
     await architectureFlow(finisherPreview);
