@@ -1,0 +1,1 @@
+test_id,test_date,operator,wing_quantity,primary_flavor_id,finish_flavor_id,heat_id,finisher_ids,primary_sauce_grams,secondary_sauce_grams,rub_grams,drizzle_grams,extra_fry_seconds,fryer_kwh,oil_start,oil_replenishment,oil_recovered_or_discarded,labor_seconds,packaging_cost_minor,waste_or_remake,kitchen_result,approver,notes

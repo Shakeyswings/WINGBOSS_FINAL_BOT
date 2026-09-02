@@ -222,7 +222,19 @@
           { "id": "x_spice_hot", "code": "HOT", "name": "HOT", "display_name": "Hot", "price": { "currency": "USD", "amount_minor": 25 }, "availability": { "status": "active" }, "type": "modifier", "pricing_context": "heat_upgrade", "modifier_groups": [], "source": "owner_decision" },
           { "id": "x_spice_spicy", "code": "SPICY", "name": "SPICY", "display_name": "Spicy", "price": { "currency": "USD", "amount_minor": 50 }, "availability": { "status": "active" }, "type": "modifier", "pricing_context": "heat_upgrade", "modifier_groups": [], "source": "owner_decision" },
           { "id": "x_spice_extreme", "code": "EXTREME", "name": "EXTREME", "display_name": "Extreme", "price": { "currency": "USD", "amount_minor": 75 }, "availability": { "status": "active" }, "type": "modifier", "pricing_context": "heat_upgrade", "modifier_groups": [], "source": "owner_decision" },
-          { "id": "x_spice_nuclear", "code": "NUCLEAR", "name": "NUCLEAR", "display_name": "Nuclear", "price": { "currency": "USD", "amount_minor": 100 }, "availability": { "status": "active" }, "type": "modifier", "pricing_context": "heat_upgrade", "modifier_groups": [], "source": "owner_decision" }
+          { "id": "x_spice_revenge", "code": "REVENGE", "name": "REVENGE", "display_name": "Revenge", "price": { "currency": "USD", "amount_minor": 100 }, "availability": { "status": "active" }, "type": "modifier", "pricing_context": "heat_upgrade", "modifier_groups": [], "source": "owner_decision" },
+          { "id": "x_spice_nuclear", "code": "NUCLEAR", "name": "NUCLEAR", "display_name": "Nuclear", "price": { "currency": "USD", "amount_minor": 125 }, "availability": { "status": "active" }, "type": "modifier", "pricing_context": "heat_upgrade", "modifier_groups": [], "source": "owner_decision" }
+        ]
+      },
+      {
+        "id": "y_deep_fried_desserts",
+        "code": "Y",
+        "name": "DEEP FRIED DESSERTS",
+        "display_order": 8,
+        "items": [
+          { "id": "y1_deep_fried_snickers", "code": "Y1", "name": "DEEP FRIED SNICKERS", "display_name": "Deep Fried Snickers", "price": { "currency": "USD", "amount_minor": 595 }, "availability": { "status": "active" }, "type": "product", "modifier_groups": ["modifier_group_sweet_lab_toppings"], "included_topping_count": 2, "source": "owner_decision" },
+          { "id": "y2_deep_fried_oreos", "code": "Y2", "name": "DEEP FRIED OREOS", "display_name": "Deep Fried Oreos", "price": { "currency": "USD", "amount_minor": 595 }, "availability": { "status": "active" }, "type": "product", "modifier_groups": ["modifier_group_sweet_lab_toppings"], "included_topping_count": 2, "source": "owner_decision" },
+          { "id": "y3_deep_fried_blasto", "code": "Y3", "name": "DEEP FRIED BLASTO", "display_name": "Deep Fried Blasto", "price": { "currency": "USD", "amount_minor": 595 }, "availability": { "status": "active" }, "type": "product", "modifier_groups": ["modifier_group_sweet_lab_toppings"], "included_topping_count": 2, "source": "owner_decision" }
         ]
       }
     ],
@@ -392,6 +404,23 @@
         "source": "owner_decision"
       },
       {
+        "id": "modifier_group_sweet_lab_toppings",
+        "code": "SWEET_TOPPINGS",
+        "name": "Sweet Lab Toppings",
+        "minimum_select": 0,
+        "maximum_select": 5,
+        "included_select": 2,
+        "pricing_model": { "kind": "included_plus_additional", "included_count": 2, "additional_price_minor": 75 },
+        "options": [
+          { "ref": "sweet_topping_caramel", "label": "Caramel" },
+          { "ref": "sweet_topping_chocolate", "label": "Chocolate" },
+          { "ref": "sweet_topping_powdered_sugar", "label": "Powdered Sugar" },
+          { "ref": "sweet_topping_honey", "label": "Honey" },
+          { "ref": "sweet_topping_hot_honey", "label": "Hot Honey" }
+        ],
+        "source": "owner_decision"
+      },
+      {
         "id": "modifier_group_spice_level",
         "code": "SPICE_LEVEL",
         "name": "Spice Level",
@@ -403,7 +432,8 @@
           { "ref": "x_spice_hot", "price": { "currency": "USD", "amount_minor": 25 } },
           { "ref": "x_spice_spicy", "price": { "currency": "USD", "amount_minor": 50 } },
           { "ref": "x_spice_extreme", "price": { "currency": "USD", "amount_minor": 75 } },
-          { "ref": "x_spice_nuclear", "price": { "currency": "USD", "amount_minor": 100 } }
+          { "ref": "x_spice_revenge", "price": { "currency": "USD", "amount_minor": 100 } },
+          { "ref": "x_spice_nuclear", "price": { "currency": "USD", "amount_minor": 125 } }
         ],
         "source": "owner_decision"
       },
