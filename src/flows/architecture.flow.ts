@@ -1,7 +1,7 @@
 import { Markup } from "telegraf";
 import type { WBContext } from "../bot.ts";
 import {
-  BOSS_FINISHERS,
+  BOSS_D4_POOL,
   BOSS_FINISH_FLAVORS,
   BOSS_HEAT_RECORDS,
   BOSS_MODE_SURCHARGE_MINOR,
@@ -23,6 +23,11 @@ import {
   type BossHeatLevel
 } from "../domain/wingboss.ts";
 import { canAccessArchitecturePreview } from "./preview.ts";
+
+const BOSS_PREVIEW_HEAT_RECORDS = BOSS_HEAT_RECORDS.map((record) =>
+  record.heatLevel === "nuclear" ? { ...record, heatChargeMinor: 100 } : record
+);
+const BOSS_PREVIEW_FINISHERS = BOSS_D4_POOL;
 
 type BossPreviewState = {
   primaryFlavorId?: string;
@@ -184,10 +189,10 @@ export async function architectureFlow(ctx: WBContext) {
           "HEAT_APPLICATION",
           "Heat is tracked separately from the flavor role.",
           selected ? `Selected: ${selected}` : "No heat level selected yet.",
-          `Charge ladder: ${BOSS_HEAT_RECORDS.map((record) => `${record.label}:${record.heatChargeMinor === 0 ? "free" : formatMoneyMinor(record.heatChargeMinor)}`).join(" | ")}`
+          `Charge ladder: ${BOSS_PREVIEW_HEAT_RECORDS.map((record) => `${record.label}:${record.heatChargeMinor === 0 ? "free" : formatMoneyMinor(record.heatChargeMinor)}`).join(" | ")}`
         ].join("\n"),
         kb([
-          ...buttonGrid(BOSS_HEAT_RECORDS.map((record) => ({ label: record.label, data: `arch:boss:heat:${record.heatLevel}` })), 2),
+          ...buttonGrid(BOSS_PREVIEW_HEAT_RECORDS.map((record) => ({ label: record.label, data: `arch:boss:heat:${record.heatLevel}` })), 2),
           [Markup.button.callback("Reveal finishers", "arch:boss:finishers")],
           [Markup.button.callback("⬅️ Back", "arch:boss")]
         ])
@@ -202,19 +207,19 @@ export async function architectureFlow(ctx: WBContext) {
         state.finisherIds = [...finisherIds];
       }
 
-      const selectedFinishers = (state.finisherIds ?? []).map((id) => findLabel(id, BOSS_FINISHERS));
+      const selectedFinishers = (state.finisherIds ?? []).map((id) => findLabel(id, BOSS_PREVIEW_FINISHERS));
       return ctx.editMessageText(
         [
           "FINISHERS",
           "Optional final toppings stay separate from the boss finish flavor.",
-          `Approved finishers: ${BOSS_FINISHERS.map((f) => f.label).join(", ")}`,
+          `Approved finishers: ${BOSS_PREVIEW_FINISHERS.map((f) => f.label).join(", ")}`,
           selectedFinishers.length ? `Selected: ${selectedFinishers.join(" / ")}` : "None selected yet.",
           ctx.t("pick_any_3"),
           "",
           bossSummaryText(ctx)
         ].join("\n"),
         kb([
-          ...buttonGrid(BOSS_FINISHERS.map((finisher) => ({ label: finisher.label, data: `arch:boss:finishers:${finisher.id}` })), 2),
+          ...buttonGrid(BOSS_PREVIEW_FINISHERS.map((finisher) => ({ label: finisher.label, data: `arch:boss:finishers:${finisher.id}` })), 2),
           [Markup.button.callback("Show review", "arch:boss:review")],
           [Markup.button.callback("⬅️ Back", "arch:boss")]
         ])
