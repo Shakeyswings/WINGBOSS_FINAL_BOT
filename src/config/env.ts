@@ -6,6 +6,7 @@ const EnvSchema = z.object({
   STAFF_CHAT_ID: z.coerce.number().int(),
 
   RUNTIME_MODE: z.enum(["termux", "server"]).default("termux"),
+  DEPLOYMENT_ENV: z.enum(["production", "development", "test"]).default("production"),
   BACKEND_MODE: z.enum(["off", "db"]).default("off"),
   FAILOVER_MODE: z.enum(["local", "hard_fail"]).default("local"),
 
@@ -19,6 +20,8 @@ const EnvSchema = z.object({
 
   CLOSED_MODE: z.coerce.number().int().min(0).max(1).default(0).transform((v) => v === 1),
   BUSY_MODE: z.coerce.number().int().min(0).max(1).default(0).transform((v) => v === 1),
+  BOSS_MODE_PREVIEW_ENABLED: z.coerce.number().int().min(0).max(1).default(0).transform((v) => v === 1),
+  SWEET_LAB_PREVIEW_ENABLED: z.coerce.number().int().min(0).max(1).default(0).transform((v) => v === 1),
 
   PAYMENT_PROOF_REQUIRED: z.coerce.number().int().min(0).max(1).default(1).transform((v) => v === 1),
 

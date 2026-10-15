@@ -33,7 +33,7 @@ export function shimToV1(raw: any): MenuBundleV1 {
       ? spice.map((t: any, i: number) => ({
           id: String(t.id),
           label: `${t.label ?? t.id} ${t.icon ?? ""}`.trim(),
-          price_delta_usd: Number(t.price ?? t.price_delta_usd ?? 0),
+          price_delta_usd: Number(t.price ?? t.price_delta_usd),
           rank: i
         }))
       : [{ id: "original", label: "Original 🚫", price_delta_usd: 0, rank: 0 }];

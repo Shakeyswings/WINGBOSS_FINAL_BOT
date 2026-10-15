@@ -5,6 +5,14 @@ export type WBSession = {
   state: "S0_HOME" | "S1_EDU" | "S2_BROWSE" | "S4_CART" | "S5_CHECKOUT" | "S11_PROOF" | "S14_STATUS";
   draft_order_id?: string;
   lang?: "km" | "en";
+  architecture?: {
+    boss?: {
+      primaryFlavorId?: string;
+      bossFinishFlavorId?: string;
+      heatLevel?: string;
+      finisherIds?: string[];
+    };
+  };
 };
 
 export function initSessionMiddleware(): MiddlewareFn<WBContext> {

@@ -14,6 +14,15 @@ export const en = {
   btn_currency: "💲 Currency",
   btn_help: "ℹ️ Help / Contact",
 
+  btn_boss_preview: "⚡ Boss Mode",
+  btn_sweet_preview: "🍰 Sweet Lab",
+  boss_mode: "BOSS MODE",
+  boss_mode_tagline: "Flavor. Fry Again. Finish.",
+  pick_any_3: "PICK ANY 3",
+  sweet_lab: "SWEET LAB",
+  sweet_lab_tagline: "Approved dessert line preview.",
+  preview_unavailable: "Preview unavailable.",
+
   educator_note: "No worries — I’ll guide you step by step. If unsure, start with a Combo.",
   help_contact: "Contact: @callwingboss",
   currency_note: "Prices are shown in USD. Khmer Riel is estimated at the current rate."
